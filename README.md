@@ -8,7 +8,7 @@
 
 - **Marisel Alarcón**
 - **Maximiliano Martinez Gonzales**
-- **Maximiliando Pelazzo**
+- **Maximiliano Pelazzo**
 - **Fernanda Sivila**
 - **Cristian Torrejón**
 
@@ -68,4 +68,6 @@
 - **Frontend:** HTML, CSS, Bootstrap, Angular, TypeScript
 - **Backend:** Node.js, Express.js
 - **Base de Datos:** MongoDB
-- **Integraciones:** Mercado Pago, Chart.js/D3.js, Twilio, SendGrid, Facebook Graph API, Twitter API
+- **Integraciones:** APIS......
+
+
