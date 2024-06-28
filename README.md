@@ -10,7 +10,6 @@
 - **Maximiliano Martinez Gonzales**
 - **Maximiliano Pelazzo**
 - **Fernanda Sivila**
-- **Cristian Torrejón**
 
 ## Características Principales
 
