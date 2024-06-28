@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const nameDB = "gymdb";
+const nameDB = "gym_db";
 const URI = `mongodb://localhost:27017/${nameDB}`
 
 const dbconnect = () => {

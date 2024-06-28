@@ -1,0 +1,35 @@
+const mongoose = require('mongoose');
+const {Schema} = mongoose;
+
+const coachSchema = new Schema({
+    fullname:{
+        type: String,
+        require: true
+    },
+    email:{
+        type: String,
+        required: true
+    },
+    workArea:{
+        type: String,
+        required: true
+    },
+    photo: {
+        type: String,
+        required: true
+    },
+    age:{
+        type: Number,
+        required: true
+    },
+    description:{
+        type: String,
+        required: true
+    },
+    schedule:{
+        type: String,
+        required: true
+    }
+}, { collection: 'coaches'});
+
+module.exports = mongoose.model('Coach', coachSchema);
