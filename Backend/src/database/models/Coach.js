@@ -14,8 +14,9 @@ const coachSchema = new Schema({
         type: String,
         required: true
     },
-    photo: {
-        type: String,
+    img: {
+        data: Buffer,
+        contentType: String,
         required: true
     },
     age:{

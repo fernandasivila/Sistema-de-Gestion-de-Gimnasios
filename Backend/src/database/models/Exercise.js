@@ -30,8 +30,8 @@ const exerciseSchema = new Schema({
         required: true
     },
     images:[{
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Image',
+        data: Buffer,
+        contentType: String,
         required: true
     }],
     muscleGroup:{

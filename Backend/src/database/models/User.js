@@ -47,8 +47,9 @@ const userSchema = new Schema({
             required: true
         }
     },
-    photo: {
-        type: String,
+    img: {
+        data: Buffer,
+        contentType: String,
         required: true
     }
 }, { collection: 'users'});
