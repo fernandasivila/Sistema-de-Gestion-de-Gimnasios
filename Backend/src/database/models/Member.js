@@ -20,6 +20,11 @@ const memberSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'MonthlyPlan',
         required: true
+    },
+    img:{
+        data: buffer,
+        contentType: String,
+        required: true
     }
 }, { collection: 'members'});
 

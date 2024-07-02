@@ -14,9 +14,10 @@ const progressSchema = new Schema({
         type: Date,
         required: true
     },
-    photos:[{
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Image'
+    images:[{
+        data: Buffer,
+        contentType: String,
+        required: true
     }]
 }, { collection: 'progress'});
 
