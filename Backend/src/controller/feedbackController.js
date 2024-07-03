@@ -1,16 +1,16 @@
-const Coach = require("../database/models/Coach");
+const Feedback = require("../database/models/Feedback");
 const { validationResult } = require("express-validator");
 
-const coachController = {
+const feedbackController = {
     list: async (req, res) => {
         try {
-            const coaches = await Coach.find();
+            const feedbacks = await Feedback.find();
             res.status(200).json({
                 meta: {
                     status: 200,
-                    message: "Coaches retrieved successfully",
+                    message: "Feedbacks retrieved successfully",
                 },
-                data: coaches
+                data: feedbacks
             });
         } catch (error) {
             console.error(error);
@@ -25,21 +25,21 @@ const coachController = {
     getById: async (req, res) => {
         const id = req.params.id;
         try {
-          const coach = await Coach.findById(id);
-          if (!coach) {
+          const feedback = await Feedback.findById(id);
+          if (!feedback) {
             return res.status(404).json({
               meta: {
                 status: 404,
-                message: "Coach not found",
+                message: "Feedback not found",
               },
             });
           }
           res.status(200).json({
             meta: {
               status: 200,
-              message: "Coach found successfully",
+              message: "Feedback found successfully",
             },
-            data: coach,
+            data: feedback,
           });
         } catch (error) {
           res.status(500).json({
@@ -65,21 +65,17 @@ const coachController = {
             data: errors.array(),
           });
         } else {
-          let coach = new Coach({
-            ...req.body,
-            img: {
-                data: req.file.buffer,
-                contentType: req.file.mimetype,
-              },
+          let feedback = new Feedback({
+            ...req.body
           });
           try {
-            await coach.save();
+            await feedback.save();
             res.json({
               meta: {
                 status: 200,
-                message: "Coach created successfully",
+                message: "Feedback created successfully",
               },
-              data: coach,
+              data: feedback,
             });
           } catch (error) {
             res.status(500).json({
@@ -97,11 +93,11 @@ const coachController = {
       delete: async (req, res) => {
         const id = req.params.id;
         try {
-          await Coach.deleteOne({ _id: id });
+          await Feedback.deleteOne({ _id: id });
           res.json({
             meta: {
               status: 200,
-              message: "Coach deleted successfully",
+              message: "Feedback deleted successfully",
             },
           });
         } catch (error) {
@@ -129,21 +125,17 @@ const coachController = {
             data: errors.array(),
           });
         } else {
-          let updatedCoach = new Coach({
-            ...req.body,
-            img: {
-                data: req.file.buffer,
-                contentType: req.file.mimetype,
-              },
+          let updatedFeedback = new Feedback({
+            ...req.body
           });
           try {
-            await Coach.updateOne({ _id: id }, updatedCoach);
+            await Feedback.updateOne({ _id: id }, updatedFeedback);
             res.json({
               meta: {
                 status: 200,
-                message: "Coach updated successfully",
+                message: "Feedback updated successfully",
               },
-              data: updatedCoach,
+              data: updatedFeedback,
             });
           } catch (error) {
             res.status(500).json({
@@ -160,4 +152,4 @@ const coachController = {
       },
     };
     
-    module.exports = coachController;
+    module.exports = feedbackController;

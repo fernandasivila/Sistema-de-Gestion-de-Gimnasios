@@ -1,16 +1,16 @@
-const Coach = require("../database/models/Coach");
+const Event = require("../database/models/Event");
 const { validationResult } = require("express-validator");
 
-const coachController = {
+const eventController = {
     list: async (req, res) => {
         try {
-            const coaches = await Coach.find();
+            const events = await Event.find();
             res.status(200).json({
                 meta: {
                     status: 200,
-                    message: "Coaches retrieved successfully",
+                    message: "Event retrieved successfully",
                 },
-                data: coaches
+                data: events
             });
         } catch (error) {
             console.error(error);
@@ -25,21 +25,21 @@ const coachController = {
     getById: async (req, res) => {
         const id = req.params.id;
         try {
-          const coach = await Coach.findById(id);
-          if (!coach) {
+          const event = await Event.findById(id);
+          if (!event) {
             return res.status(404).json({
               meta: {
                 status: 404,
-                message: "Coach not found",
+                message: "Event not found",
               },
             });
           }
           res.status(200).json({
             meta: {
               status: 200,
-              message: "Coach found successfully",
+              message: "Event found successfully",
             },
-            data: coach,
+            data: event,
           });
         } catch (error) {
           res.status(500).json({
@@ -65,21 +65,17 @@ const coachController = {
             data: errors.array(),
           });
         } else {
-          let coach = new Coach({
-            ...req.body,
-            img: {
-                data: req.file.buffer,
-                contentType: req.file.mimetype,
-              },
+          let event = new Event({
+            ...req.body
           });
           try {
-            await coach.save();
+            await event.save();
             res.json({
               meta: {
                 status: 200,
-                message: "Coach created successfully",
+                message: "Class created successfully",
               },
-              data: coach,
+              data: event,
             });
           } catch (error) {
             res.status(500).json({
@@ -97,11 +93,11 @@ const coachController = {
       delete: async (req, res) => {
         const id = req.params.id;
         try {
-          await Coach.deleteOne({ _id: id });
+          await Event.deleteOne({ _id: id });
           res.json({
             meta: {
               status: 200,
-              message: "Coach deleted successfully",
+              message: "Event deleted successfully",
             },
           });
         } catch (error) {
@@ -129,21 +125,17 @@ const coachController = {
             data: errors.array(),
           });
         } else {
-          let updatedCoach = new Coach({
-            ...req.body,
-            img: {
-                data: req.file.buffer,
-                contentType: req.file.mimetype,
-              },
+          let updatedEvent = new Event({
+            ...req.body
           });
           try {
-            await Coach.updateOne({ _id: id }, updatedCoach);
+            await Event.updateOne({ _id: id }, updatedEvent);
             res.json({
               meta: {
                 status: 200,
-                message: "Coach updated successfully",
+                message: "Event updated successfully",
               },
-              data: updatedCoach,
+              data: updatedEvent,
             });
           } catch (error) {
             res.status(500).json({
@@ -160,4 +152,4 @@ const coachController = {
       },
     };
     
-    module.exports = coachController;
+    module.exports = eventController;
