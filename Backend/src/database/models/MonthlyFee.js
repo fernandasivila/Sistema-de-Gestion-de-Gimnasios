@@ -4,7 +4,7 @@ const {Schema} = mongoose;
 const monthlyFeeSchema = new Schema({
     dueDate:{
         type: Date,
-        require: true
+        required: true
     },
     amount: {
         type: Number,

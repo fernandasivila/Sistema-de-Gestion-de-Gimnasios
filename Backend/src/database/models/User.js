@@ -50,8 +50,7 @@ const userSchema = new Schema({
     },
     img: {
         data: Buffer,
-        contentType: String,
-        required: true
+        contentType: String
     }
 }, { collection: 'users' });
 

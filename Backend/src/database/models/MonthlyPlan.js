@@ -4,7 +4,7 @@ const {Schema} = mongoose;
 const monthlyPlanSchema = new Schema({
     name:{
         type: String,
-        require: true
+        required: true
     },
     price: {
         type: Number,
