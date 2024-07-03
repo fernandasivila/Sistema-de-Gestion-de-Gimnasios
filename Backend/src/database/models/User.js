@@ -1,31 +1,32 @@
 const mongoose = require('mongoose');
-const {Schema} = mongoose;
+const { Schema } = mongoose;
 
 const userSchema = new Schema({
-    username:{
+    username: {
         type: String,
-        require: true,
+        required: true,
         unique: true
     },
-    password:{
+    password: {
         type: String,
         required: true
     },
-    email:{
+    email: {
         type: String,
         required: true,
         unique: true
     },
     role: {
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Role'
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Role',
+        required: true
     },
     personalInformation: {
-        fisrtName:{
+        firstName: {
             type: String,
             required: true
         },
-        lastName:{
+        lastName: {
             type: String,
             required: true
         },
@@ -34,15 +35,15 @@ const userSchema = new Schema({
             required: true,
             unique: true
         },
-        address:{
+        address: {
             type: String,
             required: true
         },
-        phoneNumber:{
+        phoneNumber: {
             type: String,
             required: true
         },
-        dateOfBirth:{
+        dateOfBirth: {
             type: Date,
             required: true
         }
@@ -52,6 +53,6 @@ const userSchema = new Schema({
         contentType: String,
         required: true
     }
-}, { collection: 'users'});
+}, { collection: 'users' });
 
 module.exports = mongoose.model('User', userSchema);
