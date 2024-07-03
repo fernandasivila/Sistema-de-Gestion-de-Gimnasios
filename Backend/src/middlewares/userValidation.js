@@ -1,22 +1,42 @@
 const {body} = require('express-validator');
 const User = require('../database/models/User');
 const Role = require('../database/models/Role');
+const path = require ('path');
 
 const userValidation = [
     body('username').trim().notEmpty().withMessage('Username is required.').isLength({min: 5}).withMessage('Must be at least 5 characters').bail()
-    .custom(async (value)=> {
-        const existUsername = await User.find({username : value.trim()});
+    .custom(async (value, {req})=> {
+      let existUsername;
+        if(req.params.id){
+          existUsername = await User.find({$and: [{
+            username: value,
+            _id: { $ne: req.params.id }
+          }]});
+        }
+        else{
+          existUsername = await User.find({username : value});
+        }
 
-        if(existUsername){
+        if(existUsername.length > 0){
             throw new Error('Username already in use');
         }
         return true;
     }),
     body('password').trim().notEmpty().withMessage('Password is required.').bail().isLength({ min: 8 }).withMessage('Min length 8 characters').bail().matches(/[A-Z]/).withMessage('Must be at least a uppercase').bail().matches(/[a-z]/).withMessage('Must be at least a lowercase').bail().matches(/[0-9]/).withMessage('Must be at least a number'),
     body('email').trim().notEmpty().withMessage('Email is required.').isEmail().withMessage('Email invalid').bail()
-    .custom(async (value) => {
-        const existEmail = await User.find({ email: value });
-      if (existEmail) {
+    .custom(async (value, {req}) => {
+        let existEmail;
+        if(req.params.id){
+          existEmail = await User.find({$and: [{
+            email: value,
+            _id: { $ne: req.params.id }
+          }]});
+        }
+        else{
+          existEmail = await User.find({email : value});
+        }
+      
+      if (existEmail.length > 0) {
       throw new Error('Email already in use');
       }
       return true;
@@ -32,17 +52,32 @@ const userValidation = [
     body('personalInformation.firstName').trim().notEmpty().withMessage('Name is required').isLength({ min: 3 }).withMessage('Debe tener minimo 3 caracteres'),
     body('personalInformation.lastName').trim().notEmpty().withMessage('Surname is required').isLength({ min: 3 }).withMessage('Debe tener minimo 3 caracteres'),
     body('personalInformation.dni').trim().notEmpty().withMessage('DNI is required').bail()
-    .custom(async (value) => {
-        const existDNI = await User.find({dni : value});
+    .custom(async (value, {req}) => {
+        let existDNI;
+        if(req.params.id){
+          existDNI = await User.find({$and: [{
+            personalInformation:{
+              dni: value
+            },
+            _id: { $ne: req.params.id }
+          }]});
+        }
+        else{
+          existDNI = await User.find({
+            personalInformation:{
+              dni : value
+          }
+          });
+        }
 
-        if (existDNI) {
+        if (existDNI.length > 0) {
         throw new Error('DNI already in use');
         }
         return true;
     }),
-    body('personalInformation.address').trim().notEmpty().withMessage('Address is required'),
-    body('personalInformation.phone').trim().notEmpty().withMessage('Phone is required'),
-    body('personalInformation.dateOfBirth').trim().notEmpty().withMessage('Date of Birth is required'),
+    body('personalInformation[address]').trim().notEmpty().withMessage('Address is required'),
+    body('personalInformation[phoneNumber]').trim().notEmpty().withMessage('Phone is required'),
+    body('personalInformation[dateOfBirth]').trim().notEmpty().withMessage('Date of Birth is required').isISO8601().withMessage('Date of Birth must be a valid date format (YYYY-MM-DD)'),
     body('img').custom((value, { req }) => {
 
       if(!req.file){

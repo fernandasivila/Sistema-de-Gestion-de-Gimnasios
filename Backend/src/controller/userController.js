@@ -136,7 +136,7 @@ const userController = {
         ...req.body,
         img: {
           data: req.file.buffer,
-          contentType: req.file.mimetype,
+          contentType: req.file.mimetype
         },
       });
       try {

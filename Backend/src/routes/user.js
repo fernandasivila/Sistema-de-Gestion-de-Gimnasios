@@ -9,6 +9,6 @@ router.get('/', userController.list);
 router.get('/:id', userController.getById);
 router.post('/add',upload.single('img'),userValidation, userController.add);
 router.delete('/:id', userController.delete);
-router.put('/add', userController.update);
+router.put('/edit/:id',upload.single('img'),userValidation, userController.update);
 
 module.exports = router;
