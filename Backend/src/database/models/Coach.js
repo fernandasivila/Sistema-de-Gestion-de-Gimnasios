@@ -4,7 +4,7 @@ const {Schema} = mongoose;
 const coachSchema = new Schema({
     fullname:{
         type: String,
-        require: true
+        required: true
     },
     email:{
         type: String,

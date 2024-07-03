@@ -4,7 +4,7 @@ const {Schema} = mongoose;
 const adSchema = new Schema({
     title:{
         type: String,
-        require: true
+        required: true
     },
     body:{
         type: String,

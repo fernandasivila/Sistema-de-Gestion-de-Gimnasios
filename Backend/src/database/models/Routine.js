@@ -4,7 +4,7 @@ const {Schema} = mongoose;
 const routineSchema = new Schema({
     name:{
         type: String,
-        require: true
+        required: true
     },
     exercises:[{
         type: mongoose.Schema.Types.ObjectId, 
@@ -13,7 +13,7 @@ const routineSchema = new Schema({
     }],
     releaseDate: {
         type: Date,
-        require: true
+        required: true
     },
     muscleGroupsSelected: [{
         type: mongoose.Schema.Types.ObjectId, 

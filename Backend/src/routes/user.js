@@ -2,7 +2,7 @@ const express = require('express');
 const userController = require('../controller/userController');
 const upload = require('../middlewares/multer');
 const userValidation = require('../middlewares/userValidation');
-const imagesValidator = require('../middlewares/imagesValidator');
+//const imagesValidator = require('../middlewares/imagesValidator');
 const router = express.Router();
 
 router.get('/', userController.list);

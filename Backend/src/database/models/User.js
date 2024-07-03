@@ -4,7 +4,7 @@ const {Schema} = mongoose;
 const userSchema = new Schema({
     username:{
         type: String,
-        require: true,
+        requred: true,
         unique: true
     },
     password:{
@@ -49,8 +49,7 @@ const userSchema = new Schema({
     },
     img: {
         data: Buffer,
-        contentType: String,
-        required: true
+        contentType: String
     }
 }, { collection: 'users'});
 
