@@ -12,8 +12,8 @@ app.use(cors({origin: 'http://localhost:4200'}));
 //ROUTES
 app.use('/users', usersRoutes);
 
-app.use(PORT, () => {
+app.listen(PORT, () => {
   console.log(`[server]: running on port: http://localhost:${PORT}`);
-});
+})
 
 dbconnect();
