@@ -1,15 +1,10 @@
 <div class="container">
-    <div class="d-flex justify-content-between">
-        <h1>Listado de Usuarios</h1>
-        <div class="">
-            <a name="" id="" class="btn btn-primary" routerLink="/admin-dashboard/users/new" role="button">Nuevo Usuario</a>   
-        </div>
-    </div>
+    <h1>
+        Listado de Usuarios
+    </h1>
     <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-striped" style="width:100%">
     </table>
 </div>
-
-<!-- Modal de Confirmación -->
 
 <button #confirmationModal type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confimationModal" [hidden]="true">
     Mostrar confirmación
