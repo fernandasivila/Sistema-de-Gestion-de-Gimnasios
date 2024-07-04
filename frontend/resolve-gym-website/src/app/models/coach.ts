@@ -1,10 +1,10 @@
 export interface Coach {
-    //_id?: String;
+    _id?: String;
     fullname: String;
     email: String;
     workArea: String;
     img: {
-        data: Buffer;
+        data: String;
         contentType: String;
     };
     age: Number;

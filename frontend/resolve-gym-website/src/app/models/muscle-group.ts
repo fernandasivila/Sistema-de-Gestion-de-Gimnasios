@@ -1,8 +1,8 @@
 export interface MuscleGroup {
-    //_id?:String;
+    _id?:String;
     name: String;
     img: {
-        data: Buffer;
+        data: String;
         contentType: String;
     }
 }

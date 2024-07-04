@@ -4,7 +4,7 @@ export interface Ad {
     body: String;
     date: Date;
     img: {
-        data: Buffer;
+        data: String;
         contentType: String;
     }
 }

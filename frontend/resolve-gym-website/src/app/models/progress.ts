@@ -1,10 +1,10 @@
 interface image{
-    data: Buffer;
+    data: String;
     contentType: String;
 }
 
 export interface Progress {
-    //_id:String;
+    _id:String;
     name: String;
     weight: Number;
     date: Date;
