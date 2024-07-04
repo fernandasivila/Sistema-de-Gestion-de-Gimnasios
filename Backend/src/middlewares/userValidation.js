@@ -7,43 +7,47 @@ const userValidation = [
     body('username').trim().notEmpty().withMessage('Username is required.').isLength({min: 5}).withMessage('Must be at least 5 characters').bail()
     .custom(async (value, {req})=> {
       let existUsername;
-        if(req.params.id){
-          existUsername = await User.find({$and: [{
+        if (req.params.id) {
+          existUsername = await User.findOne({
             username: value,
-            _id: { $ne: req.params.id }
-          }]});
+            _id: { $ne: req.params.id },
+          });
+        } else {
+          existUsername = await User.findOne({
+            username: value,
+          });
         }
-        else{
-          existUsername = await User.find({username : value});
+    
+        if (existUsername) {
+          throw new Error('Username already in use');
         }
-
-        if(existUsername.length > 0){
-            throw new Error('Username already in use');
-        }
+    
         return true;
     }),
     body('password').trim().notEmpty().withMessage('Password is required.').bail().isLength({ min: 8 }).withMessage('Min length 8 characters').bail().matches(/[A-Z]/).withMessage('Must be at least a uppercase').bail().matches(/[a-z]/).withMessage('Must be at least a lowercase').bail().matches(/[0-9]/).withMessage('Must be at least a number'),
     body('email').trim().notEmpty().withMessage('Email is required.').isEmail().withMessage('Email invalid').bail()
     .custom(async (value, {req}) => {
         let existEmail;
-        if(req.params.id){
-          existEmail = await User.find({$and: [{
-            email: value,
-            _id: { $ne: req.params.id }
-          }]});
-        }
-        else{
-          existEmail = await User.find({email : value});
-        }
-      
-      if (existEmail.length > 0) {
-      throw new Error('Email already in use');
+      if (req.params.id) {
+        existEmail = await User.findOne({
+          email: value,
+          _id: { $ne: req.params.id },
+        });
+      } else {
+        existDNI = await User.findOne({
+          email: value,
+        });
       }
+  
+      if (existEmail) {
+        throw new Error('Email already in use');
+      }
+  
       return true;
   }),
     body('role').trim().notEmpty().withMessage('Role is required').bail()
     .custom(async (value) => {
-        const existRole = await Role.find({ _id: value });
+        const existRole = await Role.findById(value);
         if (!existRole) {
         throw new Error('Role invalid');
         }
@@ -54,25 +58,21 @@ const userValidation = [
     body('personalInformation.dni').trim().notEmpty().withMessage('DNI is required').bail()
     .custom(async (value, {req}) => {
         let existDNI;
-        if(req.params.id){
-          existDNI = await User.find({$and: [{
-            personalInformation:{
-              dni: value
-            },
-            _id: { $ne: req.params.id }
-          }]});
-        }
-        else{
-          existDNI = await User.find({
-            personalInformation:{
-              dni : value
-          }
+        if (req.params.id) {
+          existDNI = await User.findOne({
+            'personalInformation.dni': value,
+            _id: { $ne: req.params.id },
+          });
+        } else {
+          existDNI = await User.findOne({
+            'personalInformation.dni': value,
           });
         }
-
-        if (existDNI.length > 0) {
-        throw new Error('DNI already in use');
+    
+        if (existDNI) {
+          throw new Error('DNI already in use');
         }
+    
         return true;
     }),
     body('personalInformation[address]').trim().notEmpty().withMessage('Address is required'),

@@ -1,16 +1,16 @@
 const { validationResult } = require("express-validator");
-const User = require("../database/models/User");
+const Routine = require("../database/models/Routine");
 
-const userController = {
+const routineController = {
   list: async (req, res) => {
     try {
-      const users = await User.find().populate('role');;
+      const routines = await Routine.find().populate('exercises muscleGroupsSelected');;
       res.status(200).json({
         meta: {
           status: 200,
-          message: "Users retrieved successfully",
+          message: "Routines retrieved successfully",
         },
-        data: users,
+        data: routines,
       });
     } catch (error) {
       res.status(500).json({
@@ -27,21 +27,21 @@ const userController = {
   getById: async (req, res) => {
     const id = req.params.id;
     try {
-      const user = await User.findById(id).populate('role');;
-      if (!user) {
+      const routine = await Routine.findById(id).populate('exercises muscleGroupsSelected');;
+      if (!routine) {
         return res.status(404).json({
           meta: {
             status: 404,
-            message: "User not found",
+            message: "Routine not found",
           },
         });
       }
       res.status(200).json({
         meta: {
           status: 200,
-          message: "User found successfully",
+          message: "Routine found successfully",
         },
-        data: user,
+        data: routine,
       });
     } catch (error) {
       res.status(500).json({
@@ -67,22 +67,16 @@ const userController = {
         data: errors.array(),
       });
     } else {
-      let user = new User({
-        ...req.body,
-        img: {
-          data: req.file.buffer,
-          contentType: req.file.mimetype,
-        },
-      });
+      let routine = new Routine(req.body);
 
       try {
-        await user.save();
+        await routine.save();
         res.json({
           meta: {
             status: 200,
-            message: "User created successfully",
+            message: "Routine created successfully",
           },
-          data: user,
+          data: routine,
         });
       } catch (error) {
         res.status(500).json({
@@ -100,11 +94,11 @@ const userController = {
   delete: async (req, res) => {
     const id = req.params.id;
     try {
-      await User.deleteOne({ _id: id });
+      await Routine.deleteOne({ _id: id });
       res.json({
         meta: {
           status: 200,
-          message: "User deleted successfully",
+          message: "Routine deleted successfully",
         },
       });
     } catch (error) {
@@ -133,29 +127,22 @@ const userController = {
       });
     } else {
       try {
-        const user = {
-          ...req.body,
-          img: {
-            data: req.file.buffer,
-            contentType: req.file.mimetype
-          },
-        };
-        const updatedUser = await User.findByIdAndUpdate(id, user, { new: true }).populate('role');
-        if (!updatedUser) {
-          return res.status(404).json({
+          const updatedRoutine = await Routine.findByIdAndUpdate(id, req.body, { new: true }).populate('exercises muscleGroupsSelected');
+          if (!updatedRoutine) {
+            return res.status(404).json({
+              meta: {
+                status: 404,
+                message: "Routine not found",
+              },
+            });
+          }
+          res.json({
             meta: {
-              status: 404,
-              message: "User not found",
+              status: 200,
+              message: "Routine updated successfully",
             },
+            data: updatedRoutine,
           });
-        }
-        res.json({
-          meta: {
-            status: 200,
-            message: "User updated successfully",
-          },
-          data: updatedUser,
-        });
       } catch (error) {
         res.status(500).json({
           meta: {
@@ -171,4 +158,4 @@ const userController = {
   },
 };
 
-module.exports = userController;
+module.exports = routineController;

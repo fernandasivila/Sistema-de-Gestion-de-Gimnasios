@@ -1,16 +1,16 @@
 const { validationResult } = require("express-validator");
-const User = require("../database/models/User");
+const Progress = require("../database/models/Progress");
 
-const userController = {
+const progressController = {
   list: async (req, res) => {
     try {
-      const users = await User.find().populate('role');;
+      const progress = await Progress.find();
       res.status(200).json({
         meta: {
           status: 200,
-          message: "Users retrieved successfully",
+          message: "Progress retrieved successfully",
         },
-        data: users,
+        data: progress,
       });
     } catch (error) {
       res.status(500).json({
@@ -27,21 +27,21 @@ const userController = {
   getById: async (req, res) => {
     const id = req.params.id;
     try {
-      const user = await User.findById(id).populate('role');;
-      if (!user) {
+      const progress = await Progress.findById(id);
+      if (!progress) {
         return res.status(404).json({
           meta: {
             status: 404,
-            message: "User not found",
+            message: "Progress not found",
           },
         });
       }
       res.status(200).json({
         meta: {
           status: 200,
-          message: "User found successfully",
+          message: "Progress found successfully",
         },
-        data: user,
+        data: progress,
       });
     } catch (error) {
       res.status(500).json({
@@ -67,22 +67,24 @@ const userController = {
         data: errors.array(),
       });
     } else {
-      let user = new User({
+      const images = req.files.map(file => ({
+        data: file.buffer,
+        contentType: file.mimetype,
+      }));
+
+      let progress = new Progress({
         ...req.body,
-        img: {
-          data: req.file.buffer,
-          contentType: req.file.mimetype,
-        },
+        images: images,
       });
 
       try {
-        await user.save();
+        await progress.save();
         res.json({
           meta: {
             status: 200,
-            message: "User created successfully",
+            message: "Progress created successfully",
           },
-          data: user,
+          data: progress,
         });
       } catch (error) {
         res.status(500).json({
@@ -100,11 +102,11 @@ const userController = {
   delete: async (req, res) => {
     const id = req.params.id;
     try {
-      await User.deleteOne({ _id: id });
+      await Progress.deleteOne({ _id: id });
       res.json({
         meta: {
           status: 200,
-          message: "User deleted successfully",
+          message: "Progress deleted successfully",
         },
       });
     } catch (error) {
@@ -133,28 +135,31 @@ const userController = {
       });
     } else {
       try {
-        const user = {
+        const images = req.files.map(file => ({
+          data: file.buffer,
+          contentType: file.mimetype,
+        }));
+  
+        const progress = {
           ...req.body,
-          img: {
-            data: req.file.buffer,
-            contentType: req.file.mimetype
-          },
+          images: images,
         };
-        const updatedUser = await User.findByIdAndUpdate(id, user, { new: true }).populate('role');
-        if (!updatedUser) {
+        
+        const updatedProgress = await Progress.findByIdAndUpdate(id, progress, { new: true }).populate('role');
+        if (!updatedProgress) {
           return res.status(404).json({
             meta: {
               status: 404,
-              message: "User not found",
+              message: "Progress not found",
             },
           });
         }
         res.json({
           meta: {
             status: 200,
-            message: "User updated successfully",
+            message: "Progress updated successfully",
           },
-          data: updatedUser,
+          data: updatedProgress,
         });
       } catch (error) {
         res.status(500).json({
@@ -171,4 +176,4 @@ const userController = {
   },
 };
 
-module.exports = userController;
+module.exports = progressController;
