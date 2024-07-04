@@ -4,11 +4,10 @@ const User = require('../database/models/User');
 const loginController = {
     login: async(req, res) => {
         const data = req.body;
-
         try {
-            const user = await User.find({
+            const user = await User.findOne({
                 username: data.username
-            }).populate('role');
+            });
 
             if (!user) {
               return res.status(404).json({
@@ -19,14 +18,18 @@ const loginController = {
               });
             }
             else{
-                const confirmPassword = bcrypt.compareSync(data.password, user.password);
+                const confirmPassword = await bcrypt.compare(data.password, user.password);
                 if(confirmPassword){
                     res.status(200).json({
                         meta: {
                             status: 200,
                             message: "User logged in successfully",
                         },
-                        data: user,
+                        data: {
+                          user: {
+                            id: user._id
+                          }
+                        }
                         });
                 }
                 else{

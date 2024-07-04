@@ -34,7 +34,7 @@ const userValidation = [
           _id: { $ne: req.params.id },
         });
       } else {
-        existDNI = await User.findOne({
+        existEmail = await User.findOne({
           email: value,
         });
       }

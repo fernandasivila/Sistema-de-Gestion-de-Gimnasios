@@ -156,6 +156,65 @@ const monthlyFeeController = {
       }
     }
   },
+  getByMember: async (req, res) => {
+    const memberId = req.params.member;
+    try {
+      const monthlyFees = await MonthlyFee.find({
+        member: memberId
+      });
+      res.status(200).json({
+        meta: {
+          status: 200,
+          message: `Monthly Fees of ${member} retrieved successfully`,
+        },
+        data: monthlyFees,
+      });
+    } catch (error) {
+      res.status(500).json({
+        meta: {
+          status: 500,
+          message: "Internal Server Error",
+        },
+        data: {
+          error: error.message,
+        },
+      });
+    }
+  },
+  getDueByMember: async (req, res) => {
+    //Cuota por vencer
+    const memberId = req.params.member;
+    try {
+      const monthlyFee = await MonthlyFee.findOne({
+        member: memberId
+      }).sort({dueDate: -1});
+      if (!monthlyFee) {
+        return res.status(404).json({
+          meta: {
+            status: 404,
+            message: "Monthly Fee not found",
+          },
+        });
+      }
+      res.status(200).json({
+        meta: {
+          status: 200,
+          message: "Monthly Fee found successfully",
+        },
+        data: monthlyFee,
+      });
+    } catch (error) {
+      res.status(500).json({
+        meta: {
+          status: 500,
+          message: "Internal Server Error",
+        },
+        data: {
+          error: error.message,
+        },
+      });
+    }
+  },
 };
 
 module.exports = monthlyFeeController;
