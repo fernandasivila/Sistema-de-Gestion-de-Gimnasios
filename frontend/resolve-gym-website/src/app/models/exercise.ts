@@ -1,7 +1,7 @@
 import { MuscleGroup } from "./muscle-group";
 
 interface ExerciseImage {
-    data: Buffer;
+    data: String;
     contentType: string;
 }
 

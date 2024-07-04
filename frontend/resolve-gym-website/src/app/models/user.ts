@@ -14,7 +14,7 @@ export interface UserRequest {
         dateOfBirth: Date;
     };
     img: {
-        data: Buffer;
+        data: String;
         contentType: String;
     }
 }
@@ -34,7 +34,7 @@ export interface UserResponse {
         dateOfBirth: Date;
     };
     img: {
-        data: Buffer;
+        data: String;
         contentType: String;
     }
 }
