@@ -26,12 +26,18 @@ import { SavedRoutinesComponent } from './member-hub/saved-routines/saved-routin
 import { AttendanceHistoryComponent } from './worker-hub/attendance-history/attendance-history.component';
 import { RecordAttendanceComponent } from './worker-hub/record-attendance/record-attendance.component';
 import { MemberDetailsComponent } from './worker-hub/member-details/member-details.component';
+import { HomeComponent } from './home/home.component';
 
 export const routes: Routes = [
     {
         path: 'admin-dashboard',
         component: AdminHubLayoutComponent,
         children: [
+            {
+                path: '',
+                redirectTo: 'home',
+                pathMatch: 'full'
+            },
             {
                 path: 'home',
                 component: AdminHubHomeComponent
@@ -89,14 +95,22 @@ export const routes: Routes = [
             },{
                 path: 'events/edit/:id',
                  component: EventFormComponent
-            }
-
+            },
         ]
     },
     {
-        path: 'main',
+        path: '',
         component: MainLayoutComponent,
         children: [
+            {
+                path: '',
+                redirectTo: 'home',
+                pathMatch: 'full'
+            },
+            {
+                path: 'home',
+                component: HomeComponent
+            },
             {
                 path: 'exercises/catalog',
                 component: ExerciseCatalogComponent
