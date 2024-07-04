@@ -1,6 +1,4 @@
 const {body} = require('express-validator');
-const Exercise = require('../database/models/Exercise');
-const MuscleGroup = require('../database/models/MuscleGroup');
 
 const monthlyPlanValidator = [
     body('name').isEmpty('Name is required').isLength({min: 5}).withMessage('Must be at least 5 characters'),

@@ -1,4 +1,5 @@
 const { validationResult } = require("express-validator");
+const bcrypt = require('bcryptjs');
 const User = require("../database/models/User");
 
 const userController = {
@@ -27,7 +28,7 @@ const userController = {
   getById: async (req, res) => {
     const id = req.params.id;
     try {
-      const user = await User.findById(id).populate('role');;
+      const user = await User.findById(id).populate('role');
       if (!user) {
         return res.status(404).json({
           meta: {
@@ -69,6 +70,7 @@ const userController = {
     } else {
       let user = new User({
         ...req.body,
+        password: bcrypt.hashSync(req.body.password, 10),
         img: {
           data: req.file.buffer,
           contentType: req.file.mimetype,
@@ -135,6 +137,7 @@ const userController = {
       try {
         const user = {
           ...req.body,
+          password: bcrypt.hashSync(req.body.password, 10),
           img: {
             data: req.file.buffer,
             contentType: req.file.mimetype
