@@ -30,7 +30,8 @@ const routineValidator = [
         }
 
         return true
-    })
+    }),
+    body('releaseDate').isISO8601().withMessage('Release Date must be a valid date format (YYYY-MM-DD)'),
 ]
 
 module.exports = routineValidator;
