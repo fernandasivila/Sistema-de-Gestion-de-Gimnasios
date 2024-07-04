@@ -49,10 +49,13 @@
                         <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-bs-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">Empleados</a>
                         <div class="dropdown-menu" aria-labelledby="dropdownId">
-                            <a class="dropdown-item" href="#">Registrar Asistencia</a>
-                            <a class="dropdown-item" href="#">Historial de Ingresos</a>
-                            <a class="dropdown-item" href="#">Registrar Nuevo Miembro</a>
+                            <a class="dropdown-item" routerLink="/attendances/record">Registrar Asistencia</a>
+                            <a class="dropdown-item" routerLink="/attendances/history">Historial de Ingresos</a>
+                            <a class="dropdown-item" routerLink="/admin-dashboard/members/new">Registrar Nuevo Miembro</a>
                         </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/admin-dashboard/home">Admin Dashboard</a>
                     </li>
                 </ul>
                 <form class="d-flex my-2 my-lg-0">
