@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ADTSettings } from 'angular-datatables/src/models/settings';
 import { Subject } from 'rxjs';
 import { IDemoNgComponentEventType } from '../../../test/idemo-ng-component-event-type';
@@ -10,7 +10,7 @@ import { DataTablesModule } from 'angular-datatables';
 @Component({
   selector: 'app-user-list',
   standalone: true,
-  imports: [DataTablesModule, ActionButtonGroupComponent],
+  imports: [DataTablesModule, RouterLink, ActionButtonGroupComponent],
   providers: [DatePipe],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.css'
@@ -237,7 +237,6 @@ export class UserListComponent implements OnInit, AfterViewInit {
   }
 
   private confirmateDeletion(){
-    
     this.confirmationModal.nativeElement.click()
   }
 }
