@@ -1,12 +1,114 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { DataTablesModule } from 'angular-datatables';
+import { ActionButtonGroupComponent } from '../../action-button-group/action-button-group.component';
+import { ADTSettings } from 'angular-datatables/src/models/settings';
+import { Subject } from 'rxjs';
+import { IDemoNgComponentEventType } from '../../../test/idemo-ng-component-event-type';
 
 @Component({
   selector: 'app-coach-list',
   standalone: true,
-  imports: [],
+  imports: [DataTablesModule, RouterLink, ActionButtonGroupComponent],
+  providers:[],
   templateUrl: './coach-list.component.html',
   styleUrl: './coach-list.component.css'
 })
-export class CoachListComponent {
+export class CoachListComponent implements OnInit, AfterViewInit{
 
+  dtOptions: ADTSettings = {};
+  dtTrigger: Subject<ADTSettings> = new Subject<ADTSettings>()
+
+  constructor(private router : Router) { }
+
+  apiResponseExample = [
+    {
+      "_id": "lnjknk8",
+      "fullname": "Marcos Gregory",
+      "email": "marcosG@gmail.com",
+      "workArea": "funcional",
+      "img": {
+          "data": {
+            "type": "Buffer",
+           "data": []
+          },
+          "contentType": "image/png",
+      },
+      "age": "29",
+      "description": "5 años de experiencia",
+      "schedule": "14 hs a 19hs"
+    }
+  ]
+
+  @ViewChild('confirmationModal') confirmationModal! : ElementRef
+    @ViewChild('actionButtons') actionButtons!: TemplateRef<ActionButtonGroupComponent>
+    message = ''
+    idEventInstance = ''
+
+    ngOnInit(): void {
+    setTimeout(() => {
+      const self = this;
+      this.dtOptions = {
+        language: {
+          url: '/assets/datatable.spanish.json',
+        },
+        data: this.apiResponseExample,
+        columns: [
+          { title: 'Coach', data: 'fullname' },
+          { title:'email', data: 'email' },
+          { title: 'area', data: 'workArea' },
+          { title: 'Descripcion', data: 'description'},
+          { title:'Edad', data:'age'},
+          { title: 'Horario', data: 'schedule'},
+          { title: 'Perfil', data: 'img'},
+          {
+            title: 'Acciones',
+            data: null,
+            orderable: false,
+            defaultContent: '',
+            ngTemplateRef: {
+              ref: this.actionButtons,
+              context:{
+                // needed for capturing events inside <ng-template>
+                captureEvents: self.onCaptureEvent.bind(self)
+              }
+            }
+          }
+      ]
+    }
+  })
+  }
+  ngAfterViewInit() {
+    setTimeout(() => {
+     this.dtTrigger.next(this.dtOptions);
+    }, 200);
+  }
+
+  onCaptureEvent(event: IDemoNgComponentEventType) {
+    this.idEventInstance = event.data._id
+    if(event.cmd == 'edit'){
+      this.editMember()
+    }
+    if(event.cmd == 'delete'){
+      this.confirmateDeletion()
+    }
+    this.message = `Event '${event.cmd}' with data '${JSON.stringify(event.data)}`;
+    console.log(this.message)
+  }
+
+  ngOnDestroy(): void {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
+  }
+  editMember(){
+    this.router.navigate([`/admin-dashboard/coaches/edit/${this.idEventInstance}`])
+  }
+
+  deleteMember(){
+    //logica de borrado
+  }
+
+  private confirmateDeletion(){
+    this.confirmationModal.nativeElement.click()
+  } 
 }

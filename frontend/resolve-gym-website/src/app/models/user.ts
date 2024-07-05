@@ -1,3 +1,4 @@
+import { BufferData } from "./buffer-data";
 import { Role } from "./role";
 
 export interface UserRequest {
@@ -14,7 +15,7 @@ export interface UserRequest {
         dateOfBirth: Date;
     };
     img: {
-        data: String;
+        data: BufferData;
         contentType: String;
     }
 }
@@ -34,7 +35,7 @@ export interface UserResponse {
         dateOfBirth: Date;
     };
     img: {
-        data: String;
+        data: BufferData;
         contentType: String;
     }
 }
