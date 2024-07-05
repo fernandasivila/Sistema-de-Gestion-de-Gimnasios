@@ -1,3 +1,4 @@
+import { BufferData } from "./buffer-data";
 import { MonthlyPlan } from "./monthly-plan";
 import { Progress } from "./progress";
 import { RoutineResponse } from "./routine";
@@ -9,7 +10,7 @@ export interface MemberRequest extends UserRequest {
     progress: String[];
     mounthlyPlan: String[];
     img: {
-        data: String;
+        data: BufferData;
         contentType: string;
     };
     
@@ -22,7 +23,7 @@ export interface MemberResponse extends UserResponse {
     progress: Progress[];
     mounthlyPlan: MonthlyPlan[];
     img: {
-        data: String;
+        data: BufferData;
         contentType: string;
     };
 }
