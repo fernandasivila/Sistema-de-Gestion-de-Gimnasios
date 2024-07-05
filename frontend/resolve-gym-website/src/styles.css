@@ -2,3 +2,8 @@
     max-width: 1200px;
     margin: auto;
 }
+
+.object-form{
+    max-width: 800px !important;
+    margin: auto;
+}
