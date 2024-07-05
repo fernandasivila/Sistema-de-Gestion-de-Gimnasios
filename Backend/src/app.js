@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const dbconnect = require('./database/database');
+require('./services/cronService');
 
 const monthlyFeesRoutes = require("./routes/monthlyFee");
 const monthlyPlansRoutes = require("./routes/monthlyPlan");

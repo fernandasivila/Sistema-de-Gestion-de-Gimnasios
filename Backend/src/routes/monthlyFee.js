@@ -1,5 +1,5 @@
 const express = require('express');
-const monthlyFeeController = require('../controller/monthlyFeeController');
+const { monthlyFeeController } = require('../controller/monthlyFeeController');
 const monthlyFeeValidation = require('../middlewares/monthlyFeeValidation');
 const router = express.Router();
 
