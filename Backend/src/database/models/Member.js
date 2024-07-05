@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const User = require('../models/User')
 const {Schema} = mongoose;
 
 const memberSchema = new Schema({
@@ -22,9 +23,8 @@ const memberSchema = new Schema({
         required: true
     },
     img:{
-        data: buffer,
-        contentType: String,
-        required: true
+        data: Buffer,
+        contentType: String
     }
 }, { collection: 'members'});
 

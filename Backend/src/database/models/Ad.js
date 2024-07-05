@@ -16,8 +16,7 @@ const adSchema = new Schema({
     },
     img:{
         data: Buffer,
-        contentType: String,
-        required: true
+        contentType: String
     }
 }, { collection: 'ads'});
 

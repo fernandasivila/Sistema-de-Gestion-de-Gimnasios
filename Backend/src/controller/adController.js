@@ -66,7 +66,11 @@ const adController = {
           });
         } else {
           let ad = new Ad({
-            ...req.body
+            ...req.body,
+            img: {
+              data: req.file.buffer,
+              contentType: req.file.mimetype
+            }
           });
           try {
             await ad.save();
@@ -126,7 +130,11 @@ const adController = {
           });
         } else {
           let updatedAd = new Ad({
-            ...req.body
+            ...req.body,
+            img: {
+              data: req.file.buffer,
+              contentType: req.file.mimetype
+            }
           });
           try {
             await Ad.updateOne({ _id: id }, updatedAd);
