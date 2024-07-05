@@ -12,9 +12,7 @@ const rolesRoutes = require("./routes/role");
 const routinesRoutes = require("./routes/routine");
 const usersRoutes = require("./routes/user");
 const loginRoute = require("./routes/login");
-
 const adsRoutes = require("./routes/ad");
-const rolesRoutes = require("./routes/role");
 const attendanceRecordsRoutes = require("./routes/attendanceRecord");
 const classesRoutes = require("./routes/class");
 const coachesRoutes = require("./routes/coach");
@@ -39,7 +37,6 @@ app.use('/roles', rolesRoutes);
 app.use('/routines', routinesRoutes);
 app.use('/users', usersRoutes);
 app.use('/login', loginRoute);
-app.use('/roles', rolesRoutes);
 app.use('/ads', adsRoutes);
 app.use('/attendanceRecords', attendanceRecordsRoutes);
 app.use('/classes', classesRoutes);
