@@ -1,5 +1,7 @@
 const { validationResult } = require("express-validator");
 const MonthlyFee = require("../database/models/MonthlyFee");
+const { addDays } = require('date-fns');
+const sendEmail = require('../services/emailService');
 
 const monthlyFeeController = {
   list: async (req, res) => {
@@ -156,6 +158,103 @@ const monthlyFeeController = {
       }
     }
   },
+  getByMember: async (req, res) => {
+    const memberId = req.params.member;
+    try {
+      const monthlyFees = await MonthlyFee.find({
+        member: memberId
+      });
+      res.status(200).json({
+        meta: {
+          status: 200,
+          message: `Monthly Fees of ${member} retrieved successfully`,
+        },
+        data: monthlyFees,
+      });
+    } catch (error) {
+      res.status(500).json({
+        meta: {
+          status: 500,
+          message: "Internal Server Error",
+        },
+        data: {
+          error: error.message,
+        },
+      });
+    }
+  },
+  getDueByMember: async (req, res) => {
+    //Cuota por vencer
+    const memberId = req.params.member;
+    try {
+      const monthlyFee = await MonthlyFee.findOne({
+        member: memberId
+      }).sort({dueDate: -1});
+      if (!monthlyFee) {
+        return res.status(404).json({
+          meta: {
+            status: 404,
+            message: "Monthly Fee not found",
+          },
+        });
+      }
+      res.status(200).json({
+        meta: {
+          status: 200,
+          message: "Monthly Fee found successfully",
+        },
+        data: monthlyFee,
+      });
+    } catch (error) {
+      res.status(500).json({
+        meta: {
+          status: 500,
+          message: "Internal Server Error",
+        },
+        data: {
+          error: error.message,
+        },
+      });
+    }
+  }
 };
 
-module.exports = monthlyFeeController;
+async function monthlyFeeByDue (days){
+    try {
+      const today = new Date();
+      const dueDate = addDays(today, days);
+
+        let monthlyFees = await MonthlyFee.find({
+            dueDate: dueDate
+        }).populate('member');
+
+        if(monthlyFees){
+        monthlyFees = monthlyFees.map(fee => {
+            const memberName = `${fee.member.firstName} ${fee.member.lastName}`;
+            const dueDateString = fee.dueDate.toLocaleDateString();
+            const memberEmail = fee.member.email
+
+            const emailMessage = `
+              Hola ${memberName},
+
+              Queremos recordarte que tu cuota vence el ${dueDateString}.
+
+              Gracias por ser parte de nuestro gimnasio 🏋️‍♀️.
+
+              Saludos,
+              El Equipo de <strong>Resolve Gym</strong> 💛
+            `;
+
+            sendEmail(memberEmail,'Recordatorio de vencimiento de cuota 📅', emailMessage)
+        })
+      }
+    } catch (error) {
+        console.error("Error retrieving overdue monthly fees:", error.message);
+        throw new Error("Error retrieving overdue monthly fees");
+    }
+}
+
+module.exports = {
+  monthlyFeeController,
+  monthlyFeeByDue
+};

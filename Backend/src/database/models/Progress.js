@@ -16,8 +16,7 @@ const progressSchema = new Schema({
     },
     images:[{
         data: Buffer,
-        contentType: String,
-        required: true
+        contentType: String
     }]
 }, { collection: 'progress'});
 

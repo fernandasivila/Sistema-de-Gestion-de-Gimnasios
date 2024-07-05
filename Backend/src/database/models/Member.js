@@ -25,6 +25,9 @@ const memberSchema = new Schema({
     img:{
         data: Buffer,
         contentType: String
+    },
+    weeklyGoal:{
+        type: Number
     }
 }, { collection: 'members'});
 
