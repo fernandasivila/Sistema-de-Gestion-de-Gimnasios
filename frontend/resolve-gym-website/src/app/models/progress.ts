@@ -1,5 +1,7 @@
+import { BufferData } from "./buffer-data";
+
 interface image{
-    data: String;
+    data: BufferData;
     contentType: String;
 }
 

@@ -1,5 +1,5 @@
 export interface Class {
-    //_id?: String;
+    _id?: String;
     name: String;
     description: String;
     schedule: String;
