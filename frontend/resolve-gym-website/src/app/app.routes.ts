@@ -55,10 +55,10 @@ export const routes: Routes = [
                 component: MemberListComponent
             },{
                 path: 'members/new',
-                component: MemberFormComponent
+                component: UserFormComponent
             },{
                 path: 'members/edit/:id',
-                component: MemberFormComponent
+                component: UserFormComponent
             },{
                 path: 'exercises',
                 component: ExerciseListComponent
