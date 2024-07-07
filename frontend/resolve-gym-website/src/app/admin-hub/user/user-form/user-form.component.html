@@ -1,11 +1,11 @@
 <div class="row text-center">
-    <h1 class="fs-2">Registrar Usuario</h1>
+    <h1 class="fs-2">{{action}} {{item}}</h1>
     <!-- Para probar -->
-    <p>usuario: {{registerForm.value | json}}</p>
+    <p>usuario: {{userForm.value | json}}</p>
 </div>
 <div class="row justify-content-center">
     <div class="object-form">
-        <form [formGroup]="registerForm" class="row g-3" (submit)="onSubmit()">
+        <form [formGroup]="userForm" class="row g-3" (submit)="onSubmit()">
             <div class="col-md-6">
                 <label for="inputUsername" class="form-label">Username</label>
                 <div class="input-group">
@@ -64,10 +64,17 @@
                     El campo no puede estar vacío.
                 </div>
             </div>
+
             <div class="col-md-8">
-                <label for="formFile" class="form-label">Foto de Pérfil</label>
-                <input class="form-control" type="file" id="formFile">
+                <label for="inputImg" class="form-label">Foto de Pérfil</label>
+                <input id="inputImg" type="file" [class.is-invalid]="img?.invalid && (img?.dirty || img?.touched)"
+                class="form-control" formControlName="img" (change)="onFileChange($event)">
             </div>
+            <div class="col-md-12">
+                <img *ngIf="imageBase64post" [src]="imageBase64post" alt="Imagen seleccionada" class="img-thumbnail"
+                    style="max-height: 200px;">
+            </div>
+
             <div class="col-md-4" *ngIf="this.role?.value == 2">
                 <label for="inputMonthlyPlan" class="form-label">Plan Mensual</label>
                 <select id="inputMonthlyPlan" class="form-select"
