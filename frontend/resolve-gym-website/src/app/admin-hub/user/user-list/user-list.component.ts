@@ -17,7 +17,7 @@ import { DataTablesModule } from 'angular-datatables';
 })
 
 export class UserListComponent implements OnInit, AfterViewInit {
-  dtOptions: ADTSettings = {};
+  dtOptions: ADTSettings = {}
   dtTrigger: Subject<ADTSettings> = new Subject<ADTSettings>()
 
   constructor(
@@ -160,6 +160,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
 
   @ViewChild('confirmationModal') confirmationModal! : ElementRef
   @ViewChild('actionButtons') actionButtons!: TemplateRef<ActionButtonGroupComponent>
+
   message = ''
   idEventInstance = ''
 

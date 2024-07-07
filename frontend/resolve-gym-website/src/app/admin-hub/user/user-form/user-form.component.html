@@ -52,14 +52,18 @@
             </div>
             <div class="col-md-4">
                 <label for="inputRole" class="form-label">Rol de Usuario</label>
+                @if(item == 'Usuario'){
                 <select id="inputRole" class="form-select"
-                    [class.is-invalid]="this.role?.invalid && (this.role?.dirty || this.role?.touched)"
-                    formControlName="role">
+                    [class.is-invalid]="this.role?.invalid && (this.role?.dirty || this.role?.touched)">
                     <option selected value="">Elegir...</option>
                     @for(role of rolesPost;track role){
                     <option [value]="role.id">{{role.title}}</option>
                     }
                 </select>
+                }
+                @else{
+                <input type="text" class="form-control" id="inputRole" value="Socio" disabled>
+                }
                 <div *ngIf="validateRoleRequired()" id="validateRoleFeedback" class="invalid-feedback">
                     El campo no puede estar vacío.
                 </div>
@@ -68,22 +72,23 @@
             <div class="col-md-8">
                 <label for="inputImg" class="form-label">Foto de Pérfil</label>
                 <input id="inputImg" type="file" [class.is-invalid]="img?.invalid && (img?.dirty || img?.touched)"
-                class="form-control" formControlName="img" (change)="onFileChange($event)">
-            </div>
-            <div class="col-md-12">
-                <img *ngIf="imageBase64post" [src]="imageBase64post" alt="Imagen seleccionada" class="img-thumbnail"
-                    style="max-height: 200px;">
+                    class="form-control" formControlName="img" (change)="onFileChange($event)">
             </div>
 
             <div class="col-md-4" *ngIf="this.role?.value == 2">
                 <label for="inputMonthlyPlan" class="form-label">Plan Mensual</label>
-                <select id="inputMonthlyPlan" class="form-select"
-                    formControlName="mounthlyPlan">
+                <select id="inputMonthlyPlan" class="form-select" formControlName="mounthlyPlan">
                     @for(plan of monthlyPlans;track plan){
                     <option [value]="plan.id">{{plan.title}}</option>
                     }
                 </select>
             </div>
+
+            <div *ngIf="imageBase64post" class="col-md-12">
+                <img [src]="imageBase64post" alt="Imagen seleccionada" class="img-thumbnail"
+                    style="max-height: 200px;">
+            </div>
+
             <div class="col-md-6">
                 <label for="inputFirstName" class="form-label">Nombre</label>
                 <input type="text" class="form-control"
