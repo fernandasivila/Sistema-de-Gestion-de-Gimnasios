@@ -45,14 +45,14 @@ export class UserService {
  
 //router.put('/edit/:id',upload.single('img'),userValidation, userController.update);
 
-updateUser(idUser:String, user: UserRequest):Observable<any>{
+updateUser(user: UserResponse):Observable<any>{
   const httpOptions={
     headers: new HttpHeaders({
       'Content-Type':'application/json'
     })
   };
   const body=JSON.stringify(user);
-  return this._http.post(`${this.baseUrl}/edit/${idUser}`,body, httpOptions);
+  return this._http.post(`${this.baseUrl}/edit/${user._id}`,body, httpOptions);
  }
 
 }
