@@ -1,5 +1,5 @@
 export interface Ad {
-    //_id?: String;
+    _id?: String;
     title: String;
     body: String;
     date: Date;
