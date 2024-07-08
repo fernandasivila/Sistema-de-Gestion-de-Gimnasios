@@ -2,6 +2,8 @@ import { JsonPipe, NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { ExerciseService } from '../../../services/exercise.service';
+
 
 @Component({
   selector: 'app-exercise-form',
@@ -23,7 +25,9 @@ export class ExerciseFormComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private exerciseS: ExerciseService
+
   ) { }
 
   ngOnInit(): void {
@@ -119,7 +123,15 @@ export class ExerciseFormComponent {
       const formData = this.exerciseForm.value;
       formData.images = this.imageBase64s;
       console.log(formData);
-      // Lógica de envío del formulario (por ejemplo, guardar en base de datos)
+      this.exerciseS.addExercise(formData).subscribe(
+        (data:any)=>{
+          console.log('Ejercicio guardado correctamente', data);
+        },
+        (error:any)=>{
+          console.error('Error al guardar el ejercicio', error);
+        }
+      )
+
     } else {
       console.log('Formulario no válido');
     }

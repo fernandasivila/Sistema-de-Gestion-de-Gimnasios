@@ -2,6 +2,9 @@ import { JsonPipe, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { Event } from '../../../models/event';
+import { EventService } from '../../../services/event.service';
+
 
 @Component({
   selector: 'app-event-form',
@@ -16,7 +19,9 @@ export class EventFormComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private eventService: EventService
+
   ) { }
 
   ngOnInit(): void {
@@ -90,9 +95,21 @@ export class EventFormComponent {
 
   onSubmit() {
     if (this.eventForm.valid) {
-      const formData = this.eventForm.value;
-      console.log(formData);
-      // Lógica de envío del formulario (por ejemplo, guardar en base de datos)
+      const eventData: Event = {
+        name: this.name?.value,
+        description: this.description?.value,
+        date: this.date?.value,
+        startTime: this.startTime?.value,
+        finishTime: this.finishTime?.value
+      }
+      console.log(eventData);
+      if (this.action == "Registrar") {
+        this.eventService.addEvent(eventData).subscribe(
+          (response) => console.log(response),
+          (error) => console.error(error)
+        )
+      }
+
     } else {
       console.log('Formulario no válido');
     }
