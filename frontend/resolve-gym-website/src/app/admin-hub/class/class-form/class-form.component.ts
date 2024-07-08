@@ -2,6 +2,8 @@ import { JsonPipe, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { ClassService } from '../../../services/class.service';
+import { Class } from '../../../models/class';
 
 @Component({
   selector: 'app-class-form',
@@ -16,7 +18,8 @@ export class ClassFormComponent implements OnInit {
   
   constructor(
     private formBuilder : FormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private classService: ClassService
   ){}
 
   ngOnInit(): void {
@@ -81,9 +84,22 @@ export class ClassFormComponent implements OnInit {
 
   onSubmit() {
     if (this.classForm.valid) {
-      const formData = this.classForm.value;
-      console.log(formData);
-      //Lógica de envío
+      
+      const formData: Class ={
+        name: this.name?.value,
+        description: this.description?.value,
+        schedule: this.schedule?.value
+      }
+      console.log(formData)
+
+      if(this.action=="Registrar"){
+        this.classService.addClass(formData).subscribe(
+          res => {
+            console.log("Se registro correctamente una clase",res);
+          },
+          error => console.error(error)
+        )
+      }
     } else {
       console.log('Formulario no válido');
     }

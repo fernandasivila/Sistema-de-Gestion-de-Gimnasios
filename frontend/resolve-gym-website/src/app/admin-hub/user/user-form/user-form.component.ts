@@ -1,12 +1,17 @@
 import { formatDate, JsonPipe, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { RoleService } from '../../../services/role.service';
+import { UserService } from '../../../services/user.service';
+import { Role } from '../../../models/role';
+import { HttpClientModule } from '@angular/common/http';
+import { UserRequest } from '../../../models/user';
 
 @Component({
   selector: 'app-user-form',
   standalone: true,
-  imports: [ReactiveFormsModule, JsonPipe, NgIf],
+  imports: [ReactiveFormsModule, JsonPipe, NgIf, HttpClientModule],
   templateUrl: './user-form.component.html',
   styleUrl: './user-form.component.css'
 })
@@ -29,9 +34,15 @@ export class UserFormComponent implements OnInit {
   ]
   userForm!: FormGroup
 
+  roles: Role[] = []
+  rolIDSelected = ''
+
   constructor(
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private userService: UserService,
+    private roleService: RoleService
+
   ) {
     //TODO: Implementar cambio de acciones si la ruta indica modificación de usuario
     //TODO: Implementar role socio default si la ruta indica registro de socio
@@ -217,8 +228,58 @@ export class UserFormComponent implements OnInit {
     }
   }
 
+
+  //verificar si funciona
+  getRoles() {
+    this.roleService.getAllRoles().subscribe(
+      (data: any) => {
+        //prueba
+        console.log(data)
+        this.roles = data.map((r: any) => {
+          return {
+            _id: r._id,
+            name: r.name
+          } as Role
+        })
+        console.log(this.roles)
+      },
+      (error: any) => {
+        console.error(error)
+      }
+    )
+  }
+
   onSubmit(): void {
-    console.log(this.userForm.value)
+    if (this.userForm.valid) {
+
+      const userNew: UserRequest = {
+        username: this.username?.value,
+        password: this.password?.value,
+        email: this.email?.value,
+        role: this.role?.value,
+        personalInformation: {
+          firstName: this.firstName?.value,
+          lastName: this.lastName?.value,
+          dni: this.dni?.value,
+          address: this.address?.value,
+          phoneNumber: this.phoneNumber?.value,
+          dateOfBirth: this.dateOfBirth?.value,
+        },
+        img: this.img?.value
+      }
+      console.log(userNew);
+
+      this.userService.addUser(userNew).subscribe(
+        (res: any) => {
+          console.log("nuevo usuario registrado", res)
+        },
+        (error: any) => {
+          console.error("Error al registrar el usuario", error)
+        }
+      )
+    } else {
+      console.log('Formulario no válido');
+    }
   }
 
 }

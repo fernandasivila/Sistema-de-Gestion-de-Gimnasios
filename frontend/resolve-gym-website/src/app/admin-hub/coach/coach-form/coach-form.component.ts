@@ -2,6 +2,8 @@ import { JsonPipe, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { CoachService } from '../../../services/coach.service';
+import { Coach } from '../../../models/coach';
 
 @Component({
   selector: 'app-coach-form',
@@ -17,7 +19,8 @@ export class CoachFormComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private coachService: CoachService
   ) { }
 
   ngOnInit(): void {
@@ -84,39 +87,39 @@ export class CoachFormComponent implements OnInit {
   validateFullnameRequired(): boolean {
     return this.coachForm.get('fullname')?.errors?.['required'] ?? false;
   }
-  
+
   validateFullnameMinLength(): boolean {
     return this.coachForm.get('fullname')?.errors?.['minlength'] ?? false;
   }
-  
+
   validateFullnamePattern(): boolean {
     return this.coachForm.get('fullname')?.errors?.['pattern'] ?? false;
   }
-  
+
   validateEmailRequired(): boolean {
     return this.coachForm.get('email')?.errors?.['required'] ?? false;
   }
-  
+
   validateEmailPattern(): boolean {
     return this.coachForm.get('email')?.errors?.['email'] ?? false;
   }
-  
+
   validateWorkAreaRequired(): boolean {
     return this.coachForm.get('workArea')?.errors?.['required'] ?? false;
   }
-  
+
   validateAgeRequired(): boolean {
     return this.coachForm.get('age')?.errors?.['required'] ?? false;
   }
-  
+
   validateAgeRange(): boolean {
     return (this.coachForm.get('age')?.errors?.['min'] ?? false) || (this.coachForm.get('age')?.errors?.['max'] ?? false);
   }
-  
+
   validateDescriptionRequired(): boolean {
     return this.coachForm.get('description')?.errors?.['required'] ?? false;
   }
-  
+
   validateScheduleRequired(): boolean {
     return this.coachForm.get('schedule')?.errors?.['required'] ?? false;
   }
@@ -138,9 +141,27 @@ export class CoachFormComponent implements OnInit {
 
   onSubmit() {
     if (this.coachForm.valid) {
-      const formData = this.coachForm.value;
-      console.log(formData);
-      //Lógica de envío
+
+      const coach: Coach = {
+        fullname: this.fullname?.value,
+        email: this.email?.value,
+        workArea: this.workArea?.value,
+        img: this.img?.value,
+        age: this.age?.value,
+        description: this.description?.value,
+        schedule: this.schedule?.value
+      }
+      console.log(coach);
+      if (this.action == "Registrar") {
+        this.coachService.addCoach(coach).subscribe(
+          (response) => {
+            console.log('Coach registrado correctamente', response);
+          },
+          (error) => {
+            console.error('Error al registrar el coach', error);
+          }
+        )
+      }
     } else {
       console.log('Formulario no válido');
     }
