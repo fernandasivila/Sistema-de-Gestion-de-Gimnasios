@@ -1,1 +1,39 @@
-<p>saved-routines works!</p>
+<div class="container ">
+    <h1 class="text-center">Mis rutinas</h1>
+    <div *ngIf="routines.length==0" class="alert alert-info">
+        <p>No tiene rutinas guardadas.</p>
+        <button>Agregar Rutina</button>
+    </div>
+    <div>
+        <div class="card m-3" *ngFor="let routine of routines">
+            <div class="card-header row">
+
+                <div class="col-6">
+                    <h5 class="card-title">{{ routine.name }}</h5>
+                    <p class="card-text"> <i>
+                            Guardada: {{ routine.releaseDate | date }}
+                        </i> </p>
+                </div>
+                <div class="col-6 d-flex justify-content-end">
+                    <button class="btn btn-warning">Ver</button>
+                </div>
+            </div>
+            <div class="card-body">
+
+                <p class="card-text"> <strong>Ejercicios: </strong></p>
+                <ul class="list-group">
+                    <li class="list-group-item" *ngFor="let exercise of routine.exercises">
+                        {{ exercise.name }} | no se si agregar info
+                    </li>
+                </ul>
+                <p class="card-text"> <strong> Grupos Musculares:</strong></p>
+                <ul class="list-group">
+                    <li class="list-group-item" *ngFor="let muscleGroup of routine.muscleGroupsSelected">
+                        {{ muscleGroup.name }}
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>

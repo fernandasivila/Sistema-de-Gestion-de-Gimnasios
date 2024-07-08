@@ -13,7 +13,7 @@ export interface ExerciseRequest {
     instruction: String;
     difficult: String; //Principiante, Intermedio, Avanzado
     type: String; //Cardio Musculacion
-    images: ExerciseImage[] ;
+    images: string[] ;
     muscleGroup: String;
 }
 

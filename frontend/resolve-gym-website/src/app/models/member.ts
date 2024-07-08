@@ -9,10 +9,7 @@ export interface MemberRequest extends UserRequest {
     routines: String[];
     progress: String[];
     mounthlyPlan: String[];
-    img: {
-        data: BufferData;
-        contentType: string;
-    };
+    img:string;
     
 }
 
@@ -22,8 +19,5 @@ export interface MemberResponse extends UserResponse {
     routines: RoutineResponse[];
     progress: Progress[];
     mounthlyPlan: MonthlyPlan[];
-    img: {
-        data: BufferData;
-        contentType: string;
-    };
+    img: string;
 }
