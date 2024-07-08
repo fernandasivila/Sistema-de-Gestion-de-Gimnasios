@@ -1,1 +1,42 @@
-<p>feedback-form works!</p>
+<div class="row text-center">
+    <h1 class="fs-2"> Nos interesa tu opinión</h1>
+    <!-- Para probar 
+    <p>clase: {{classForm.value | json}}</p>-->
+</div>
+<div class="row justify-content-center">
+    <div class="object-form">
+        <form [formGroup]="feedbackForm" class="row g-3" (ngSubmit)="onSubmit()">
+            <div class="col-md-12">
+                <label for="inputDescription" class="form-label">Comentario</label>
+                <textarea id="inputDescription" [class.is-invalid]="description?.invalid && (description?.dirty || description?.touched)" class="form-control" rows="3" formControlName="description" required></textarea>
+                <div *ngIf="validateDescriptionRequired()" class="invalid-feedback">
+                    El campo no puede estar vacío.
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label for="inputDate" class="form-label">Fecha</label>
+                <input id="inputDate" type="date" [class.is-invalid]="date?.invalid && (date?.dirty || date?.touched)" class="form-control" formControlName="date" required>
+                <div *ngIf="validateDateRequired()" class="invalid-feedback">
+                    El campo no puede estar vacío.
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label for="inputScore" class="form-label">Puntaje</label>
+                <!--
+                 <ngx-star-rating formControlName="score" [rating]="0" [starCount]="5" [readOnly]="false"></ngx-star-rating>
+                -->
+                <ngx-star-rating formControlName="score" ></ngx-star-rating>
+                
+                <div *ngIf="validateScoreRequired()" class="invalid-feedback">
+                  El campo no puede estar vacío y debe estar entre 1 y 5.
+                </div>
+              </div>
+            
+            <div class="col-12 d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary" [disabled]="feedbackForm.invalid">Enviar</button>
+            </div>
+          </form>
+    </div>
+</div>

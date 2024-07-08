@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { IDemoNgComponentEventType } from '../../../test/idemo-ng-component-event-type';
 import { ActionButtonGroupComponent } from '../../action-button-group/action-button-group.component';
 import { DataTablesModule } from 'angular-datatables';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-user-list',
@@ -22,7 +23,8 @@ export class UserListComponent implements OnInit, AfterViewInit {
 
   constructor(
     private datePipe: DatePipe,
-    private router: Router
+    private router: Router,
+    private userService: UserService
   ) {}
 
   apiResponseExample = [
@@ -234,7 +236,16 @@ export class UserListComponent implements OnInit, AfterViewInit {
   }
 
   deleteMember(){
-    //logica de borrado
+    if (this.idEventInstance) {
+      this.userService.deleteUserById(this.idEventInstance).subscribe(
+        (data:any)=>{
+          console.log("Usuario eliminado con exito", data)
+        },
+        (error:any)=>{
+          console.log("ERROR eliminando user",error)
+        }
+      )
+    }
   }
 
   private confirmateDeletion(){
