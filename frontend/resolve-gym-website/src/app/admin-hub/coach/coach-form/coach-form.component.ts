@@ -21,6 +21,7 @@ export class CoachFormComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private coachService: CoachService
+
   ) { }
 
   ngOnInit(): void {
@@ -88,38 +89,39 @@ export class CoachFormComponent implements OnInit {
     return this.coachForm.get('fullname')?.errors?.['required'] ?? false;
   }
 
+  
   validateFullnameMinLength(): boolean {
     return this.coachForm.get('fullname')?.errors?.['minlength'] ?? false;
   }
-
+  
   validateFullnamePattern(): boolean {
     return this.coachForm.get('fullname')?.errors?.['pattern'] ?? false;
   }
-
+  
   validateEmailRequired(): boolean {
     return this.coachForm.get('email')?.errors?.['required'] ?? false;
   }
-
+  
   validateEmailPattern(): boolean {
     return this.coachForm.get('email')?.errors?.['email'] ?? false;
   }
-
+  
   validateWorkAreaRequired(): boolean {
     return this.coachForm.get('workArea')?.errors?.['required'] ?? false;
   }
-
+  
   validateAgeRequired(): boolean {
     return this.coachForm.get('age')?.errors?.['required'] ?? false;
   }
-
+  
   validateAgeRange(): boolean {
     return (this.coachForm.get('age')?.errors?.['min'] ?? false) || (this.coachForm.get('age')?.errors?.['max'] ?? false);
   }
-
+  
   validateDescriptionRequired(): boolean {
     return this.coachForm.get('description')?.errors?.['required'] ?? false;
   }
-
+  
   validateScheduleRequired(): boolean {
     return this.coachForm.get('schedule')?.errors?.['required'] ?? false;
   }
@@ -162,6 +164,7 @@ export class CoachFormComponent implements OnInit {
           }
         )
       }
+
     } else {
       console.log('Formulario no válido');
     }

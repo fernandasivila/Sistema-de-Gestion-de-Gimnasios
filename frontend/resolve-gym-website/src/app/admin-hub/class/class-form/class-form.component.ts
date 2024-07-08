@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ClassService } from '../../../services/class.service';
 import { Class } from '../../../models/class';
 
+
 @Component({
   selector: 'app-class-form',
   standalone: true,
@@ -100,6 +101,7 @@ export class ClassFormComponent implements OnInit {
           error => console.error(error)
         )
       }
+
     } else {
       console.log('Formulario no válido');
     }

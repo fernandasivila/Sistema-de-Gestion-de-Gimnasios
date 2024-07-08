@@ -4,6 +4,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { ActivatedRoute } from '@angular/router';
 import { ExerciseService } from '../../../services/exercise.service';
 
+
 @Component({
   selector: 'app-exercise-form',
   standalone: true,
@@ -26,6 +27,7 @@ export class ExerciseFormComponent {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private exerciseS: ExerciseService
+
   ) { }
 
   ngOnInit(): void {
@@ -129,6 +131,7 @@ export class ExerciseFormComponent {
           console.error('Error al guardar el ejercicio', error);
         }
       )
+
     } else {
       console.log('Formulario no válido');
     }

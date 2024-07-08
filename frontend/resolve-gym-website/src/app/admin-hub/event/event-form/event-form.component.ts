@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Event } from '../../../models/event';
 import { EventService } from '../../../services/event.service';
 
+
 @Component({
   selector: 'app-event-form',
   standalone: true,
@@ -20,6 +21,7 @@ export class EventFormComponent {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private eventService: EventService
+
   ) { }
 
   ngOnInit(): void {
@@ -107,6 +109,7 @@ export class EventFormComponent {
           (error) => console.error(error)
         )
       }
+
     } else {
       console.log('Formulario no válido');
     }
