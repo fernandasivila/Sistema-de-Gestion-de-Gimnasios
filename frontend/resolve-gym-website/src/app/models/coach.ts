@@ -3,10 +3,7 @@ export interface Coach {
     fullname: String;
     email: String;
     workArea: String;
-    img: {
-        data: String;
-        contentType: String;
-    };
+    img: string;
     age: Number;
     description: String;
     schedule: String;
