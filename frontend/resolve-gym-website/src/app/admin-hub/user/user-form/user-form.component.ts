@@ -1,12 +1,13 @@
 import { formatDate, JsonPipe, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RoleService } from '../../../services/role.service';
 import { UserService } from '../../../services/user.service';
 import { Role } from '../../../models/role';
 import { HttpClientModule } from '@angular/common/http';
-import { UserRequest } from '../../../models/user';
+import { UserRequest, UserResponse } from '../../../models/user';
+import { error } from 'jquery';
 
 
 @Component({
@@ -21,6 +22,7 @@ export class UserFormComponent implements OnInit {
 
   action = 'Registrar'
   item = 'Usuario'
+  userId = ''
 
   dateOfBirthPost = new Date()
   rolesPost = [
@@ -42,6 +44,7 @@ export class UserFormComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
+    private router: Router,
     private userService: UserService,
     private roleService: RoleService
 
@@ -71,8 +74,12 @@ export class UserFormComponent implements OnInit {
           case 'new':
             this.action = 'Registrar'
             break
-          case 'edit':
+          case 'edit': 
             this.action = 'Modificar'
+            this.userId = this.route.snapshot.paramMap.get('id')!
+            if (this.userId) {
+              this.loadUserData(this.userId);
+            }
             break
         }
         switch (data[0].path) {
@@ -230,6 +237,32 @@ export class UserFormComponent implements OnInit {
     }
   }
 
+  loadUserData(idUser: string) {
+    this.userService.getUserById(idUser).subscribe(
+      (dataUser) => {
+        this.userForm.patchValue(
+          {
+            username: dataUser.username,
+            password: dataUser.password,
+            email: dataUser.email,
+            role: dataUser.role,
+            firstName: dataUser.personalInformation.firstName,
+            lastName: dataUser.personalInformation.lastName,
+            dni: dataUser.personalInformation.dni,
+            address: dataUser.personalInformation.address,
+            phoneNumber: dataUser.personalInformation.phoneNumber,
+            dateOfBirth: formatDate(dataUser.personalInformation.dateOfBirth, 'yyyy-MM-dd', 'en'),
+            img: dataUser.img,
+          }
+        )
+       // this.imageBase64post = dataUser.img;
+      },
+      (error: any) => {
+        console.log("Error cargando datos de usuario", error)
+      }
+    )
+  }
+
 
   //verificar si funciona
   getRoles() {
@@ -253,32 +286,68 @@ export class UserFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.userForm.valid) {
+      if(this.action=='Registrar'){
 
-      const userNew: UserRequest = {
-        username: this.username?.value,
-        password: this.password?.value,
-        email: this.email?.value,
-        role: this.role?.value,
-        personalInformation: {
-          firstName: this.firstName?.value,
-          lastName: this.lastName?.value,
-          dni: this.dni?.value,
-          address: this.address?.value,
-          phoneNumber: this.phoneNumber?.value,
-          dateOfBirth: this.dateOfBirth?.value,
-        },
-        img: this.img?.value
-      }
-      console.log(userNew);
-
-      this.userService.addUser(userNew).subscribe(
-        (res: any) => {
-          console.log("nuevo usuario registrado", res)
-        },
-        (error: any) => {
-          console.error("Error al registrar el usuario", error)
+        const userNew: UserRequest = {
+          username: this.username?.value,
+          password: this.password?.value,
+          email: this.email?.value,
+          role: this.role?.value,
+          personalInformation: {
+            firstName: this.firstName?.value,
+            lastName: this.lastName?.value,
+            dni: this.dni?.value,
+            address: this.address?.value,
+            phoneNumber: this.phoneNumber?.value,
+            dateOfBirth: this.dateOfBirth?.value,
+          },
+          img: this.img?.value
         }
-      )
+        console.log(userNew);
+
+        this.userService.addUser(userNew).subscribe(
+          (res: any) => {
+            console.log("nuevo usuario registrado", res)
+            this.router.navigate(['/users/']);
+          },
+          (error: any) => {
+            console.error("Error al registrar el usuario", error)
+          }
+        )
+      }
+      
+
+      
+      if(this.action=='Modificar'){
+        const userUpdated: UserResponse={
+          _id: this.userId,
+          username: this.username?.value,
+          password: this.password?.value,
+          email: this.email?.value,
+          role: this.role?.value,
+          personalInformation: {
+            firstName: this.firstName?.value,
+            lastName: this.lastName?.value,
+            dni: this.dni?.value,
+            address: this.address?.value,
+            phoneNumber: this.phoneNumber?.value,
+            dateOfBirth: this.dateOfBirth?.value,
+          },
+          img: this.img?.value
+        }
+        console.log(userUpdated);
+
+        this.userService.updateUser(userUpdated).subscribe(
+          (data:any)=>{
+            console.log("usuario modificado", data)
+            this.router.navigate(['/users/'])
+          },
+          (error:any)=>{
+            console.error("Error al modificar el usuario", error)
+          }
+        )
+      }
+        
     } else {
       console.log('Formulario no válido');
     }
