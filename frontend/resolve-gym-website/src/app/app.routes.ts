@@ -4,7 +4,6 @@ import { AdminHubHomeComponent } from './admin-hub/admin-hub-home/admin-hub-home
 import { UserListComponent } from './admin-hub/user/user-list/user-list.component';
 import { UserFormComponent } from './admin-hub/user/user-form/user-form.component';
 import { MemberListComponent } from './admin-hub/member/member-list/member-list.component';
-import { MemberFormComponent } from './admin-hub/member/member-form/member-form.component';
 import { ExerciseListComponent } from './admin-hub/exercise/exercise-list/exercise-list.component';
 import { ExerciseFormComponent } from './admin-hub/exercise/exercise-form/exercise-form.component';
 import { ClassListComponent } from './admin-hub/class/class-list/class-list.component';

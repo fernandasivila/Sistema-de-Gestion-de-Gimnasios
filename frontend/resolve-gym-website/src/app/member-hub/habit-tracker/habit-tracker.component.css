@@ -1,0 +1,55 @@
+.table-calendar{
+    text-align: center;
+    table-layout: fixed;
+    border-collapse: collapse;
+    background-color: #252525;
+    border-radius: 30px;
+    width: 100%;
+    max-width: 800px;
+}
+
+tr {
+    height: 50px;
+}
+
+th td {
+    width: calc(100% / 7) !important;
+    padding: 10px;
+}
+
+.calendar-number {
+    padding: 3px;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 100%;
+    margin: auto;
+}
+
+.habit-success {
+    color: #0b2e02;
+    font-weight: bold;
+    background-color: #5fc745;
+}
+
+.habit-extra {
+    border: 2px solid;
+    border-color: #5fc745;
+    color: #5fc745;
+}
+
+.habit-failed {
+    color: #440b07;
+    font-weight: bold;
+    background-color: #c74e45;
+}
+
+.habit-neutral {
+    color: #ffffff;
+    border-color: #ffffff;
+    background-color: #4e4e4e;
+}
+
+.today {
+    border:2px solid #ffffff;
+    font-weight: bold;
+}
