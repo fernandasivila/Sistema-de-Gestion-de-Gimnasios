@@ -54,7 +54,37 @@ const muscleGroupController = {
         },
       });
     }
-  }
+  },
+  add: async (req, res) => {
+      let muscleGroup = new MuscleGroup({
+        ...req.body,
+        img: {
+          data: req.file.buffer,
+          contentType: req.file.mimetype,
+        },
+      });
+
+      try {
+        await muscleGroup.save();
+        res.json({
+          meta: {
+            status: 200,
+            message: "Muscle Group created successfully",
+          },
+          data: muscleGroup,
+        });
+      } catch (error) {
+        res.status(500).json({
+          meta: {
+            status: 500,
+            message: "Error processing operation",
+          },
+          data: {
+            error: error.message,
+          },
+        });
+      }
+  },
 };
 
 module.exports = muscleGroupController;

@@ -127,7 +127,7 @@ const monthlyPlanController = {
       });
     } else {
       try {
-          const updatedMonthlyPlan = await MonthlyPlan.findByIdAndUpdate(id, req.body, { new: true }).populate('exercises muscleGroupsSelected');
+          const updatedMonthlyPlan = await MonthlyPlan.findByIdAndUpdate(id, req.body, { new: true });
           if (!updatedMonthlyPlan) {
             return res.status(404).json({
               meta: {

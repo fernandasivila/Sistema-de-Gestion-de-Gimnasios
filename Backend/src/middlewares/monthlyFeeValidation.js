@@ -9,7 +9,7 @@ const isValidObjectId = (value) => {
 };
 
 const monthlyFeeValidator = [
-    body('amount').isEmpty('Price is required').isFloat({ gt: 0 }).withMessage('Amount must be a positive number'),
+    body('amount').notEmpty().withMessage('Price is required').isFloat({ gt: 0 }).withMessage('Amount must be a positive number'),
     body('dueDate').isISO8601().withMessage('Due date must be a valid date format (YYYY-MM-DD)'),
     body('member').trim().notEmpty().withMessage('Member is required').custom(isValidObjectId).bail()
     .custom(async (value) => {
