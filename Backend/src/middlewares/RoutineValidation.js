@@ -10,7 +10,7 @@ const isValidObjectId = (value) => {
 };
 
 const routineValidator = [
-    body('name').isEmpty('Name is required'),
+    body('name').notEmpty().withMessage('Name is required'),
     body('exercises').isArray({min: 1}).withMessage('Exercises must be an array with at least one exercise'),
     body('exercises.*').custom(isValidObjectId).bail().custom(async (value) => {
         const existExercise = await Exercise.findById(value);
