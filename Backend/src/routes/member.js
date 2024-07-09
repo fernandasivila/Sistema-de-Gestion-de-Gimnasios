@@ -6,8 +6,8 @@ const router = express.Router();
 
 router.get('/', memberController.list);
 router.get('/:id', memberController.getById);
-router.post('/add', upload.single('img'), memberValidation, memberController.add);
+router.post('/add', memberValidation, memberController.add);
 router.delete('/:id', memberController.delete);
-router.put('/edit/:id', upload.single('img'), memberValidation, memberController.update);
+router.put('/edit/:id', memberValidation, memberController.update);
 
 module.exports = router;

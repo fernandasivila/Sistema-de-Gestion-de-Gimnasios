@@ -1,5 +1,6 @@
 const AttendanceRecord = require("../database/models/AttendanceRecord");
 const { validationResult } = require("express-validator");
+const mongoose = require('mongoose');
 
 const attendanceRecordController = {
     list: async (req, res) => {
@@ -53,6 +54,37 @@ const attendanceRecordController = {
             });
         }
     },
+    getByMember: async (req, res) => {
+        const id = req.params.member;
+        try {
+            const attendanceRecord = await AttendanceRecord.find({member: id});
+            if (!attendanceRecord) {
+                return res.status(404).json({
+                    meta: {
+                        status: 404,
+                        message: "Attendance Records not found",
+                    },
+                });
+            }
+            res.status(200).json({
+                meta: {
+                    status: 200,
+                    message: "Attendance Records found successfully",
+                },
+                data: attendanceRecord,
+            });
+        } catch (error) {
+            res.status(500).json({
+                meta: {
+                    status: 500,
+                    message: "Internal Server Error",
+                },
+                data: {
+                    error: error.message,
+                },
+            });
+        }
+    },
     add: async (req, res) => {
         const errors = validationResult(req);
 
@@ -65,8 +97,9 @@ const attendanceRecordController = {
                 data: errors.array(),
             });
         } else {
-            let attendanceRecord = new Ad({
-                ...req.body
+            let attendanceRecord = new AttendanceRecord({
+                date: req.body.date,
+                member: req.body.member
             });
             try {
                 await attendanceRecord.save();
@@ -126,7 +159,8 @@ const attendanceRecordController = {
             });
         } else {
             let updatedAttendanceRecord = new AttendanceRecord({
-                ...req.body
+                date: req.body.date,
+                member: req.body.member
             });
             try {
                 await AttendanceRecord.updateOne({ _id: id }, updatedAttendanceRecord);

@@ -66,11 +66,7 @@ const memberController = {
           });
         } else {
           let member = new Member({
-            ...req.body,
-            img: {
-                data: req.file.buffer,
-                contentType: req.file.mimetype,
-              },
+            ...req.body
           });
           try {
             await member.save();
@@ -130,11 +126,7 @@ const memberController = {
           });
         } else {
           let updatedMember = new Member({
-            ...req.body,
-            img: {
-                data: req.file.buffer,
-                contentType: req.file.mimetype,
-              },
+            ...req.body
           });
           try {
             await Member.updateOne({ _id: id }, updatedMember);

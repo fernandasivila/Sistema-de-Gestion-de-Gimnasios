@@ -22,10 +22,6 @@ const memberSchema = new Schema({
         ref: 'MonthlyPlan',
         required: true
     },
-    img:{
-        data: Buffer,
-        contentType: String
-    },
     weeklyGoal:{
         type: Number
     }

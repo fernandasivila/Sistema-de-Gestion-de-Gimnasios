@@ -6,7 +6,7 @@ const attendanceRecordSchema = new Schema({
         type: Date,
         required: true
     },
-    Member:{
+    member:{
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Member',
         required: true
