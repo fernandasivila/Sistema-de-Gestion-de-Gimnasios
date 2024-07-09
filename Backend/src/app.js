@@ -1,8 +1,12 @@
 const express = require("express");
+const session = require("express-session");
+const passport = require("./services/passport-config");
 const cors = require("cors");
 const dbconnect = require('./database/database');
 require('./services/cronService');
 
+const authRoutes = require("./routes/authRoutes");
+const shareRoutes = require("./routes/shareRoutes");
 const monthlyFeesRoutes = require("./routes/monthlyFee");
 const monthlyPlansRoutes = require("./routes/monthlyPlan");
 const muscleGroupsRoutes = require("./routes/muscleGroup");
@@ -20,6 +24,15 @@ const exercisesRoutes = require("./routes/exercise");
 const feedbacksRoutes = require("./routes/feedback");
 const membersRoutes = require("./routes/member");
 const app = express();
+
+app.use(session({
+  secret: 'maxipro328',
+  resave: false,
+  saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 const PORT = 3000;
 
@@ -44,6 +57,8 @@ app.use('/coaches', coachesRoutes);
 app.use('/exercises', exercisesRoutes);
 app.use('/feedbacks', feedbacksRoutes);
 app.use('/members', membersRoutes);
+app.use('/auth', authRoutes);
+app.use('/share', shareRoutes);
 
 app.listen(PORT, () => {
   console.log(`[server]: running on port: http://localhost:${PORT}`);
