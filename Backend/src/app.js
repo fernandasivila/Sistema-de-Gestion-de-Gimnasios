@@ -23,6 +23,10 @@ const coachesRoutes = require("./routes/coach");
 const exercisesRoutes = require("./routes/exercise");
 const feedbacksRoutes = require("./routes/feedback");
 const membersRoutes = require("./routes/member");
+const paymentRoutes = require('./routes/paymentRoutes');
+
+// Usa las rutas de pago
+
 const app = express();
 
 app.use(session({
@@ -59,6 +63,7 @@ app.use('/feedbacks', feedbacksRoutes);
 app.use('/members', membersRoutes);
 app.use('/auth', authRoutes);
 app.use('/share', shareRoutes);
+app.use('/api/payments', paymentRoutes);
 
 app.listen(PORT, () => {
   console.log(`[server]: running on port: http://localhost:${PORT}`);

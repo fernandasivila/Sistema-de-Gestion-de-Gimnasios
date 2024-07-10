@@ -9,13 +9,11 @@ const memberSchema = new Schema({
     },
     routines:[{
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Routine',
-        required: true
+        ref: 'Routine'
     }],
     progress:[{
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Progress',
-        required: true
+        ref: 'Progress'
     }],
     mounthlyPlan:{
         type: mongoose.Schema.Types.ObjectId, 
