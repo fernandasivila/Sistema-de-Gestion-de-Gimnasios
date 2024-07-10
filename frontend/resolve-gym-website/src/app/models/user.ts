@@ -14,7 +14,7 @@ export interface UserRequest {
         phoneNumber: String;
         dateOfBirth: Date;
     };
-    img: string;
+    img: any;
 }
 
 export interface UserResponse {
@@ -31,5 +31,5 @@ export interface UserResponse {
         phoneNumber: String;
         dateOfBirth: Date;
     };
-    img: string;
+    img: any;
 }

@@ -7,6 +7,7 @@ import { UserService } from '../../../services/user.service';
 import { Role } from '../../../models/role';
 import { HttpClientModule } from '@angular/common/http';
 import { UserRequest, UserResponse } from '../../../models/user';
+import {Buffer} from "buffer" ;
 import { error } from 'jquery';
 
 
@@ -25,10 +26,7 @@ export class UserFormComponent implements OnInit {
   userId = ''
 
   dateOfBirthPost = new Date()
-  rolesPost = [
-    { id: 1, title: 'Empleado' },
-    { id: 2, title: 'Socio' }
-  ]
+ 
   imageBase64post: string | ArrayBuffer | null = null
 
   monthlyPlans = [
@@ -40,6 +38,8 @@ export class UserFormComponent implements OnInit {
 
   roles: Role[] = []
   rolIDSelected = ''
+  imageData: any;
+  imgUpdate=false
 
   constructor(
     private formBuilder: FormBuilder,
@@ -70,6 +70,7 @@ export class UserFormComponent implements OnInit {
       img: new FormControl(null),
       mounthlyPlan: new FormControl("1"),
     })
+
     this.route.url.subscribe(
       (data: any) => {
         switch (data[1].path) {
@@ -225,6 +226,7 @@ export class UserFormComponent implements OnInit {
   }
 
   onFileChange(event: Event) {
+    this.imgUpdate=true
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
       const file = input.files[0];
@@ -232,16 +234,25 @@ export class UserFormComponent implements OnInit {
       reader.readAsDataURL(file);
       reader.onload = () => {
         this.imageBase64post = reader.result;
+        this.imageData=this.imageBase64post
         this.userForm.patchValue({
           img: this.imageBase64post
         });
+        this.imgUpdate=true
       };
     }
   }
 
   loadUserData(idUser: string) {
     this.userService.getUserById(idUser).subscribe(
-      (dataUser) => {
+      (result) => {
+        const dataUser = result.data
+        
+        let imgUser = dataUser.img
+        console.log("USUARIO A MODIFICAR:", imgUser)
+       // this.imageBase64post = dataUser.img;
+       this.imageData = this.convertToBase64(imgUser.data.data,imgUser.contentType)
+
         this.userForm.patchValue(
           {
             username: dataUser.username,
@@ -254,10 +265,9 @@ export class UserFormComponent implements OnInit {
             address: dataUser.personalInformation.address,
             phoneNumber: dataUser.personalInformation.phoneNumber,
             dateOfBirth: formatDate(dataUser.personalInformation.dateOfBirth, 'yyyy-MM-dd', 'en'),
-            img: dataUser.img,
+           img: this.imageData
           }
         )
-       // this.imageBase64post = dataUser.img;
       },
       (error: any) => {
         console.log("Error cargando datos de usuario", error)
@@ -265,13 +275,18 @@ export class UserFormComponent implements OnInit {
     )
   }
 
+  private convertToBase64(data: number[], contentType: string): string {
+    const buffer = Buffer.from(data);
+    const base64String = buffer.toString('base64');
+    return `data:${contentType};base64,${base64String}`;
+  }
 
   //verificar si funciona
   getRoles() {
     this.roleService.getAllRoles().subscribe(
       (data: any) => {
         this.roles = data.data
-        console.log(this.roles)
+       // console.log(this.roles)
       },
       (error: any) => {
         console.error(error)
@@ -280,6 +295,11 @@ export class UserFormComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if(this.imgUpdate==false){
+      this.userForm.patchValue({
+        img: this.imageData
+      });
+    }
     if (this.userForm.valid) {
       if(this.action=='Registrar'){
 
