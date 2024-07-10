@@ -54,6 +54,8 @@ export class UserFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getRoles()
+
     this.userForm = this.formBuilder.group({
       username: new FormControl("", [Validators.required, Validators.minLength(3)]),
       password: new FormControl("", [Validators.required, Validators.minLength(8), Validators.pattern('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$')]),
@@ -87,7 +89,7 @@ export class UserFormComponent implements OnInit {
             this.item = 'Usuario'
             break
           case 'members':
-            this.userForm.controls['role'].setValue('2')
+            this.userForm.controls['role'].setValue('6684bcf820405336cc3abc3c')
             this.item = 'Socio'
             break
         }
@@ -268,14 +270,7 @@ export class UserFormComponent implements OnInit {
   getRoles() {
     this.roleService.getAllRoles().subscribe(
       (data: any) => {
-        //prueba
-        console.log(data)
-        this.roles = data.map((r: any) => {
-          return {
-            _id: r._id,
-            name: r.name
-          } as Role
-        })
+        this.roles = data.data
         console.log(this.roles)
       },
       (error: any) => {

@@ -56,8 +56,8 @@
                 <select id="inputRole" class="form-select"
                     [class.is-invalid]="this.role?.invalid && (this.role?.dirty || this.role?.touched)">
                     <option selected value="">Elegir...</option>
-                    @for(role of rolesPost;track role){
-                    <option [value]="role.id">{{role.title}}</option>
+                    @for(role of roles;track role){
+                    <option [value]="role._id">{{role.name}}</option>
                     }
                 </select>
                 }

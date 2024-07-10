@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RoutineResponse } from '../../models/routine';
 import { MemberService } from '../../services/member.service';
 import { CommonModule } from '@angular/common';
+import { RoutineService } from '../../services/routine.service';
 
 @Component({
   selector: 'app-saved-routines',
@@ -46,20 +47,21 @@ export class SavedRoutinesComponent implements OnInit {
     ]
   };
 
-  constructor(private memberService: MemberService){
-
-  }
+  constructor(
+    private memberService: MemberService,
+    private routinesService: RoutineService
+  ){  }
   ngOnInit(): void {
-    const userId = localStorage.getItem('userid') || '';
+    const userId = localStorage.getItem('userid') || '668e0e4536ff04d0e3f318e4';
     //this.loadRoutines(userId);
     this.routines=this.fakeMemberResponse.routines
-    console.log(this.routines)
   }
 
   loadRoutines(idMember: string){
     this.memberService.getMemberById(idMember) .subscribe(
       (data:any) => {
-      this.routines = data.routines;
+        console.log(data)
+      this.routines = data.data.routines;
     },
     (error:any)=>{
       console.error("Error trayendo rutinas del socio",error);

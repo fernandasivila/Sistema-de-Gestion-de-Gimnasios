@@ -50,7 +50,7 @@ export class FeedbackFormComponent implements OnInit {
         date: new Date(),
         score: this.score?.value,
         //member: localStorage.getItem('userid') || ''
-        member: '66873297b999b7b4466cba9e'
+        member: '668e0e4536ff04d0e3f318e4' //Socio Jane
       }
       this.feedbackService.addFeedback(feedback).subscribe(
         (result: any) => {
@@ -58,8 +58,7 @@ export class FeedbackFormComponent implements OnInit {
           this.loadFeedbacks()
         },
         (error: any) => {
-          console.error("Error al registrar el comentario", error)
-
+          console.error("ERROR al registrar el comentario", error)
         }
 
       )

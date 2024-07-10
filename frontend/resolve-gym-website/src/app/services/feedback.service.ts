@@ -19,14 +19,12 @@ export class FeedbackService {
   return this._http.get(this.baseUrl+'/'+id)
  }
   addFeedback(feedback: FeedbackRequest): Observable<any>{
-    console.log(feedback)
     const httpOptions={
       headers:new HttpHeaders({
         'Content-Type':'application/json'
       })
     }
     const body = JSON.stringify(feedback)
-    console.log('BODY en el service',feedback)
   return this._http.post(this.baseUrl+'/add', body, httpOptions)
  }
   deleteFeedback(id: string): Observable<any>{
