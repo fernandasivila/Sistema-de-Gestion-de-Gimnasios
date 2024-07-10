@@ -5,8 +5,9 @@ import { ADTSettings } from 'angular-datatables/src/models/settings';
 import { Subject } from 'rxjs';
 import { IDemoNgComponentEventType } from '../../../test/idemo-ng-component-event-type';
 import { ActionButtonGroupComponent } from '../../action-button-group/action-button-group.component';
-import { DataTablesModule } from 'angular-datatables';
+import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { UserService } from '../../../services/user.service';
+import { UserResponse } from '../../../models/user';
 
 @Component({
   selector: 'app-user-list',
@@ -18,14 +19,17 @@ import { UserService } from '../../../services/user.service';
 })
 
 export class UserListComponent implements OnInit, AfterViewInit {
+  @ViewChild(DataTableDirective, { static: false })
+  dtElement!: DataTableDirective;
+
   dtOptions: ADTSettings = {}
-  dtTrigger: Subject<ADTSettings> = new Subject<ADTSettings>()
+  dtTrigger: Subject<any> = new Subject()
 
   constructor(
     private datePipe: DatePipe,
     private router: Router,
-    private userService: UserService
-  ) {}
+    private userService: UserService,
+  ) { }
 
   apiResponseExample = [
     {
@@ -160,7 +164,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
     }
   ]
 
-  @ViewChild('confirmationModal') confirmationModal! : ElementRef
+  @ViewChild('confirmationModal') confirmationModal!: ElementRef
   @ViewChild('actionButtons') actionButtons!: TemplateRef<ActionButtonGroupComponent>
 
   message = ''
@@ -173,7 +177,16 @@ export class UserListComponent implements OnInit, AfterViewInit {
         language: {
           url: '/assets/datatable.spanish.json',
         },
-        data: this.apiResponseExample,
+        ajax: (dataTablesParameters: any, callback) => {
+          this.userService.getUsers().subscribe(resp => {
+            console.log(resp.data)
+            callback({
+              recordsTotal: resp.recordsTotal,
+              recordsFiltered: resp.recordsFiltered,
+              data: resp.data
+            });
+          })
+        },
         columns: [
           { title: 'Usuario', data: 'username' },
           { title: 'Email', data: 'email' },
@@ -187,7 +200,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
             title: 'Fecha de Nacimiento',
             data: 'personalInformation.dateOfBirth',
             ngPipeInstance: this.datePipe,
-            ngPipeArgs: ['mediumDate','format']
+            ngPipeArgs: ['mediumDate', 'format']
           },
           {
             title: 'Acciones',
@@ -196,7 +209,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
             defaultContent: '',
             ngTemplateRef: {
               ref: this.actionButtons,
-              context:{
+              context: {
                 // needed for capturing events inside <ng-template>
                 captureEvents: self.onCaptureEvent.bind(self)
               }
@@ -216,10 +229,10 @@ export class UserListComponent implements OnInit, AfterViewInit {
 
   onCaptureEvent(event: IDemoNgComponentEventType) {
     this.idEventInstance = event.data._id
-    if(event.cmd == 'edit'){
+    if (event.cmd == 'edit') {
       this.editMember()
     }
-    if(event.cmd == 'delete'){
+    if (event.cmd == 'delete') {
       this.confirmateDeletion()
     }
     this.message = `Event '${event.cmd}' with data '${JSON.stringify(event.data)}`;
@@ -231,24 +244,46 @@ export class UserListComponent implements OnInit, AfterViewInit {
     this.dtTrigger.unsubscribe();
   }
 
-  editMember(){
+  editMember() {
     this.router.navigate([`/admin-dashboard/users/edit/${this.idEventInstance}`])
   }
 
-  deleteMember(){
+  deleteMember() {
     if (this.idEventInstance) {
       this.userService.deleteUserById(this.idEventInstance).subscribe(
-        (data:any)=>{
+        (data: any) => {
           console.log("Usuario eliminado con exito", data)
         },
-        (error:any)=>{
-          console.log("ERROR eliminando user",error)
+        (error: any) => {
+          console.log("ERROR eliminando user", error)
         }
       )
     }
   }
 
-  private confirmateDeletion(){
+  loadTable() {
+    this.userService.getUsers().subscribe(
+      (data: any) => {
+        this.apiResponseExample = [...data.data]
+        this.reRender()
+      },
+      (error: any) => {
+        console.log(error)
+      }
+    )
+  }
+
+  private reRender() {
+    console.log(this.dtElement)
+    this.dtElement.dtInstance.then(dtInstance => {
+      // Destroy the table first
+      dtInstance.destroy();
+      // Call the dtTrigger to rerender again
+      this.dtTrigger.next(this.dtOptions);
+    });
+  }
+
+  private confirmateDeletion() {
     this.confirmationModal.nativeElement.click()
   }
 }
