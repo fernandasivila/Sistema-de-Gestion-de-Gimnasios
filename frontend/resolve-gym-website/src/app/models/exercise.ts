@@ -13,8 +13,8 @@ export interface ExerciseRequest {
     instruction: String;
     difficult: String; //Principiante, Intermedio, Avanzado
     type: String; //Cardio Musculacion
-    images: string[] ;
-    muscleGroup: String;
+    images: ExerciseImage[];
+    muscleGroup: String; //Request: Llave, Response: Llave
 }
 
 export interface ExerciseResponse {
@@ -27,7 +27,7 @@ export interface ExerciseResponse {
     difficult: String; //Principiante, Intermedio, Avanzado
     type: String; //Cardio Musculacion
     images: ExerciseImage[] ;
-    muscleGroup: MuscleGroup;
+    muscleGroup: String; //Request: Llave, Response: Llave
 }
 
 

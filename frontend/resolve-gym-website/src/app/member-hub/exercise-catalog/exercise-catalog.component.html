@@ -1,1 +1,87 @@
-<p>exercise-catalog works!</p>
+<app-excercise-details></app-excercise-details>
+<app-routine-creator></app-routine-creator>
+<!-- Filtros -->
+<div class="d-grid d-md-flex flex-row mb-4 gap-3">
+    <div class="d-grid d-md-flex gap-3">
+        <div class="d-flex gap-2">
+            <button type="button" class="col-6 col-md-auto btn btn-secondary">
+                Tipo de Musculación
+            </button>
+            <div class="col-6 col-md-auto">
+                <select class="form-select" name="" id="">
+                    <option selected>Sin Filtro</option>
+                    <option value="">Cardio</option>
+                    <option value="">Musculación</option>
+                </select>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="button" class="col-6 col-md-auto btn btn-secondary">
+                Grupo Musculatorio
+            </button>
+            <div class="col-6 col-md-auto">
+                <select class="form-select" name="" id="">
+                    <option selected>Sin Filtro</option>
+                    <option value="">Grupo 1</option>
+                    <option value="">Grupo 2</option>
+                    <option value="">Grupo 3</option>
+                </select>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="button" class="col-6 col-md-auto btn btn-secondary">
+                Dificultad
+            </button>
+            <div class="col-6 col-md-auto">
+                <select class="form-select" name="" id="">
+                    <option selected>Sin Filtro</option>
+                    <option value="">Principiante</option>
+                    <option value="">Intermedio</option>
+                    <option value="">Avanzado</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex ms-md-auto">
+        <button type="button" class="btn btn-primary flex-fill" data-bs-toggle="modal" data-bs-target="#routineCreator">
+            Rutina Creada
+            <fa-icon [icon]="faDumbbell"></fa-icon>
+        </button>
+    </div>
+</div>
+
+    <!-- Catalago de Ejercicios -->
+
+<div class="row row-cols-2 row-cols-md-4 g-3">
+    @for(excercise of ejerciciosAPI;track excercise){
+    <div class="col">
+        <div class="card h-100">
+            <img class="card-img-top" src="https://accuratesurgical.com/wp-content/uploads/2023/08/no-image.jpg"
+                style="height: 150px; object-fit: cover;" alt="Title" />
+            <div class="card-body d-flex flex-column">
+                <div class="d-inline-flex gap-1 mb-2">
+                    <span class="badge bg-primary">Grupo Musc.</span>
+                    <span class="badge bg-secondary-subtle">{{excercise.type}}</span>
+                </div>
+                <h4 class="card-title">{{excercise.name}}</h4>
+                <p class="card-text">{{excercise.instruction}}</p>
+                <ul class="list-group list-group-flush mt-auto">
+                    <li class="list-group-item"><span class="fw-bold">Accesorio(s): </span> {{excercise.accessory}}</li>
+                    <li class="list-group-item"><span class="fw-bold">Dificultad: </span> {{excercise.difficult}}</li>
+                </ul>
+                <div class="d-grid mt-2 d-md-flex gap-2">
+                    <button type="button" class="btn btn-primary flex-fill">
+                        Añadir
+                    </button>
+                    <button type="button" class="btn btn-secondary flex-fill" data-bs-toggle="modal" data-bs-target="#modalDetails">
+                        Ver detalles
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+
+    <!-- Visualizador de Rutina -->
+
+</div>

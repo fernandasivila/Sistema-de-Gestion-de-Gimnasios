@@ -4,7 +4,7 @@ export interface MuscleGroup {
     _id?:String;
     name: String;
     img: {
-        data: BufferData;
+        data: string;
         contentType: String;
     }
 }

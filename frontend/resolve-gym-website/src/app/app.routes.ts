@@ -140,7 +140,7 @@ export const routes: Routes = [
             },
             {
                 path: 'routines/creator',
-                component: RoutineCreatorComponent
+                component: ExerciseCatalogComponent
             },
             {
                 path: 'routines',
