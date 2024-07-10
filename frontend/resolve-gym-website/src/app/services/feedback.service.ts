@@ -12,32 +12,34 @@ export class FeedbackService {
 
   constructor(private _http: HttpClient) { }
 
- getAllFeedbacks():Observable<FeedbackResponse[]>{
-  return this._http.get<FeedbackResponse[]>(this.baseUrl+'/')
+ getAllFeedbacks():Observable<any>{
+  return this._http.get(this.baseUrl+'/')
  }
-  getFeedbackById(id: string):Observable<FeedbackResponse>{
-  return this._http.get<FeedbackResponse>(this.baseUrl+'/'+id)
+  getFeedbackById(id: string):Observable<any>{
+  return this._http.get(this.baseUrl+'/'+id)
  }
-  addFeedback(feedback: FeedbackRequest): Observable<FeedbackRequest>{
+  addFeedback(feedback: FeedbackRequest): Observable<any>{
+    console.log(feedback)
     const httpOptions={
       headers:new HttpHeaders({
         'Content-Type':'application/json'
       })
     }
     const body = JSON.stringify(feedback)
-  return this._http.post<FeedbackRequest>(this.baseUrl+'/add', body, httpOptions)
+    console.log('BODY en el service',feedback)
+  return this._http.post(this.baseUrl+'/add', body, httpOptions)
  }
   deleteFeedback(id: string): Observable<any>{
-    return this._http.delete<any>(this.baseUrl+'/'+id)
+    return this._http.delete(this.baseUrl+'/'+id)
  }
-  updateFeedback(feedback: FeedbackResponse): Observable<FeedbackResponse>{
+  updateFeedback(feedback: FeedbackResponse): Observable<any>{
     const httpOptions={
       headers:new HttpHeaders({
         'Content-Type':'application/json'
       })
     }
     const body = JSON.stringify(feedback)
-    return this._http.put<FeedbackResponse>(this.baseUrl+'/edit/'+feedback._id, body, httpOptions)
+    return this._http.put(this.baseUrl+'/edit/'+feedback._id, body, httpOptions)
   }
 
 }

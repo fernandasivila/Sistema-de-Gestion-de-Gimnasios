@@ -26,6 +26,7 @@ import { AttendanceHistoryComponent } from './worker-hub/attendance-history/atte
 import { RecordAttendanceComponent } from './worker-hub/record-attendance/record-attendance.component';
 import { MemberDetailsComponent } from './worker-hub/member-details/member-details.component';
 import { HomeComponent } from './home/home.component';
+import { LoginComponent } from './login/login.component';
 
 export const routes: Routes = [
     {
@@ -101,6 +102,10 @@ export const routes: Routes = [
         path: '',
         component: MainLayoutComponent,
         children: [
+            {
+                path: 'login',
+                component: LoginComponent
+            },
             {
                 path: '',
                 redirectTo: 'home',
