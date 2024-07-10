@@ -51,7 +51,7 @@ export class ProgressTrackerComponent implements OnInit {
         data: [80, 80, 65, 65, 60, 50, 56, 55],
         fill: true,
         borderColor: '#ffffff',
-        backgroundColor: '#5fc7458e',
+        backgroundColor: '#5fc745',
         tension: 0.1,
         borderWidth: 3,
         pointRadius: 4,

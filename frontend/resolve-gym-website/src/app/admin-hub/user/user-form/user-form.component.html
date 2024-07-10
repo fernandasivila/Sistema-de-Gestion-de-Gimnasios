@@ -53,11 +53,14 @@
             <div class="col-md-4">
                 <label for="inputRole" class="form-label">Rol de Usuario</label>
                 @if(item == 'Usuario'){
-                <select id="inputRole" class="form-select"
+                <select id="inputRole" class="form-select" formControlName="role"
                     [class.is-invalid]="this.role?.invalid && (this.role?.dirty || this.role?.touched)">
+                    <option *ngIf="userForm.controls['role'].value" [ngValue]="userForm.controls['role'].value">{{
+                        userForm.controls['role'].value.name }}</option>
+
                     <option selected value="">Elegir...</option>
-                    @for(role of rolesPost;track role){
-                    <option [value]="role.id">{{role.title}}</option>
+                    @for(role of roles;track role){
+                    <option [value]="role._id" [ngValue]="role">{{role.name}}</option>
                     }
                 </select>
                 }
@@ -71,8 +74,20 @@
 
             <div class="col-md-8">
                 <label for="inputImg" class="form-label">Foto de Pérfil</label>
-                <input id="inputImg" type="file" [class.is-invalid]="img?.invalid && (img?.dirty || img?.touched)"
-                    class="form-control" formControlName="img" (change)="onFileChange($event)">
+                <div class="row">
+                    <div class="col" *ngIf="action=='Modificar' && imgUpdate==false">
+                        <img [src]="imageData" alt="Imagen del usuario" width="200" height="200">
+                    </div>
+                    <div class="col">
+                        <input id="inputImg" type="file"
+                            [class.is-invalid]="img?.invalid && (img?.dirty || img?.touched)" class="form-control"
+                            formControlName="img" (change)="onFileChange($event)">
+
+                    </div>
+                </div>
+
+
+
             </div>
 
             <div class="col-md-4" *ngIf="this.role?.value == 2">
@@ -85,8 +100,7 @@
             </div>
 
             <div *ngIf="imageBase64post" class="col-md-12">
-                <img [src]="imageBase64post" alt="Imagen seleccionada" class="img-thumbnail"
-                    style="max-height: 200px;">
+                <img [src]="imageBase64post" alt="Imagen seleccionada" class="img-thumbnail" style="max-height: 200px;">
             </div>
 
             <div class="col-md-6">
@@ -162,7 +176,8 @@
                 </div>
             </div>
             <div class="col-12 d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary">Registrar</button>
+                <button *ngIf="action=='Registrar'" type="submit" class="btn btn-primary">Registrar</button>
+                <button *ngIf="action=='Modificar'" type="submit" class="btn btn-primary">Modificar</button>
             </div>
         </form>
     </div>

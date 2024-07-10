@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { FeedbackService } from '../../services/feedback.service';
 import { CommonModule } from '@angular/common';
 import { NgxStarRatingModule } from 'ngx-star-rating';
-import { FeedbackRequest } from '../../models/feedback';
+import { FeedbackRequest, FeedbackResponse } from '../../models/feedback';
 
 @Component({
   selector: 'app-feedback-form',
@@ -13,57 +13,69 @@ import { FeedbackRequest } from '../../models/feedback';
   styleUrl: './feedback-form.component.css'
 })
 export class FeedbackFormComponent implements OnInit {
-  feedbackForm! : FormGroup
+  feedbackForm!: FormGroup
+  feedbacks: any
 
   constructor(
-    private formBuilder : FormBuilder,
+    private formBuilder: FormBuilder,
     private feedbackService: FeedbackService
-  ){}
+  ) {
+
+  }
   ngOnInit(): void {
+    this.loadFeedbacks()
     this.feedbackForm = this.formBuilder.group({
       description: new FormControl("", [Validators.required]),
-      date: new FormControl("", [Validators.required]),
-     // score: new FormControl(),
       score: [0, [Validators.required, Validators.min(1), Validators.max(5)]]
     })
   }
 
   get description() { return this.feedbackForm.get('description'); }
-  get date() { return this.feedbackForm.get('date'); }
   get score() { return this.feedbackForm.get('score'); }
 
-  validateDescriptionRequired():Boolean {
+  validateDescriptionRequired(): Boolean {
     const description = this.description;
     return description?.errors?.['required'] && (description?.dirty || description?.touched);
-  }
-  validateDateRequired():Boolean {
-    const date = this.date;
-    return date?.errors?.['required'] && (date?.dirty || date?.touched);
   }
 
   validateScoreRequired(): boolean {
     return !!this.score?.invalid && (this.score?.dirty || this.score?.touched);
   }
 
- onSubmit(){
-  if (this.feedbackForm.valid) {
-    const feedback: FeedbackRequest={
-      body: this.description?.value,
-    date: this.date?.value,
-    score: this.score?.value,
-    member: localStorage.getItem('userid') || ''
-    }
-    console.log(feedback)
+  onSubmit() {
+    if (this.feedbackForm.valid) {
 
-    this.feedbackService.addFeedback(feedback).subscribe(
-      (result:any)=>{
-        console.log("Se registro un nuevo comentario", result)
+      const feedback: FeedbackRequest = {
+        body: this.description?.value,
+        date: new Date(),
+        score: this.score?.value,
+        //member: localStorage.getItem('userid') || ''
+        member: '668e0e4536ff04d0e3f318e4' //Socio Jane
+      }
+      this.feedbackService.addFeedback(feedback).subscribe(
+        (result: any) => {
+          console.log("Se registro un nuevo comentario", result)
+          this.loadFeedbacks()
+        },
+        (error: any) => {
+          console.error("ERROR al registrar el comentario", error)
+        }
+
+      )
+      this.feedbackForm.reset()
+    }
+  }
+
+  loadFeedbacks() {
+
+    this.feedbackService.getAllFeedbacks().subscribe(
+      (result: any) => {
+        console.log("Se cargaron los comentarios", result)
+        this.feedbacks = result.data
       },
-      (error:any)=>{
-        console.error("Error al registrar el comentario", error)
-        this.feedbackForm.reset() // Resetear el formulario para volver a intentarlo.
+      (error: any) => {
+        console.error("Error al cargar los comentarios", error)
       }
     )
   }
- }
 }
