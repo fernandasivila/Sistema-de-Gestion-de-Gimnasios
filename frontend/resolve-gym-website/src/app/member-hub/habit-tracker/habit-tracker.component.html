@@ -1,32 +1,32 @@
 <table class="table-calendar">
   <thead>
     <tr>
-      <th colspan="7" class="fs-4">{{calendarInformation.baseDateForCalendar| date : 'MMMM'}}</th>
+      <th colspan="8" class="fs-4">{{workingDate | date:'MMMM yyyy':undefined:'es' | titlecase}}</th>
     </tr>
     <tr class="fs-6">
+      <th><span class="d-none d-sm-inline">Domingo</span><span class="d-sm-none d-inline">D</span></th>
       <th><span class="d-none d-sm-inline">Lunes</span><span class="d-sm-none d-inline">L</span></th>
       <th><span class="d-none d-sm-inline">Martes</span><span class="d-sm-none d-inline">M</span></th>
       <th><span class="d-none d-sm-inline">Miércoles</span><span class="d-sm-none d-inline">M</span></th>
       <th><span class="d-none d-sm-inline">Jueves</span><span class="d-sm-none d-inline">J</span></th>
       <th><span class="d-none d-sm-inline">Viernes</span><span class="d-sm-none d-inline">V</span></th>
       <th><span class="d-none d-sm-inline">Sábado</span><span class="d-sm-none d-inline">S</span></th>
-      <th><span class="d-none d-sm-inline">Domingo</span><span class="d-sm-none d-inline">D</span></th>
+      <th><span class="d-none d-sm-inline">Objetivo</span><span class="d-sm-none d-inline">O</span></th>
     </tr>
   </thead>
   <tbody>
-    @for(week of calendarInformation.calendarDates; track week){
+    @for(week of calendar; track week){
     <tr>
-      @for(day of week; track day){
+      @for(day of week.days; track day){
       <td>
-        <div class="calendar-number" [class.habit-failed]="calendarInformation.calendarStates[day-1] == 'Ausente'"
-          [class.habit-success]="calendarInformation.calendarStates[day-1] == 'Presente'"
-          [class.habit-neutral]="calendarInformation.calendarStates[day-1] == 'Neutral'"
-          [class.habit-extra]="calendarInformation.calendarStates[day-1] == 'Extra'"
-          [class.today]="day == calendarInformation.baseDateForCalendar.getDate()"
-          >
-          {{day}}</div>
+        @if(day){
+        <div class="calendar-number" [class.habit-success]="day?.wasPresent" [class.today]="day?.isToday">
+          {{day.date}}</div>
+        }
       </td>
       }
+      <td [class.week-failed]="!week.goalReached" [class.week-success]="week.goalReached">{{week.daysAttended}} /
+        {{this.dayGoals}} <i [class.bi-check]="week.goalReached" [class.bi-x]="!week.goalReached"></i></td>
     </tr>
     }
   </tbody>

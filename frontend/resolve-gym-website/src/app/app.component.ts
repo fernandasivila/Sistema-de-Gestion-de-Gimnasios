@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AdminHubLayoutComponent } from './admin-hub/admin-hub-layout/admin-hub-layout.component';
+import { registerLocaleData } from '@angular/common';
+import localePy from '@angular/common/locales/es-419'
+
+registerLocaleData(localePy, 'es')
 
 @Component({
   selector: 'app-root',
