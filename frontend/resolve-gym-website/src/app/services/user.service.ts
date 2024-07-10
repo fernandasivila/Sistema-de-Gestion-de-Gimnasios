@@ -13,17 +13,17 @@ export class UserService {
 
   constructor(private _http: HttpClient) { }
 
-  getUsers():Observable<UserResponse[]>{
+  getUsers():Observable<any>{
     const httpOptions={
       headers: new HttpHeaders({
         'content-type':'application/json'
       })
     };
-    return this._http.get<UserResponse[]>(this.baseUrl+'/',httpOptions);
+    return this._http.get(this.baseUrl+'/',httpOptions);
   }
 
- getUserById(idUser: String):Observable<UserResponse>{
-  return this._http.get<UserResponse>(`${this.baseUrl}/${idUser}`);
+ getUserById(idUser: String):Observable<any>{
+  return this._http.get(`${this.baseUrl}/${idUser}`);
  }
 
  //router.post('/add',upload.single('img'),userValidation, userController.add);
