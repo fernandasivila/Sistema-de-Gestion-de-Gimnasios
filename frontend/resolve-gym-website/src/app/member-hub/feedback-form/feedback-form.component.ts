@@ -49,18 +49,13 @@ export class FeedbackFormComponent implements OnInit {
         body: this.description?.value,
         date: new Date(),
         score: this.score?.value,
-        //member: localStorage.getItem('userid') || ''
-        member: '668e0e4536ff04d0e3f318e4' //Socio Jane
+        member: '66901b759baea98ed03a1642' //Socio
       }
       this.feedbackService.addFeedback(feedback).subscribe(
         (result: any) => {
           console.log("Se registro un nuevo comentario", result)
           this.loadFeedbacks()
-        },
-        (error: any) => {
-          console.error("ERROR al registrar el comentario", error)
         }
-
       )
       this.feedbackForm.reset()
     }
@@ -77,5 +72,9 @@ export class FeedbackFormComponent implements OnInit {
         console.error("Error al cargar los comentarios", error)
       }
     )
+  }
+
+  getStars(score: number): number[] {
+    return Array(score).fill(0);
   }
 }

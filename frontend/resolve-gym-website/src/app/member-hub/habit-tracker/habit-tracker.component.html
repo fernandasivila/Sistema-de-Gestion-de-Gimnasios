@@ -1,3 +1,19 @@
+<div class="row justify-content-center">
+<nav aria-label="Page navigation example">
+  <ul class="pagination pagination-lg justify-content-center">
+    <li class="page-item" (click)="subtractMonths()">
+      <a class="page-link" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    <li class="page-item" (click)="addMonths()">
+      <a class="page-link" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+</div>
 <table class="table-calendar">
   <thead>
     <tr>
@@ -26,7 +42,7 @@
       </td>
       }
       <td [class.week-failed]="!week.goalReached" [class.week-success]="week.goalReached">{{week.daysAttended}} /
-        {{this.dayGoals}} <i [class.bi-check]="week.goalReached" [class.bi-x]="!week.goalReached"></i></td>
+        {{daysGoals}} <i [class.bi-check]="week.goalReached" [class.bi-x]="!week.goalReached"></i></td>
     </tr>
     }
   </tbody>

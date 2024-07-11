@@ -12,8 +12,8 @@ export class MemberService {
   constructor(private _http:HttpClient) { }
 
 
- getMembers():Observable<MemberResponse[]> {
-    return this._http.get<MemberResponse[]>(this.baseUrl+'/');
+ getMembers():Observable<any> {
+    return this._http.get(this.baseUrl+'/');
   }
  getMemberById(id:string):Observable<MemberResponse>{
    return this._http.get<MemberResponse>(`${this.baseUrl}/${id}`);

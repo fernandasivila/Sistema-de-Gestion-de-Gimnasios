@@ -6,6 +6,7 @@ import { ActionButtonGroupComponent } from '../../action-button-group/action-but
 import { ADTSettings } from 'angular-datatables/src/models/settings';
 import { Subject } from 'rxjs';
 import { IDemoNgComponentEventType } from '../../../test/idemo-ng-component-event-type';
+import { MemberService } from '../../../services/member.service';
 
 @Component({
   selector: 'app-member-list',
@@ -22,7 +23,8 @@ export class MemberListComponent implements OnInit, AfterViewInit  {
   
   constructor(
     private datePipe: DatePipe,
-    private router: Router
+    private router: Router,
+    private memberService : MemberService
   ){}
   
 
@@ -68,7 +70,16 @@ export class MemberListComponent implements OnInit, AfterViewInit  {
         language:{
           url: 'assets/datatable.spanish.json',
         },
-        data: this.apiResponseExample,
+        ajax: (dataTablesParameters: any, callback) => {
+          this.memberService.getMembers().subscribe(resp => {
+            console.log(resp.data)
+            callback({
+              recordsTotal: resp.recordsTotal,
+              recordsFiltered: resp.recordsFiltered,
+              data: resp.data
+            });
+          })
+        },
         columns: [
           { title: 'Usuario', data: 'username'},
           { title: 'Email', data: 'email'},
