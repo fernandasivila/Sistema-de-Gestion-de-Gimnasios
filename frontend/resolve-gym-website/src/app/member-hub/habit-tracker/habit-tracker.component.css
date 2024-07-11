@@ -46,3 +46,7 @@ th td {
     font-weight: bold;
     outline: 2px solid #ffffff;
 }
+
+.pagination span{
+    color: #ffffff
+}
