@@ -13,7 +13,7 @@ const isValidObjectId = (value) => {
 const AttendanceRecordValidation = [
     body('date').isISO8601().notEmpty().withMessage('Date must be a valid date format (YYYY-MM-DD)'),
     body('member').trim().notEmpty().withMessage('Member is required').custom(isValidObjectId).custom(
-        async (value) => { 
+        async (value, { req }) => { 
             const exist = await Member.findById(value);
             if (!exist) {
             throw new Error('Role invalid');
@@ -21,7 +21,7 @@ const AttendanceRecordValidation = [
 
             const attendanceRecord = await AttendanceRecord.findOne({
                 member: value,
-                date: new Date(req.body.date)
+                date: req.body.date
             });
 
             if (attendanceRecord) {

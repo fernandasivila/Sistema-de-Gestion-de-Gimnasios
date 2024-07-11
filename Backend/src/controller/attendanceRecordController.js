@@ -98,10 +98,11 @@ const attendanceRecordController = {
         }
     },
     getByMember: async (req, res) => {
-        const id = req.params.member;
+        const memberId = req.params.member; 
+    
         try {
-            const attendanceRecord = await AttendanceRecord.find({member: id});
-            if (!attendanceRecord) {
+            const attendanceRecords = await AttendanceRecord.find({member: memberId});
+            if (!attendanceRecords) {
                 return res.status(404).json({
                     meta: {
                         status: 404,
@@ -114,7 +115,7 @@ const attendanceRecordController = {
                     status: 200,
                     message: "Attendance Records found successfully",
                 },
-                data: attendanceRecord,
+                data: attendanceRecords,
             });
         } catch (error) {
             res.status(500).json({
