@@ -1,19 +1,19 @@
 const axios = require("axios");
 
 class PaymentService {
-  async createPayment() {
+  async createPayment(monthlyPlan) {
     const url = "https://api.mercadopago.com/checkout/preferences";
 
+    const items = monthlyPlan.map(monthlyPlan =>({
+      title: monthlyPlan.name,
+      description: monthlyPlan.description,
+      category_id: "gym_resolve",
+      quantity: 1,
+      unit_price: monthlyPlan.amount
+    }));
+
     const body = {
-      items: [
-        {
-          title: "Mensualidad Gym Resolve",
-          description: "Mensualidad de Gimnasio",
-          category_id: "gym_resolve",
-          quantity: 1,
-          unit_price: 10
-        }
-      ],
+      items: items,
       back_urls: {
         failure: "/failure",
         pending: "/pending",

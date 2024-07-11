@@ -22,6 +22,46 @@ const memberController = {
             });
         }
     },
+    getActiveMembers: async (req, res) => {
+      try {
+          const activeMembers = await Member.find({ state: 'active' });
+          res.status(200).json({
+              meta: {
+                  status: 200,
+                  message: " Active Members retrieved successfully",
+              },
+              data: activeMembers
+          });
+      } catch (error) {
+          console.error(error);
+          res.status(500).json({
+              meta: {
+                  status: 500,
+                  message: "Internal Server Error",
+              },
+          });
+      }
+  },
+  countActiveMembers: async (req, res) => {
+    try {
+        const count = await Member.countDocuments({ state: 'active' });
+        res.status(200).json({
+            meta: {
+                status: 200,
+                message: "Count of active members retrieved successfully",
+            },
+            data: { count }
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            meta: {
+                status: 500,
+                message: "Internal Server Error",
+            },
+        });
+    }
+},
     getById: async (req, res) => {
         const id = req.params.id;
         try {
@@ -53,6 +93,37 @@ const memberController = {
           });
         }
     },
+    getByDni: async (req, res) => {
+      const dni = req.params.dni;
+      try {
+        const member = await Member.findOne({dni});
+        if (!member) {
+          return res.status(404).json({
+            meta: {
+              status: 404,
+              message: "Member not found",
+            },
+          });
+        }
+        res.status(200).json({
+          meta: {
+            status: 200,
+            message: "Member found successfully",
+          },
+          data: member,
+        });
+      } catch (error) {
+        res.status(500).json({
+          meta: {
+            status: 500,
+            message: "Internal Server Error",
+          },
+          data: {
+            error: error.message,
+          },
+        });
+      }
+  },
     add: async (req, res) => {
         const errors = validationResult(req);
     

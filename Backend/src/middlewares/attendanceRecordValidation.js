@@ -1,7 +1,7 @@
 const {body} = require('express-validator');
 const mongoose = require('mongoose');
 const Member = require('../database/models/Member');
-const User = require('../database/models/User');
+const AttendanceRecord = require('../database/models/AttendanceRecord');
 
 const isValidObjectId = (value) => {
     if (!mongoose.Types.ObjectId.isValid(value)) {
@@ -18,6 +18,16 @@ const AttendanceRecordValidation = [
             if (!exist) {
             throw new Error('Role invalid');
             }
+
+            const attendanceRecord = await AttendanceRecord.findOne({
+                member: value,
+                date: new Date(req.body.date)
+            });
+
+            if (attendanceRecord) {
+                throw new Error('Member already registered for this date');
+            }
+
             return true;
         }
     )
