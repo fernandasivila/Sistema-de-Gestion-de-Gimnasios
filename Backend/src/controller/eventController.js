@@ -162,16 +162,6 @@ const eventController = {
         }
       },
     };
-    
-
-    /* function convertTimeToDate(date, time) {
-      const timeZone = 'America/Argentina/Buenos_Aires'
-      const [hours, minutes] = time.split(':').map(Number);
-  
-      const dateWithTime = moment.tz(date, timeZone).set({ hour: hours, minute: minutes, second: 0, millisecond: 0 });
-
-      return dateWithTime.toDate();
-  } */
 
       function convertTimeToDate(date, time) {
         const [hours, minutes] = time.split(':').map(Number);

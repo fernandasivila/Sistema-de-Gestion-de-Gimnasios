@@ -129,13 +129,13 @@ const coachController = {
             data: errors.array(),
           });
         } else {
-          let updatedCoach = new Coach({
+          let updatedCoach = {
             ...req.body,
             img: {
                 data: req.file.buffer,
                 contentType: req.file.mimetype,
               },
-          });
+          };
           try {
             await Coach.updateOne({ _id: id }, updatedCoach);
             res.json({

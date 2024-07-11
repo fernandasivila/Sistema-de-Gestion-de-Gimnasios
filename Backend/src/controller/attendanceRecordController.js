@@ -201,10 +201,10 @@ const attendanceRecordController = {
                 data: errors.array(),
             });
         } else {
-            let updatedAttendanceRecord = new AttendanceRecord({
+            let updatedAttendanceRecord = {
                 date: req.body.date,
                 member: req.body.member
-            });
+            };
             try {
                 await AttendanceRecord.updateOne({ _id: id }, updatedAttendanceRecord);
                 res.json({

@@ -125,9 +125,9 @@ const classController = {
             data: errors.array(),
           });
         } else {
-          let updatedClass = new Class({
+          let updatedClass = {
             ...req.body
-          });
+          };
           try {
             await Class.updateOne({ _id: id }, updatedClass);
             res.json({

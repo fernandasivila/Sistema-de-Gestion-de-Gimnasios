@@ -129,10 +129,12 @@ const exerciseController = {
             data: errors.array(),
           });
         } else {
-          let updatedExercise = new Exercise({
-            ...req.body
-          });
 
+          let updatedExercise ={
+            ...req.body
+          };
+
+          
           if (req.files && req.files.length > 0) {
             updatedExercise.images = req.files.map(file => ({
                 data: file.buffer,
