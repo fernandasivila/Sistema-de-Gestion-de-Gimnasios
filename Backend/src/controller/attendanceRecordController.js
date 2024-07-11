@@ -1,4 +1,5 @@
 const AttendanceRecord = require("../database/models/AttendanceRecord");
+const Member = require("../database/models/Member");
 const { validationResult } = require("express-validator");
 const mongoose = require('mongoose');
 
@@ -20,6 +21,48 @@ const attendanceRecordController = {
                     status: 500,
                     message: "Internal Server Error",
                 },
+            });
+        }
+    },
+    findByMemberAndMonth: async (req, res) => {
+        const { memberId, month, year } = req.params;
+
+        try {
+            const member = await Member.findById(memberId);
+            if (!member) {
+                return res.status(404).json({
+                    meta: {
+                        status: 404,
+                        message: 'Member not found'
+                    }
+                });
+            }
+
+            const startDate = new Date(year, month - 1, 1);
+            const endDate = new Date(year, month, 0, 23, 59, 59, 999);
+
+            const attendanceRecords = await AttendanceRecord.find({
+                member: memberId,
+                date: {
+                    $gte: startDate,
+                    $lte: endDate
+                }
+            });
+
+            res.status(200).json({
+                meta: {
+                    status: 200,
+                    message: 'Attendance records retrieved successfully'
+                },
+                data: attendanceRecords
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({
+                meta: {
+                    status: 500,
+                    message: 'Internal Server Error'
+                }
             });
         }
     },
