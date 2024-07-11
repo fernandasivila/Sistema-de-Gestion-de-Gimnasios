@@ -125,9 +125,9 @@ const feedbackController = {
             data: errors.array(),
           });
         } else {
-          let updatedFeedback = new Feedback({
+          let updatedFeedback = {
             ...req.body
-          });
+          };
           try {
             await Feedback.updateOne({ _id: id }, updatedFeedback);
             res.json({

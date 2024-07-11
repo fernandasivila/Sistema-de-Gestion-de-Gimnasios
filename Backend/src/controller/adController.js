@@ -129,13 +129,13 @@ const adController = {
             data: errors.array(),
           });
         } else {
-          let updatedAd = new Ad({
+          let updatedAd = {
             ...req.body,
             img: {
               data: req.file.buffer,
               contentType: req.file.mimetype
             }
-          });
+          };
           try {
             await Ad.updateOne({ _id: id }, updatedAd);
             res.json({

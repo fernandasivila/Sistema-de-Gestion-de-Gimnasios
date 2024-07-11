@@ -129,13 +129,13 @@ const exerciseController = {
             data: errors.array(),
           });
         } else {
-          let updatedExercise = new Exercise({
+          let updatedExercise = {
             ...req.body,
             img: [{
                 data: req.file.buffer,
                 contentType: req.file.mimetype,
               }],
-          });
+          };
 
           if (req.file) {
             updatedExercise.$push = {
