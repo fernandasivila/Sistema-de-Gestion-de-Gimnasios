@@ -1,4 +1,4 @@
-export interface Event {
+export interface EventI {
     _id?: String;
     name: String;
     description: String;

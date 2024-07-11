@@ -2,7 +2,7 @@ import { JsonPipe, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Event } from '../../../models/event';
+import { EventI } from '../../../models/event';
 import { EventService } from '../../../services/event.service';
 
 
@@ -95,7 +95,7 @@ export class EventFormComponent {
 
   onSubmit() {
     if (this.eventForm.valid) {
-      const eventData: Event = {
+      const eventData: EventI = {
         name: this.name?.value,
         description: this.description?.value,
         date: this.date?.value,
