@@ -11,8 +11,8 @@ const coachSchema = new Schema({
         required: true
     },
     workArea:{
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Class'
     },
     img: {
         data: Buffer,
