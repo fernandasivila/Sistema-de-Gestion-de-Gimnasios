@@ -5,7 +5,13 @@ class PaymentController {
   
     async getPaymentLink(req, res) {
       try {
-        const payment = await this.subscriptionService.createPayment();
+        const { monthlyPlan } = req.body;
+
+        if (!monthlyPlan || monthlyPlan.length === 0) {
+          return res.status(400).json({ error: true, msg: "No monthlyPlan provided" });
+        }
+
+        const payment = await this.subscriptionService.createPayment(monthlyPlan);
   
         return res.json(payment);
       } catch (error) {
