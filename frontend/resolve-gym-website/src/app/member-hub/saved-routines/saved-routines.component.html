@@ -14,18 +14,52 @@
                             Guardada: {{ routine.releaseDate | date }}
                         </i> </p>
                 </div>
-                <div class="col-6 d-flex justify-content-end">
-                    <button class="btn btn-warning">Ver</button>
-                </div>
             </div>
             <div class="card-body">
 
                 <p class="card-text"> <strong>Ejercicios: </strong></p>
-                <ul class="list-group">
-                    <li class="list-group-item" *ngFor="let exercise of routine.exercises">
-                        {{ exercise.name }} | no se si agregar info
-                    </li>
-                </ul>
+                <div>
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Ejercicio</th>
+                            <th scope="col">Set</th>
+                            <th scope="col">Rep x Set</th>
+                            <th scope="col">imagen:</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let exercise of routine.exercises">
+                            <th scope="row">
+                                <div class="col d-flex justify-content-end">
+                                    <button class="btn btn-warning">Ver</button>
+                                </div>
+                            </th>
+                            <td>
+                                <div class="col item">
+                                    {{exercise.name}}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col item">
+                                    {{exercise.set}} .
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col item">
+                                    {{exercise.rep}} .
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col item">
+                                   . {{exercise.images[0]}}
+                                </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                </div>
                 <p class="card-text"> <strong> Grupos Musculares:</strong></p>
                 <ul class="list-group">
                     <li class="list-group-item" *ngFor="let muscleGroup of routine.muscleGroupsSelected">
