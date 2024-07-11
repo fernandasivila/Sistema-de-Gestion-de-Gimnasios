@@ -10,7 +10,7 @@
                     <p class="card-text"> <i>
                             {{feed.date | date}}
                         </i> </p>
-                    <p>Puntaje: {{feed.score}} </p>
+                    <p>Puntaje: <i *ngFor="let star of getStars(feed.score)" class="bi bi-star-fill" style="color: #FFD43B;"></i> </p>
                 </div>
             </div>
             <div class="card-body">
