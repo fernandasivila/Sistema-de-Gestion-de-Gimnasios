@@ -1,5 +1,6 @@
 const {body} = require('express-validator');
 const path = require('path');
+const mongoose = require('mongoose');
 const MuscleGroup = require('../database/models/MuscleGroup');
 
 const isValidObjectId = (value) => {
@@ -25,7 +26,7 @@ const exerciseValidation = [
             return true;
         }
     ),
-    body('img').custom((value, { req }) => {
+    body('images').custom((value, { req }) => {
 
         if(!req.files || req.files.length === 0) {
           throw new Error('At least one image is required');
