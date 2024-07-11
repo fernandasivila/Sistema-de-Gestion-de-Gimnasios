@@ -3,6 +3,8 @@ const session = require("express-session");
 const passport = require("./services/passport-config");
 const cors = require("cors");
 const dbconnect = require('./database/database');
+const moment = require('moment-timezone');
+
 require('./services/cronService');
 
 const authRoutes = require("./routes/authRoutes");
@@ -19,6 +21,7 @@ const loginRoute = require("./routes/login");
 const adsRoutes = require("./routes/ad");
 const attendanceRecordsRoutes = require("./routes/attendanceRecord");
 const classesRoutes = require("./routes/class");
+const eventsRoutes = require("./routes/event");
 const coachesRoutes = require("./routes/coach");
 const exercisesRoutes = require("./routes/exercise");
 const feedbacksRoutes = require("./routes/feedback");
@@ -44,6 +47,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({origin: 'http://localhost:4200'}));
 
+
+
+// Establecer la zona horaria deseada
+moment.tz.setDefault('America/Argentina/Buenos_Aires');
+
 //ROUTES
 app.use('/monthlyFees', monthlyFeesRoutes);
 app.use('/monthlyPlans', monthlyPlansRoutes);
@@ -57,6 +65,7 @@ app.use('/login', loginRoute);
 app.use('/ads', adsRoutes);
 app.use('/attendanceRecords', attendanceRecordsRoutes);
 app.use('/classes', classesRoutes);
+app.use('/events', eventsRoutes);
 app.use('/coaches', coachesRoutes);
 app.use('/exercises', exercisesRoutes);
 app.use('/feedbacks', feedbacksRoutes);

@@ -1,5 +1,6 @@
 const Event = require("../database/models/Event");
 const { validationResult } = require("express-validator");
+const moment = require('moment-timezone');
 
 const eventController = {
     list: async (req, res) => {
@@ -125,9 +126,19 @@ const eventController = {
             data: errors.array(),
           });
         } else {
-          let updatedEvent = new Event({
-            ...req.body
-          });
+          const { date, startTime, finishTime } = req.body;
+
+          const startDateTime = convertTimeToDate(date, startTime);
+          const finishDateTime = convertTimeToDate(date, finishTime);
+
+          console.log("Start DateTime:", startDateTime);
+          console.log("Finish DateTime:", finishDateTime);
+
+          const updatedEvent = {
+              ...req.body,
+              startTime: startDateTime,
+              finishTime: finishDateTime
+          };
           try {
             await Event.updateOne({ _id: id }, updatedEvent);
             res.json({
@@ -152,4 +163,29 @@ const eventController = {
       },
     };
     
+
+    /* function convertTimeToDate(date, time) {
+      const timeZone = 'America/Argentina/Buenos_Aires'
+      const [hours, minutes] = time.split(':').map(Number);
+  
+      const dateWithTime = moment.tz(date, timeZone).set({ hour: hours, minute: minutes, second: 0, millisecond: 0 });
+
+      return dateWithTime.toDate();
+  } */
+
+      function convertTimeToDate(date, time) {
+        const [hours, minutes] = time.split(':').map(Number);
+        
+        // Crear un objeto moment en la zona horaria de Argentina y establecer la hora
+        const dateTime = moment.tz(date, 'America/Argentina/Buenos_Aires').set({
+          hour: hours,
+          minute: minutes,
+          second: 0,
+          millisecond: 0
+      });
+    
+        // Convertir el objeto moment de vuelta a una fecha
+        return dateTime.toDate();
+    }
+
     module.exports = eventController;
