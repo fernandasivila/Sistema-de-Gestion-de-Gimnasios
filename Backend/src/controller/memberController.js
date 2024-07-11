@@ -1,5 +1,6 @@
 const Member = require("../database/models/Member");
 const { validationResult } = require("express-validator");
+const bcrypt = require('bcryptjs');
 
 const memberController = {
     list: async (req, res) => {
@@ -41,8 +42,8 @@ const memberController = {
               },
           });
       }
-  },
-  countActiveMembers: async (req, res) => {
+    },
+    countActiveMembers: async (req, res) => {
     try {
         const count = await Member.countDocuments({ state: 'active' });
         res.status(200).json({
@@ -61,7 +62,7 @@ const memberController = {
             },
         });
     }
-},
+    },
     getById: async (req, res) => {
         const id = req.params.id;
         try {
@@ -126,7 +127,8 @@ const memberController = {
   },
     add: async (req, res) => {
         const errors = validationResult(req);
-    
+        console.log(req.body);
+
         if (!errors.isEmpty()) {
           return res.status(400).json({
             meta: {
@@ -137,7 +139,12 @@ const memberController = {
           });
         } else {
           let member = new Member({
-            ...req.body
+            ...req.body,
+            password: bcrypt.hashSync(req.body.password, 10),
+            img: {
+              data: req.file.buffer,
+              contentType: req.file.mimetype,
+            },
           });
           try {
             await member.save();
@@ -196,9 +203,14 @@ const memberController = {
             data: errors.array(),
           });
         } else {
-          let updatedMember = new Member({
-            ...req.body
-          });
+          let updatedMember = {
+            ...req.body,
+            password: bcrypt.hashSync(req.body.password, 10),
+            img: {
+              data: req.file.buffer,
+              contentType: req.file.mimetype,
+            },
+          };
           try {
             await Member.updateOne({ _id: id }, updatedMember);
             res.json({
