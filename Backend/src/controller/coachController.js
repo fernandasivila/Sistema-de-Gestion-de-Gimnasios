@@ -4,7 +4,7 @@ const { validationResult } = require("express-validator");
 const coachController = {
     list: async (req, res) => {
         try {
-            const coaches = await Coach.find();
+            const coaches = await Coach.find().populate('workArea');
             res.status(200).json({
                 meta: {
                     status: 200,

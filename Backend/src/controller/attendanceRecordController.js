@@ -25,8 +25,8 @@ const attendanceRecordController = {
         }
     },
     findByMemberAndMonth: async (req, res) => {
-        const { memberId, month, year } = req.params;
-
+        const { memberId, year, month } = req.params;
+        console.log(memberId, year, month);
         try {
             const member = await Member.findById(memberId);
             if (!member) {
@@ -38,8 +38,11 @@ const attendanceRecordController = {
                 });
             }
 
-            const startDate = new Date(year, month - 1, 1);
-            const endDate = new Date(year, month, 0, 23, 59, 59, 999);
+            const startDate = new Date(year, month - 1, 1, -3, 0, 0, 0);
+            
+            const endDate = new Date(year, month, 0, 20, 59, 59, 999);
+
+            console.log(startDate, endDate);
 
             const attendanceRecords = await AttendanceRecord.find({
                 member: memberId,
