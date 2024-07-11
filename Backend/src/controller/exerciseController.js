@@ -1,4 +1,4 @@
-const Exercise = require("../database/models/Event");
+const Exercise = require("../database/models/Exercise");
 const { validationResult } = require("express-validator");
 
 const exerciseController = {
@@ -67,10 +67,10 @@ const exerciseController = {
         } else {
           let exercise = new Exercise({
             ...req.body,
-            img: [{
-                data: req.file.buffer,
-                contentType: req.file.mimetype,
-              }],
+            images: req.files.map(file => ({
+              data: file.buffer,
+              contentType: file.mimetype,
+          }))
           });
           try {
             await exercise.save();
@@ -129,21 +129,18 @@ const exerciseController = {
             data: errors.array(),
           });
         } else {
-          let updatedExercise = {
-            ...req.body,
-            img: [{
-                data: req.file.buffer,
-                contentType: req.file.mimetype,
-              }],
+
+          let updatedExercise ={
+            ...req.body
           };
 
-          if (req.file) {
-            updatedExercise.$push = {
-                img: {
-                    data: req.file.buffer,
-                    contentType: req.file.mimetype,
-                }
-            };
+          
+          if (req.files && req.files.length > 0) {
+            updatedExercise.images = req.files.map(file => ({
+                data: file.buffer,
+                contentType: file.mimetype,
+            }));
+        }
         }
 
           try {
@@ -167,7 +164,5 @@ const exerciseController = {
             });
           }
         }
-      },
-    };
-    
+      };
     module.exports = exerciseController;
