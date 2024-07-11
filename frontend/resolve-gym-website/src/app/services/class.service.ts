@@ -11,31 +11,31 @@ export class ClassService {
 
   constructor(private _http: HttpClient) { }
   
-  getAllClasses():Observable<Class[]>{
-    return this._http.get<Class[]>(this.baseUrl+'/')
+  getAllClasses():Observable<any>{
+    return this._http.get(this.baseUrl+'/')
   }
-  getClassById(id:string):Observable<Class>{
-    return this._http.get<Class>(this.baseUrl+'/'+id)
+  getClassById(id:string):Observable<any>{
+    return this._http.get(this.baseUrl+'/'+id)
   }
-  addClass(classNew:Class):Observable<Class>{
+  addClass(classNew:Class):Observable<any>{
     const httpOptions={
       headers:new HttpHeaders({
         'Content-Type':'application/json'
       })
     }
     const body = JSON.stringify(classNew)
-    return this._http.post<Class>(this.baseUrl+'/add', body, httpOptions)
+    return this._http.post(this.baseUrl+'/add', body, httpOptions)
   }
-  deleteClass(id:string):Observable<Class>{
-    return this._http.delete<Class>(this.baseUrl+'/'+id)
+  deleteClass(id:string):Observable<any>{
+    return this._http.delete(this.baseUrl+'/'+id)
   }
-  updateClass(classUpdate: Class):Observable<Class>{
+  updateClass(classUpdate: Class):Observable<any>{
     const httpOptions={
       headers:new HttpHeaders({
         'Content-Type':'application/json'
       })
     }
     const body = JSON.stringify(classUpdate)
-    return this._http.post<Class>(`${this.baseUrl}/edit/${classUpdate._id}`,body,httpOptions)
+    return this._http.post(`${this.baseUrl}/edit/${classUpdate._id}`,body,httpOptions)
   }
 }
