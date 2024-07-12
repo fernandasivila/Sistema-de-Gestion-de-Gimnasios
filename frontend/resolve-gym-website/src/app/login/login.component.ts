@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { JsonPipe, NgIf } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { UserService } from '../services/user.service';
+import { data, error } from 'jquery';
 
 @Component({
   selector: 'app-login',
@@ -14,11 +16,14 @@ import { HttpClientModule } from '@angular/common/http';
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
+  roleUser=''
+  userId:any
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     private loginService: LoginService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -66,19 +71,41 @@ export class LoginComponent implements OnInit {
       });
   
         if (this.loginForm.valid) {
+          this.isLogged=false
         this.loginService.login(this.username?.value, this.password?.value).subscribe(
           (res: any) => {
-            console.log(res)
-            if (res.status == 200){
+            if (res.meta.status == 200){
               this.isLogged = true;
+
               //cookies
-              /* sessionStorage.setItem("userId",res.data.user.id)
-              this.router.navigate(['/home']); */
+              this.userId=res.data.user.id
+              sessionStorage.setItem("userId",this.userId)
+               
+              this.userService.getUserById(this.userId).subscribe(
+                (result) => {
+                  console.log(result)
+                  this.roleUser = result.data.role.name
+                  console.log(this.roleUser)
+                  sessionStorage.setItem("roleUser",this.roleUser)
+
+                  console.log("AQUI",this.loginService.getRoleUserLogged())
+                  if(this.roleUser=="Dueño"){
+                    this.router.navigate(['/admin-dashboard/home']);
+                   }else{
+                    this.router.navigate(['']);
+                   }
+                },
+                (error: any) => {
+                  console.log(error)
+                }
+               )
+            }else{
+              this.isLogged=true;
             }
           },
           (error:any)=>{
             //aplicar toast
-            this.isLogged=true;
+            
             console.log(error)
           }
         )
