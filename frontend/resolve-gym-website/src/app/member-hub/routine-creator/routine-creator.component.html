@@ -8,6 +8,10 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div>
+                    <label for="">Nombre de la rutina</label>
+                    <input type="text" [(ngModel)]="nameRoutine" >
+                </div>
                 <div class="table-responsive">
                     <table class="table table-striped-columns table-hover">
                         <thead>
@@ -19,34 +23,21 @@
                             </tr>
                         </thead>
                         <tbody class="table-group-divider">
-                            <tr>
-                                <td scope="row">Sentadillas</td>
-                                <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId"
-                                        placeholder="" /></td>
-                                <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId"
-                                        placeholder="" /></td>
+                            <tr *ngFor="let ejercicio of routine, let i = index">
+                                <td scope="row">{{ejercicio.name}}</td>
+                                <td class="text-center">
+                                        {{ejercicio.set}}</td>
+                                <td class="text-center">
+                                        {{ejercicio.rep}}</td>
                                 <td>
                                     <div class="d-flex gap-2 justify-content-center">
-                                        <button type="button" name="" id="" class="btn btn-danger">
+                                        <button type="button" name="" id="" class="btn btn-danger" (click)="borrarEjercicio(i)" >
                                             Borrar
                                         </button>
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
-                                <td scope="row">Flexiones de Pecho</td>
-                                <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId"
-                                        placeholder="" /></td>
-                                <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId"
-                                        placeholder="" /></td>
-                                <td>
-                                    <div class="d-flex gap-2 justify-content-center">
-                                        <button type="button" name="" id="" class="btn btn-danger">
-                                            Borrar
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
+                            
                         </tbody>
                     </table>
                 </div>
@@ -54,7 +45,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary">Guardar Rutina</button>
+                <button type="button" class="btn btn-primary" (click)="createRoutine()" >Guardar Rutina</button>
             </div>
         </div>
     </div>
