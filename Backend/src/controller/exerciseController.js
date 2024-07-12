@@ -4,7 +4,7 @@ const { validationResult } = require("express-validator");
 const exerciseController = {
     list: async (req, res) => {
         try {
-            const exercises = await Exercise.find();
+            const exercises = await Exercise.find().populate('muscleGroup');
             res.status(200).json({
                 meta: {
                     status: 200,
