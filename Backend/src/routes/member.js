@@ -14,5 +14,7 @@ router.get('/dni/:dni', memberController.getByDni);
 router.post('/add',upload.single('img'),userValidation, memberValidation, memberController.add);
 router.delete('/:id', memberController.delete);
 router.put('/edit/:id', upload.single('img'),userValidation, memberValidation, memberController.update);
+router.put('/edit/routine/:id',memberController.addRoutine);
+router.put('/edit/monthlyPlan/:id',memberController.changeMonthlyPlan);
 
 module.exports = router;

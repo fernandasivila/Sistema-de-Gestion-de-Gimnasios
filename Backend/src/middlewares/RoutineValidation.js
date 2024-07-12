@@ -1,7 +1,7 @@
 const {body} = require('express-validator');
 const Exercise = require('../database/models/Exercise');
 const MuscleGroup = require('../database/models/MuscleGroup');
- require('mongoose');
+const mongoose = require('mongoose');
 
 const isValidObjectId = (value) => {
     if (!mongoose.Types.ObjectId.isValid(value)) {

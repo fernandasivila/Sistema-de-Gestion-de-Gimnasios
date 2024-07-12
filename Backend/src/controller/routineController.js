@@ -67,6 +67,7 @@ const routineController = {
         data: errors.array(),
       });
     } else {
+      console.log(req.body);
       let routine = new Routine(req.body);
 
       try {

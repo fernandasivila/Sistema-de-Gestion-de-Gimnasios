@@ -4,7 +4,7 @@ const MuscleGroup = require("../database/models/MuscleGroup");
 const muscleGroupController = {
   list: async (req, res) => {
     try {
-      const muscleGroups = await MuscleGroup.find();
+      const muscleGroups = await MuscleGroup.find({}, '-img');
       res.status(200).json({
         meta: {
           status: 200,

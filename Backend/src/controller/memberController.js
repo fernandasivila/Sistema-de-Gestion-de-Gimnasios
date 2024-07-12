@@ -254,6 +254,73 @@ const memberController = {
             });
         }
       },
+      addRoutine: async (req, res) => {
+        const memberId = req.params.id;
+        const newRoutineId = req.body.routine;
+
+        console.log(newRoutineId);
+        try {
+          const updateResult = await Member.updateOne(
+            { _id: memberId },
+            { $push: { routines: newRoutineId } }
+          );
+          
+          console.log(updateResult);
+
+          if (updateResult.modifiedCount === 0) {
+            return res.status(404).json({
+              meta: {
+                status: 404,
+                message: "Member not found or routine already added"
+              }
+            });
+          }
+      
+          res.json({
+            meta: {
+              status: 200,
+              message: "Member updated routines successfully"
+            }
+          });
+          } catch (error) {
+            res.status(500).json({
+              meta: {
+                status: 500,
+                message: "Error processing operation",
+              },
+              data: {
+                error: error.message,
+              },
+            });
+          }
+      },
+      changeMonthlyPlan: async (req, res) => {
+        const id = req.params.id;
+        const newMonthlyPlanId = req.body.monthlyPlan;
+
+        try {
+          await Member.updateOne(
+            { _id: id },
+            { $set: { monthlyPlan: newMonthlyPlanId } }
+          );
+            res.json({
+              meta: {
+                status: 200,
+                message: "Member updated monthlyPlan successfully",
+              }
+            });
+          } catch (error) {
+            res.status(500).json({
+              meta: {
+                status: 500,
+                message: "Error processing operation",
+              },
+              data: {
+                error: error.message,
+              },
+            });
+          }
+      },
     };
     
     module.exports = memberController;
