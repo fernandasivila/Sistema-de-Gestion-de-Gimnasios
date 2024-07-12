@@ -1,7 +1,7 @@
 import { JsonPipe, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EventI } from '../../../models/event';
 import { EventService } from '../../../services/event.service';
 
@@ -21,7 +21,8 @@ export class EventFormComponent {
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
-    private eventService: EventService
+    private eventService: EventService,
+    private router: Router
 
   ) { }
 
@@ -48,6 +49,9 @@ export class EventFormComponent {
               this.loadEventoToModify(this.idModificar)
             }
           })
+          if(this.idModificar){
+            this.loadEventData(this.idModificar)
+          }
           break;
       }
     });
@@ -144,17 +148,45 @@ export class EventFormComponent {
           (response) => console.log(response),
           (error) => console.error(error)
         )
+        this.router.navigate(['/admin-dashboard/events/'])
       }
       if (this.action == "Modificar") {
         eventData._id = this.idModificar;
         console.log(eventData)
         this.eventService.updateEvent(eventData).subscribe(
-          (response) => console.log(response),
+          (response) => {
+            console.log(response)
+            this.router.navigate(['/admin-dashboard/events/'])
+          },
           (error) => console.error(error)
         )
       }
     } else {
       console.log('Formulario no válido');
     }
+  }
+  loadEventData(id: string): void {
+    this.eventService.getEventById(id).subscribe(
+      (result) => {
+        const event = result.data;
+        this.eventForm.patchValue({
+          name: event.name,
+          description: event.description,
+          date: this.extractDate(event.date),
+          startTime: this.extractTime(event.startTime),
+          finishTime: this.extractTime(event.finishTime)
+        });
+      },
+      (error) => {
+        console.error('Error cargando los datos del evento', error);
+      }
+    );
+  }
+  private extractDate(dateTimeString: string): string {
+    return dateTimeString.split('T')[0];
+  }
+  
+  private extractTime(dateTimeString: string): string {
+    return dateTimeString.split('T')[1].slice(0, 5);
   }
 }
