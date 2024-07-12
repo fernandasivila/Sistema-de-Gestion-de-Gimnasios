@@ -42,7 +42,11 @@ export class HabitTrackerComponent implements OnInit {
   calendar : calendarWeek[] = []
 
   ngOnInit(): void {
-      this.getAttendanceRecordsByMemberAndDate();
+      this.loadCalendar();
+  }
+
+  loadCalendar(){
+    this.getAttendanceRecordsByMemberAndDate();
   }
 
   getAttendanceRecordsByMemberAndDate() {
@@ -50,7 +54,7 @@ export class HabitTrackerComponent implements OnInit {
     this.attendanceRecordService.getAttendanceRecordByMemberAndMonth(this.memberId,this.workingDate.getMonth()+1, this.workingDate.getFullYear()).subscribe(
       (result: any) => {
         console.log(result)
-        console.log(this.workingDate.getMonth());
+        console.log(this.workingDate);
         
         this.attendanceRecords = result.data
         this.getMember();
@@ -132,5 +136,19 @@ export class HabitTrackerComponent implements OnInit {
 
     console.log(calendar)
     return calendar
+  }
+
+
+  addMonths(){
+    const today = new Date();
+    if(this.workingDate < today){
+    this.workingDate.setMonth(this.workingDate.getMonth() + 1);
+    this.loadCalendar();
+    }
+  }
+
+  subtractMonths(){
+    this.workingDate.setMonth(this.workingDate.getMonth() - 1);
+    this.loadCalendar();
   }
 }
