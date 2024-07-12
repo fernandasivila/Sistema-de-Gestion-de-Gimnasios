@@ -67,10 +67,10 @@ const exerciseController = {
         } else {
           let exercise = new Exercise({
             ...req.body,
-            images: req.files.map(file => ({
-              data: file.buffer,
-              contentType: file.mimetype,
-          }))
+            img: {
+              data: req.file.buffer,
+              contentType: req.file.mimetype
+            }
           });
           try {
             await exercise.save();
@@ -131,15 +131,12 @@ const exerciseController = {
         } else {
 
           let updatedExercise ={
-            ...req.body
+            ...req.body,
+            img: {
+              data: req.file.buffer,
+              contentType: req.file.mimetype
+            }
           };
-
-          if (req.files && req.files.length > 0) {
-            updatedExercise.images = req.files.map(file => ({
-                data: file.buffer,
-                contentType: file.mimetype,
-            }));
-        }
         }
 
           try {

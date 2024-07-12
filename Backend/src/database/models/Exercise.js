@@ -29,10 +29,10 @@ const exerciseSchema = new Schema({
         type: String, //Cardio Musculacion
         required: true
     },
-    images:[{
+    images:{
         data: Buffer,
         contentType: String
-    }],
+    },
     muscleGroup:{
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'MuscleGroup',

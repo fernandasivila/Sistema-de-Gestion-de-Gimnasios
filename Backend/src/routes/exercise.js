@@ -6,9 +6,9 @@ const router = express.Router();
 
 router.get('/', exerciseController.list);
 router.get('/:id', exerciseController.getById);
-router.post('/add', upload.array('img', 10), exerciseValidation, exerciseController.add);
+router.post('/add', upload.single('images'), exerciseValidation, exerciseController.add);
 router.delete('/:id', exerciseController.delete);
-router.put('/edit/:id', upload.array('img', 10), exerciseValidation, exerciseController.update);
+router.put('/edit/:id', upload.single('images'), exerciseValidation, exerciseController.update);
 
 module.exports = router;
 
