@@ -98,6 +98,11 @@ export class UserFormComponent implements OnInit {
     )
   }
 
+
+  getFormValuesWithoutImage() {
+    const formValues = { ...this.userForm.value };
+    return formValues;
+  }
   //getters para mejorar redibilidad
   get username() {
     return this.userForm.get('username')
@@ -307,7 +312,7 @@ export class UserFormComponent implements OnInit {
           username: this.username?.value,
           password: this.password?.value,
           email: this.email?.value,
-          role: this.role?.value,
+          role: this.role?.value._id,
           personalInformation: {
             firstName: this.firstName?.value,
             lastName: this.lastName?.value,
@@ -318,7 +323,7 @@ export class UserFormComponent implements OnInit {
           },
           img: this.img?.value
         }
-        console.log(userNew);
+        console.log("AQUI",userNew);
 
         this.userService.addUser(userNew).subscribe(
           (res: any) => {
