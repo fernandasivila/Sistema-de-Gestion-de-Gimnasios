@@ -66,8 +66,15 @@ const eventController = {
             data: errors.array(),
           });
         } else {
+          const { date, startTime, finishTime } = req.body;
+
+          const startDateTime = convertTimeToDate(date, startTime);
+          const finishDateTime = convertTimeToDate(date, finishTime);
+
           let event = new Event({
-            ...req.body
+            ...req.body,
+            startTime: startDateTime,
+              finishTime: finishDateTime
           });
           try {
             await event.save();
