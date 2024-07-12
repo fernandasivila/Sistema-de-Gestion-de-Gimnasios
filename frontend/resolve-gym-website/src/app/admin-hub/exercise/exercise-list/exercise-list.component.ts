@@ -7,6 +7,8 @@ import { ADTSettings } from 'angular-datatables/src/models/settings';
 import { Subject } from 'rxjs';
 import { IDemoNgComponentEventType } from '../../../test/idemo-ng-component-event-type';
 import { ExerciseService } from '../../../services/exercise.service';
+import { MuscleGroupService } from '../../../services/muscle-group.service';
+import { ExerciseResponse } from '../../../models/exercise';
 
 @Component({
   selector: 'app-exercise-list',
@@ -20,10 +22,12 @@ export class ExerciseListComponent implements OnInit, AfterViewInit{
 
   dtOptions: ADTSettings = {};
   dtTrigger: Subject<ADTSettings> = new Subject<ADTSettings>()
+  nameMusculo = ''
 
   constructor(private datePipe: DatePipe, 
     private router: Router,
-    private ejercicioService: ExerciseService
+    private ejercicioService: ExerciseService,
+    private musculosService: MuscleGroupService
   ) {
     
   }
@@ -42,12 +46,15 @@ export class ExerciseListComponent implements OnInit, AfterViewInit{
         },
         ajax: (dataTablesParameters: any, callback) => {
           this.ejercicioService.getAllExercises().subscribe(resp => {
-            console.log(resp.data)
+            console.log("AQUII",resp.data)
+   
             callback({
               recordsTotal: resp.recordsTotal,
               recordsFiltered: resp.recordsFiltered,
               data: resp.data
-            });
+              
+            }
+          );
           })
         },
         columns: [
@@ -57,7 +64,7 @@ export class ExerciseListComponent implements OnInit, AfterViewInit{
           { title: 'Instrucciones', data:'instruction'},
           { title: 'Dificultad', data: 'difficult'},
           { title: 'Tipo', data: 'type'},
-          { title: 'Músculo', data:'muscleGroup'},
+        //  { title: 'Músculo', data:'muscleGroup'},
           {
             title: 'Acciones',
             data: null,
@@ -121,5 +128,12 @@ export class ExerciseListComponent implements OnInit, AfterViewInit{
     this.confirmationModal.nativeElement.click()
   }
 
-
+  cargarNameMusculo(id:String){
+    this.musculosService.getMuscleGroupById(id).subscribe(
+      data=>{
+        console.log("MUSCULO TRAIDO",data)
+        this.nameMusculo = data.data.name
+      },error => console.log("ERROR TRAYENDO EL MUSCULO",error)
+    )
+  }
 }
