@@ -4,13 +4,15 @@ class PaymentService {
   async createPayment(monthlyPlan) {
     const url = "https://api.mercadopago.com/checkout/preferences";
 
-    const items = monthlyPlan.map(monthlyPlan =>({
-      title: monthlyPlan.name,
-      description: monthlyPlan.description,
+    const items = [
+      {
+      title: "Gym Resolve",
+      description: "Hola",
       category_id: "gym_resolve",
       quantity: 1,
-      unit_price: monthlyPlan.amount
-    }));
+      unit_price: 1
+      }
+    ]
 
     const body = {
       items: items,
