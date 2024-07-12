@@ -44,6 +44,10 @@ export class MemberService {
     return this._http.get(`${this.baseUrl}/progress/${id}`);
   }
 
+  getRoutinesByMember(id:string):Observable<any>{
+    return this._http.get(`${this.baseUrl}/routines/${id}`);
+  }
+
   addRoutine(idRoutine : string, idMember: string):Observable<any>{
     const httpOptions={
       headers:new HttpHeaders({
@@ -57,4 +61,18 @@ export class MemberService {
     })
     return this._http.put(`${this.baseUrl}/edit/routine/${idMember}`,body,httpOptions);
     }
+
+    addProgress(idProgress : string, idMember: string):Observable<any>{
+      const httpOptions={
+        headers:new HttpHeaders({
+          'Content-Type':'application/json'
+        })
+      }
+      console.log(idProgress);
+      
+      const body = JSON.stringify({
+        "progress": idProgress
+      })
+      return this._http.put(`${this.baseUrl}/edit/progress/${idMember}`,body,httpOptions);
+      }
 }

@@ -4,6 +4,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProgressService } from '../../../services/progress.service';
 import { Progress } from '../../../models/progress';
+import { MemberService } from '../../../services/member.service';
 
 @Component({
   selector: 'app-progress-record',
@@ -16,10 +17,12 @@ export class ProgressRecordComponent implements OnInit {
 
   action = 'Registrar';
   progressId = '';
+  userId = "6690162d02bf509b25364502"; //SOCIO
 
   dateProgress = new Date();
 
   imageBase64post: string | ArrayBuffer | null = null;
+
 
   progressForm!: FormGroup;
 
@@ -30,7 +33,8 @@ export class ProgressRecordComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private progressService: ProgressService
+    private progressService: ProgressService,
+    private memberService: MemberService
   ) { }
 
   ngOnInit(): void {
@@ -107,12 +111,22 @@ export class ProgressRecordComponent implements OnInit {
       this.progressService.addProgress(progressNew).subscribe(
         data => {
           console.log('Progreso registrado', data);
-          this.router.navigate(['progresses/tracker'])
+          this.progressId = data.data._id;
+          this.addProgressToMember();
+          //this.router.navigate(['progresses/tracker'])
         },
         error => {
           console.error('Error al registrar el progreso', error);
         }
       );
     }
+  }
+
+  addProgressToMember(){
+    this.memberService.addProgress(this.progressId,this.userId).subscribe(
+      (data : any) =>{
+        console.log('Progreso agregado a miembro correctamente', data);
+      }
+    )
   }
 }
