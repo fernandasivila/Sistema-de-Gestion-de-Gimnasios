@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Chart, ChartOptions, ChartType } from 'chart.js/auto';
 import { Progress } from '../../../models/progress';
 import { MemberService } from '../../../services/member.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-progress-tracker',
@@ -16,7 +17,8 @@ export class ProgressTrackerComponent implements OnInit {
   progress!: Progress[]
 
   constructor(
-    private memberService: MemberService
+    private memberService: MemberService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -88,7 +90,8 @@ export class ProgressTrackerComponent implements OnInit {
   }
 
   addProgress() {
-    //añadir un progreso
+    this.router.navigate(['progresses/record'])
+
   }
 
 }
