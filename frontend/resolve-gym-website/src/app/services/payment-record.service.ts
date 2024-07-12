@@ -10,13 +10,13 @@ export class PaymentRecordService {
   private baseUrl='http://localhost:3000/paymentRecords'
   constructor(private _http: HttpClient) { }
 
-  getAllPaymentRecord():Observable<PaymentRecordResponse[]>{
-    return this._http.get<PaymentRecordResponse[]>(`${this.baseUrl}/`);
+  getAllPaymentRecord():Observable<any>{
+    return this._http.get(`${this.baseUrl}/`);
   }
-  getPaymentRecordById(id: String): Observable<PaymentRecordResponse>{
-    return this._http.get<PaymentRecordResponse>(`${this.baseUrl}/${id}`);
+  getPaymentRecordById(id: String): Observable<any>{
+    return this._http.get(`${this.baseUrl}/${id}`);
   }
-  addPaymentRecord(paymentRecord: PaymentRecordRequest): Observable<PaymentRecordRequest>{
+  addPaymentRecord(paymentRecord: PaymentRecordRequest): Observable<any>{
     const httpOptions={
       headers:new HttpHeaders({
         'Content-Type':'application/json'
@@ -24,19 +24,19 @@ export class PaymentRecordService {
     }
     const body = JSON.stringify(paymentRecord)
     
-    return this._http.post<PaymentRecordRequest>(this.baseUrl+'/add', body, httpOptions);
+    return this._http.post(this.baseUrl+'/add', body, httpOptions);
   }
   deletePaymentRecord(id: String): Observable<any>{
     return this._http.delete(`${this.baseUrl}/${id}`);
   }
-  updatePaymentRecord(paymentRecord: PaymentRecordResponse): Observable<PaymentRecordResponse>{
+  updatePaymentRecord(paymentRecord: PaymentRecordResponse): Observable<any>{
     const httpOptions={
       headers:new HttpHeaders({
         'Content-Type':'application/json'
       })
     }
     const body = JSON.stringify(paymentRecord)
-    return this._http.put<PaymentRecordResponse>(`${this.baseUrl}/edit/${paymentRecord._id}`, body, httpOptions);
+    return this._http.put(`${this.baseUrl}/edit/${paymentRecord._id}`, body, httpOptions);
   }
 
 }

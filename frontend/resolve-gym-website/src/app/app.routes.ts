@@ -31,6 +31,7 @@ import { EventsListComponent } from './events-list/events-list.component';
 import { CoachesListComponent } from './coaches-list/coaches-list.component';
 import { FeePaymentComponent } from './worker-hub/fee-payment/fee-payment.component';
 import { FeesListComponent } from './worker-hub/fees-list/fees-list.component';
+import { PaymentRecordComponent } from './worker-hub/payment-record/payment-record.component';
 
 export const routes: Routes = [
     {
@@ -164,7 +165,11 @@ export const routes: Routes = [
                 component: SavedRoutinesComponent
             },
 
-            //WORKER 
+            //WORKER
+            {
+                path:'fees/record',
+                component: PaymentRecordComponent
+            }, 
             {
                 path: 'attendances/history',
                 component: AttendanceHistoryComponent
