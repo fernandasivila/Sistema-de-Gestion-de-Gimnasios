@@ -18,6 +18,9 @@ export class MemberService {
  getMemberById(id:string):Observable<MemberResponse>{
    return this._http.get<MemberResponse>(`${this.baseUrl}/${id}`);
  }
+ getMemberByDNI(dni:string):Observable<any>{
+  return this._http.get(`${this.baseUrl}/dni/${dni}`);
+}
  addMemeber(mem:MemberRequest):Observable<MemberRequest>{
   const httpOptions={
     headers:new HttpHeaders({
