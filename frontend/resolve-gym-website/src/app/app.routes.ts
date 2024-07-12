@@ -29,7 +29,6 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { EventsListComponent } from './events-list/events-list.component';
 import { CoachesListComponent } from './coaches-list/coaches-list.component';
-import { FeePaymentComponent } from './worker-hub/fee-payment/fee-payment.component';
 import { FeesListComponent } from './worker-hub/fees-list/fees-list.component';
 
 export const routes: Routes = [

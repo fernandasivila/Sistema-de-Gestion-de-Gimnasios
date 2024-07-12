@@ -78,4 +78,18 @@ export class MemberService {
       })
       return this._http.put(`${this.baseUrl}/edit/progress/${idMember}`,body,httpOptions);
       }
+    
+      changePlan(idMonthlyPlan : string, idMember: string):Observable<any>{
+        const httpOptions={
+          headers:new HttpHeaders({
+            'Content-Type':'application/json'
+          })
+        }
+        console.log(idMonthlyPlan);
+        
+        const body = JSON.stringify({
+          "monthlyPlan": idMonthlyPlan
+        })
+        return this._http.put(`${this.baseUrl}/edit/monthlyPlan/${idMember}`,body,httpOptions);
+        }
 }
