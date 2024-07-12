@@ -23,15 +23,14 @@ export class LoginService {
 
   //logout
   logout() {
-    sessionStorage.removeItem("user");
-    sessionStorage.removeItem("perfil");
-    sessionStorage.removeItem("userid");
+    sessionStorage.removeItem("userId");
+    sessionStorage.removeItem("roleUser");
   }
 
 
   //Comprobar si hay un usuario logueado
   userLoggedIn() {
-    var usuario = sessionStorage.getItem("user");
+    var usuario = sessionStorage.getItem("userId");
     if (usuario != null) {
       return true;
     } else {
@@ -39,10 +38,17 @@ export class LoginService {
     }
   }
 
+  //obtener el usuario
   userLogged() {
     var usuario = sessionStorage.getItem("user");
     return usuario;
   }
-
+  
+  //obtener el rol de usuario
+  getRoleUserLogged(){
+    var role = sessionStorage.getItem("roleUser");
+    console.log("ROLE", role)
+    return role;
+  }
 
 }
