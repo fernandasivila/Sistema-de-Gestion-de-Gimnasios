@@ -31,6 +31,7 @@ import { EventsListComponent } from './events-list/events-list.component';
 import { CoachesListComponent } from './coaches-list/coaches-list.component';
 import { FeesListComponent } from './worker-hub/fees-list/fees-list.component';
 import { PaymentRecordComponent } from './worker-hub/payment-record/payment-record.component';
+import { MonthlyPlansComponent } from './monthly-plans/monthly-plans.component';
 
 export const routes: Routes = [
     {
@@ -118,6 +119,10 @@ export const routes: Routes = [
             {
                 path: 'home',
                 component: HomeComponent
+            },
+            {
+                path: 'monthlyPlans',
+                component: MonthlyPlansComponent
             },
             {
                 path: 'events',
