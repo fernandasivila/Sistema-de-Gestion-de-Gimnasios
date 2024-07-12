@@ -1,11 +1,12 @@
 import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { DataTablesModule } from 'angular-datatables';
+import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { ActionButtonGroupComponent } from '../../action-button-group/action-button-group.component';
 import { ADTSettings } from 'angular-datatables/src/models/settings';
 import { Subject } from 'rxjs';
 import { IDemoNgComponentEventType } from '../../../test/idemo-ng-component-event-type';
+import { EventService } from '../../../services/event.service';
 
 @Component({
   selector: 'app-event-list',
@@ -20,21 +21,12 @@ export class EventListComponent implements OnInit, AfterViewInit {
   dtOptions: ADTSettings = {};
   dtTrigger: Subject<ADTSettings> = new Subject<ADTSettings>()
 
-  constructor(private router : Router, private datePipe: DatePipe){}
-
-  apiResponseExample = [
-    {
-      "_id": "sdf4",
-    "name": "Perroton",
-    "description": "Colabora con un kilo de alimento y gana meses gratis",
-    "date": "2024-01-01T00:00:00.000Z",
-    "startTime": "2024-01-01T00:00:00.000Z",
-    "finishTime":"2024-01-01T00:30:00.000Z"
-    }
-  ]
+  constructor(private eventService: EventService, private router : Router, private datePipe: DatePipe){}
 
   @ViewChild('confirmationModal') confirmationModal! : ElementRef
   @ViewChild('actionButtons') actionButtons!: TemplateRef<ActionButtonGroupComponent>
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement!: DataTableDirective;
   message = ''
   idEventInstance = ''
 
@@ -45,20 +37,21 @@ export class EventListComponent implements OnInit, AfterViewInit {
         language: {
           url: '/assets/datatable.spanish.json',
         },
-        data: this.apiResponseExample,
+        ajax: (dataTablesParameters: any, callback) => {
+          this.eventService.getAllEvents().subscribe(resp => {
+            console.log(resp.data)
+            callback({
+              data: resp.data
+            });
+          })
+        },
         columns: [
           { title: 'Evento', data: 'name' },
           { title:'Descripcion', data:'description'},
-          { title:'Fecha', data:'date', ngPipeInstance: this.datePipe, ngPipeArgs: ['mediumDate', 'format']},
-          { title: 'Inicia', data:'startTime', ngPipeInstance: this.datePipe, ngPipeArgs: ['shortTime', 'format']},
-          { title: 'Termina', 
-            data: 'finishTime', 
-            render: (data, type, row) => {
-             return this.datePipe.transform(data, 'shortTime');
-            }
-          },
-         
-          
+          { title:'Fecha', data:'date', render: (data: any) => this.datePipe.transform(data, 'shortDate')},
+          { title: 'Inicia', data:'startTime', render: (data: any) => this.datePipe.transform(data, 'shortTime')},
+          { title: 'Termina', data: 'finishTime', render: (data: any) => this.datePipe.transform(data, 'shortTime')},
+  
           {
             title: 'Acciones',
             data: null,
@@ -102,12 +95,26 @@ export class EventListComponent implements OnInit, AfterViewInit {
     this.router.navigate([`/admin-dashboard/events/edit/${this.idEventInstance}`])
   }
 
-  deleteMember(){
-    console.log(this.idEventInstance)
+  deleteMember() {
+    this.eventService.deleteEvent(this.idEventInstance).subscribe(
+      (response) => {
+        console.log(response);
+        this.rerender()
+      },
+      (error) => console.error(error)
+    );
   }
 
   private confirmateDeletion(){
     this.confirmationModal.nativeElement.click()
   }
 
+  rerender(): void {
+    this.dtElement.dtInstance.then(dtInstance => {
+      // Destroy the table first
+      dtInstance.destroy();
+      // Call the dtTrigger to rerender again
+      this.dtTrigger.next(this.dtOptions);
+    });
+  }
 }

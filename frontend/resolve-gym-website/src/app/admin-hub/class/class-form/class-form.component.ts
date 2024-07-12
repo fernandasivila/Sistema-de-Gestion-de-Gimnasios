@@ -113,7 +113,6 @@ export class ClassFormComponent implements OnInit {
         description: this.description?.value,
         schedule: this.schedule?.value
       }
-      console.log(formData)
 
       if(this.action=="Registrar"){
         this.classService.addClass(formData).subscribe(
@@ -124,12 +123,16 @@ export class ClassFormComponent implements OnInit {
           error => console.error(error)
         )
       }else if (this.action == "Modificar") {
+        formData._id = this.classId
+        console.log(formData)
         this.classService.updateClass(formData).subscribe(
           res => {
             console.log("Clase modificada con éxito", res);
             this.router.navigate(['/admin-dashboard/classes']);
           },
-          error => console.error("Error al modificar la clase", error)
+          error => {
+            console.error("Error al modificar la clase", error)
+          }
         );
 
     } else {

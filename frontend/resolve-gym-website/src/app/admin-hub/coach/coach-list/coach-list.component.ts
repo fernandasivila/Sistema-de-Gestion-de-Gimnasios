@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { DataTablesModule } from 'angular-datatables';
+import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { ActionButtonGroupComponent } from '../../action-button-group/action-button-group.component';
 import { ADTSettings } from 'angular-datatables/src/models/settings';
 import { Subject } from 'rxjs';
@@ -12,11 +12,11 @@ import { Coach } from '../../../models/coach';
   selector: 'app-coach-list',
   standalone: true,
   imports: [DataTablesModule, RouterLink, ActionButtonGroupComponent],
-  providers:[],
+  providers: [],
   templateUrl: './coach-list.component.html',
   styleUrl: './coach-list.component.css'
 })
-export class CoachListComponent implements OnInit, AfterViewInit{
+export class CoachListComponent implements OnInit, AfterViewInit {
 
   dtOptions: ADTSettings = {};
   dtTrigger: Subject<ADTSettings> = new Subject<ADTSettings>()
@@ -34,11 +34,11 @@ export class CoachListComponent implements OnInit, AfterViewInit{
       "email": "marcosG@gmail.com",
       "workArea": "funcional",
       "img": {
-          "data": {
-            "type": "Buffer",
-           "data": []
-          },
-          "contentType": "image/png",
+        "data": {
+          "type": "Buffer",
+          "data": []
+        },
+        "contentType": "image/png",
       },
       "age": "29",
       "description": "5 años de experiencia",
@@ -46,12 +46,14 @@ export class CoachListComponent implements OnInit, AfterViewInit{
     }
   ]
 
-  @ViewChild('confirmationModal') confirmationModal! : ElementRef
-    @ViewChild('actionButtons') actionButtons!: TemplateRef<ActionButtonGroupComponent>
-    message = ''
-    idEventInstance = ''
+  @ViewChild('confirmationModal') confirmationModal!: ElementRef
+  @ViewChild('actionButtons') actionButtons!: TemplateRef<ActionButtonGroupComponent>
+  @ViewChild(DataTableDirective, { static: false })
+  dtElement!: DataTableDirective;
+  message = ''
+  idEventInstance = ''
 
-    ngOnInit(): void {
+  ngOnInit(): void {
     setTimeout(() => {
       const self = this;
       this.dtOptions = {
@@ -69,12 +71,11 @@ export class CoachListComponent implements OnInit, AfterViewInit{
         },
         columns: [
           { title: 'Coach', data: 'fullname' },
-          { title:'email', data: 'email' },
-          { title: 'area', data: 'workArea' },
-          { title: 'Descripcion', data: 'description'},
-          { title:'Edad', data:'age'},
-          { title: 'Horario', data: 'schedule'},
-          { title: 'Perfil', data: 'img'},
+          { title: 'email', data: 'email' },
+          { title: 'area', data: 'workArea.name' },
+          { title: 'Descripcion', data: 'description' },
+          { title: 'Edad', data: 'age' },
+          { title: 'Horario', data: 'schedule' },
           {
             title: 'Acciones',
             data: null,
@@ -82,28 +83,28 @@ export class CoachListComponent implements OnInit, AfterViewInit{
             defaultContent: '',
             ngTemplateRef: {
               ref: this.actionButtons,
-              context:{
+              context: {
                 // needed for capturing events inside <ng-template>
                 captureEvents: self.onCaptureEvent.bind(self)
               }
             }
           }
-      ]
-    }
-  })
+        ]
+      }
+    })
   }
   ngAfterViewInit() {
     setTimeout(() => {
-     this.dtTrigger.next(this.dtOptions);
+      this.dtTrigger.next(this.dtOptions);
     }, 200);
   }
 
   onCaptureEvent(event: IDemoNgComponentEventType) {
     this.idEventInstance = event.data._id
-    if(event.cmd == 'edit'){
+    if (event.cmd == 'edit') {
       this.editMember()
     }
-    if(event.cmd == 'delete'){
+    if (event.cmd == 'delete') {
       this.confirmateDeletion()
     }
     this.message = `Event '${event.cmd}' with data '${JSON.stringify(event.data)}`;
@@ -114,23 +115,32 @@ export class CoachListComponent implements OnInit, AfterViewInit{
     // Do not forget to unsubscribe the event
     this.dtTrigger.unsubscribe();
   }
-  editMember(){
+  editMember() {
     this.router.navigate([`/admin-dashboard/coaches/edit/${this.idEventInstance}`])
   }
 
-  deleteMember(){
-    if(this.idEventInstance){
+  deleteMember() {
+    if (this.idEventInstance) {
       this.coachService.deleteCoach(this.idEventInstance).subscribe(
-        (data:any)=>{
-          console.log("Coach eliminado",data)
-          this.router.navigate(['/admin-dashboard/classes'])
+        (data: any) => {
+          console.log("Coach eliminado", data)
+          this.rerender()
         },
-        error=> console.log("Error eliminando coach",error)
+        error => console.log("Error eliminando coach", error)
       )
     }
   }
 
-  private confirmateDeletion(){
+  private confirmateDeletion() {
     this.confirmationModal.nativeElement.click()
-  } 
+  }
+
+  rerender(): void {
+    this.dtElement.dtInstance.then(dtInstance => {
+      // Destroy the table first
+      dtInstance.destroy();
+      // Call the dtTrigger to rerender again
+      this.dtTrigger.next(this.dtOptions);
+    });
+  }
 }
