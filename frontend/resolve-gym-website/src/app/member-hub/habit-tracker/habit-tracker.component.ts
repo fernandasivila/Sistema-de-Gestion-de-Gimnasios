@@ -3,6 +3,7 @@ import { Component, OnInit, Injectable, ChangeDetectorRef } from '@angular/core'
 import { AttendanceRecordService } from '../../services/attendance-record.service';
 import { MemberService } from '../../services/member.service';
 import { AttendanceRecordResponse } from '../../models/attendance-record';
+import { LoginService } from '../../services/login.service';
 
 type calendarDay = {
   date: number,
@@ -29,7 +30,8 @@ export class HabitTrackerComponent implements OnInit {
   constructor(
     private cdr: ChangeDetectorRef,
     private attendanceRecordService: AttendanceRecordService,
-    private memberService : MemberService
+    private memberService : MemberService,
+    private loginService : LoginService
   ){
   }
   //registro de asistencias de x miembro
@@ -37,7 +39,7 @@ export class HabitTrackerComponent implements OnInit {
   member: any;
   attendedDays : number[] = [];
   workingDate = new Date();
-  memberId = "6690162d02bf509b25364502"; //SOCIO
+  memberId = this.loginService.userLoggedIn()? this.loginService.userLogged(): ''; //SOCIO
   daysGoals = 0;
   isCurrentMonth = true;
 

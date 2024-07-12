@@ -5,6 +5,7 @@ import { FormsModule, NgModel } from '@angular/forms';
 import { RoutineService } from '../../services/routine.service';
 import { RoutineRequest } from '../../models/routine';
 import { MemberService } from '../../services/member.service';
+import { LoginService } from '../../services/login.service';
 
 
 @Component({
@@ -23,11 +24,12 @@ export class RoutineCreatorComponent {
   exercises: String[] = []
   routineId = "";
 
-  userId = "6690195e9baea98ed03a162f"; //SOCIO
+  userId = this.loginService.userLoggedIn()? this.loginService.userLogged(): ''; //SOCIO
 
   constructor(
     private routineService: RoutineService,
-    private memberService : MemberService
+    private memberService : MemberService,
+    private loginService: LoginService
   ){}
 
   getMuscleGroupName() {

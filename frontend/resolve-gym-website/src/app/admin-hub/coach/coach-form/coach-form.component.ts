@@ -16,12 +16,12 @@ export class CoachFormComponent implements OnInit {
   action = 'Registrar'
   coachForm!: FormGroup
   imageBase64: string | ArrayBuffer | null = null;
+  coachId: string = ''
 
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private coachService: CoachService
-
   ) { }
 
   ngOnInit(): void {
@@ -42,11 +42,42 @@ export class CoachFormComponent implements OnInit {
             break
           case 'edit':
             this.action = 'Modificar'
-            //Logica Modificar
+            this.coachId = this.route.snapshot.params['id'];
+            if (this.coachId) {
+              this.loadCoachToModify(this.coachId)
+            } else {
+              console.log("El id de la clase no se encontró")
+            }
             break
         }
       }
     )
+  }
+
+  loadCoachToModify(id: string) {
+    this.coachService.getCoachById(id).subscribe(
+      resp => {
+        console.log(resp.data)
+        let coach = resp.data
+        this.coachForm.patchValue(
+          {
+            fullname: coach.fullname,
+            email: coach.email,
+            workArea: coach.workArea,
+            age: coach.age,
+            description: coach.description,
+            schedule: coach.schedule
+          }
+        )
+        this.imageBase64 
+      }
+    )
+  }
+
+  private convertToBase64(data: number[], contentType: string): string {
+    const buffer = Buffer.from(data);
+    const base64String = buffer.toString('base64');
+    return `data:${contentType};base64,${base64String}`;
   }
 
   //ELIMINAR
@@ -89,39 +120,39 @@ export class CoachFormComponent implements OnInit {
     return this.coachForm.get('fullname')?.errors?.['required'] ?? false;
   }
 
-  
+
   validateFullnameMinLength(): boolean {
     return this.coachForm.get('fullname')?.errors?.['minlength'] ?? false;
   }
-  
+
   validateFullnamePattern(): boolean {
     return this.coachForm.get('fullname')?.errors?.['pattern'] ?? false;
   }
-  
+
   validateEmailRequired(): boolean {
     return this.coachForm.get('email')?.errors?.['required'] ?? false;
   }
-  
+
   validateEmailPattern(): boolean {
     return this.coachForm.get('email')?.errors?.['email'] ?? false;
   }
-  
+
   validateWorkAreaRequired(): boolean {
     return this.coachForm.get('workArea')?.errors?.['required'] ?? false;
   }
-  
+
   validateAgeRequired(): boolean {
     return this.coachForm.get('age')?.errors?.['required'] ?? false;
   }
-  
+
   validateAgeRange(): boolean {
     return (this.coachForm.get('age')?.errors?.['min'] ?? false) || (this.coachForm.get('age')?.errors?.['max'] ?? false);
   }
-  
+
   validateDescriptionRequired(): boolean {
     return this.coachForm.get('description')?.errors?.['required'] ?? false;
   }
-  
+
   validateScheduleRequired(): boolean {
     return this.coachForm.get('schedule')?.errors?.['required'] ?? false;
   }

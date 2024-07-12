@@ -16,7 +16,7 @@
                         <a class="nav-link active" href="#" aria-current="page">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Membresías</a>
+                        <a class="nav-link" routerLink="/monthlyPlans">Membresías</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" routerLink="/coaches">Profesores</a>
@@ -36,7 +36,7 @@
                             <a class="dropdown-item" routerLink="/progresses/tracker">Progress Tracker</a>
                             <a class="dropdown-item" routerLink="/routines/creator">Rutina Diaria</a>
                             <a class="dropdown-item" routerLink="/routines">Ver Rutinas Guardadas</a>
-                            <a class="dropdown-item" routerLink="/membershipPayments">Mi Membresía</a>
+                            <!-- <a class="dropdown-item" routerLink="/membershipPayments">Mi Membresía</a> -->
                         </div>
                     </li>
                     <li class="nav-item dropdown" *ngIf="loginService.userLoggedIn() && loginService.getRoleUserLogged() =='Empleado'">
@@ -50,8 +50,14 @@
                             <a class="dropdown-item" routerLink="/admin-dashboard/members/new">Registrar Nuevo Miembro</a>
                         </div>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" *ngIf="loginService.userLoggedIn() && loginService.getRoleUserLogged() =='Dueño'">
                         <a class="nav-link" routerLink="/admin-dashboard/home">Admin Dashboard</a>
+                    </li>
+                    
+                </ul>
+                <ul class="navbar-nav me-auto mt-2 mt-lg-0 mx-auto">
+                    <li class="nav-item" *ngIf="loginService.userLoggedIn()">
+                        <a class="nav-link name-user"><i class="bi bi-person-circle icon-user"></i> {{fullname}}</a>
                     </li>
                 </ul>
                 <form class="d-flex my-2 my-lg-0">

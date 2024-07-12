@@ -3,6 +3,7 @@ import { RoutineResponse } from '../../models/routine';
 import { MemberService } from '../../services/member.service';
 import { CommonModule } from '@angular/common';
 import { RoutineService } from '../../services/routine.service';
+import { LoginService } from '../../services/login.service';
 
 @Component({
   selector: 'app-saved-routines',
@@ -16,11 +17,12 @@ export class SavedRoutinesComponent implements OnInit {
 
   constructor(
     private memberService: MemberService,
-    private routinesService: RoutineService
+    private routinesService: RoutineService,
+    private loginService: LoginService
   ){  }
 
   ngOnInit(): void {
-    const userId = localStorage.getItem('userid') || '6690195e9baea98ed03a162f';
+    const userId = this.loginService.userLoggedIn()? this.loginService.userLogged(): '';
     this.loadRoutines(userId);
   }
 

@@ -41,13 +41,12 @@ export class LoginService {
   //obtener el usuario
   userLogged() {
     var usuario = sessionStorage.getItem("userId");
-    return usuario;
+    return usuario? usuario:'';
   }
   
   //obtener el rol de usuario
   getRoleUserLogged(){
     var role = sessionStorage.getItem("roleUser");
-    console.log("ROLE", role)
     return role;
   }
 
