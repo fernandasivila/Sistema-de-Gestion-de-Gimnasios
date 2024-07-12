@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { DataTablesModule } from 'angular-datatables';
+import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { ActionButtonGroupComponent } from '../../action-button-group/action-button-group.component';
 import { ADTSettings } from 'angular-datatables/src/models/settings';
 import { Subject } from 'rxjs';
@@ -25,6 +25,8 @@ export class EventListComponent implements OnInit, AfterViewInit {
 
   @ViewChild('confirmationModal') confirmationModal! : ElementRef
   @ViewChild('actionButtons') actionButtons!: TemplateRef<ActionButtonGroupComponent>
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement!: DataTableDirective;
   message = ''
   idEventInstance = ''
 
@@ -97,7 +99,7 @@ export class EventListComponent implements OnInit, AfterViewInit {
     this.eventService.deleteEvent(this.idEventInstance).subscribe(
       (response) => {
         console.log(response);
-        window.location.reload();
+        this.rerender()
       },
       (error) => console.error(error)
     );
@@ -107,4 +109,12 @@ export class EventListComponent implements OnInit, AfterViewInit {
     this.confirmationModal.nativeElement.click()
   }
 
+  rerender(): void {
+    this.dtElement.dtInstance.then(dtInstance => {
+      // Destroy the table first
+      dtInstance.destroy();
+      // Call the dtTrigger to rerender again
+      this.dtTrigger.next(this.dtOptions);
+    });
+  }
 }
