@@ -4,6 +4,7 @@ const User = require('../database/models/User');
 const loginController = {
     login: async(req, res) => {
         const data = req.body;
+        console.log(data);
         try {
             const user = await User.findOne({
                 username: data.username

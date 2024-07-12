@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.get('/', memberController.list);
 router.get('/activeMembers', memberController.getActiveMembers);
+router.get('/progress/:id', memberController.getProgressByMember);
 router.get('/activeMembers/count', memberController.countActiveMembers);
 router.get('/:id', memberController.getById);
 router.get('/dni/:dni', memberController.getByDni);

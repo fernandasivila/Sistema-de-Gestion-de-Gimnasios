@@ -233,6 +233,27 @@ const memberController = {
           }
         }
       },
+      getProgressByMember: async (req, res) => {
+        const id = req.params.id;
+        try {
+            const activeMembers = await Member.findById(id).populate('progress');
+            res.status(200).json({
+                meta: {
+                    status: 200,
+                    message: " Active Members retrieved successfully",
+                },
+                data: activeMembers
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({
+                meta: {
+                    status: 500,
+                    message: "Internal Server Error",
+                },
+            });
+        }
+      },
     };
     
     module.exports = memberController;
