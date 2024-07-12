@@ -6,11 +6,13 @@ import { MemberService } from '../../services/member.service';
 import { MonthlyPlanService } from '../../services/monthly-plan.service';
 import { MonthlyPlan } from '../../models/monthly-plan';
 import { PaymentService } from '../../services/payment.service';
+import { PaymentLinkComponent } from '../../worker-hub/payment-link/payment-link.component';
+import { MonthlyFeeRequest } from '../../models/monthly-fee';
 
 @Component({
   selector: 'app-payment-form',
   standalone: true,
-  imports: [ReactiveFormsModule, JsonPipe, NgIf, HttpClientModule, FormsModule],
+  imports: [ReactiveFormsModule, JsonPipe, NgIf, HttpClientModule, FormsModule, PaymentLinkComponent],
   templateUrl: './payment-form.component.html',
   styleUrl: './payment-form.component.css'
 })
@@ -22,8 +24,12 @@ export class PaymentFormComponent {
   monthlyPlanId = "";
   monthlyPlanSelected : any;
   monthlyPlanSelectedId = "";
-  today = new Date();
+
+  linkCreated: boolean =false;
+  
   dueDate = this.getDueDateOneMonthFromToday();
+
+  monthlyFee!: MonthlyFeeRequest;
 
   paymentLink = "";
 
@@ -91,6 +97,11 @@ export class PaymentFormComponent {
     return `${year}-${month}-${day}`;
   }
 
+  convertStringToDate(dateString: string): Date {
+    const [year, month, day] = dateString.split('-').map(Number);
+    return new Date(year, month - 1, day); // Month is zero-based in JavaScript Date object
+  }
+
   onGenerateQR(): void {
     if(this.monthlyPlanId != this.monthlyPlanSelectedId)
       this.changeMonthlyPlan();
@@ -102,7 +113,14 @@ export class PaymentFormComponent {
         console.log(data)
         this.paymentLink= data['init_point'];
         console.log(this.paymentLink);
-        
+
+        this.monthlyFee = {
+          dueDate: this.convertStringToDate(this.dueDate),
+          amount: this.monthlyPlanSelected.price,
+          member: this.member._id
+        }
+
+        this.linkCreated=true;
       },
       (error: any) => {
         console.error("Error al generar link", error)

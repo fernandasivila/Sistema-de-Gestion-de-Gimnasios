@@ -39,3 +39,7 @@
       </form>
     </div>
   </div>
+
+  @if(linkCreated){
+  <app-payment-link [monthlyFee]="monthlyFee" [paymentLink]="paymentLink"></app-payment-link>
+  }

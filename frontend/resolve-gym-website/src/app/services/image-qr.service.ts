@@ -10,7 +10,7 @@ export class ImageQrService {
   constructor(private _http: HttpClient) { }
 
   public generate(data:string, size:string):Observable<any>{
-    const url = 'https://qr-code-generator20.p.rapidapi.com/generatebasicbase64?data=${data}&size=${size}';
+    const url = `https://qr-code-generator20.p.rapidapi.com/generatebasicbase64?data=${data}&size=${size}`;
     
     //otra manera:
     //const url = https://qr-code-generator20.p.rapidapi.com/generatebasicbase64?data=${encodeURIComponent(data)}&size=${size};
