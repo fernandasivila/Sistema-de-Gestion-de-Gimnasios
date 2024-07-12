@@ -12,39 +12,39 @@ export class MonthlyFeeService {
 
   constructor(private _http: HttpClient) { }
 
-  getAllMonthlyFees():Observable<MonthlyFeeResponse> {
-    return this._http.get<MonthlyFeeResponse>(this.baseUrl+'/');
+  getAllMonthlyFees():Observable<any> {
+    return this._http.get(this.baseUrl+'/');
   }
-  getMonthlyFeeById(id: String): Observable<MonthlyFeeResponse> {
-    return this._http.get<MonthlyFeeResponse>(this.baseUrl+'/'+id);
+  getMonthlyFeeById(id: String): Observable<any> {
+    return this._http.get(this.baseUrl+'/'+id);
   }
-  addMonthlyFee(monthlyFee: MonthlyFeeRequest): Observable<MonthlyFeeRequest> {
+  addMonthlyFee(monthlyFee: MonthlyFeeRequest): Observable<any> {
     const httpOptions={
       headers:new HttpHeaders({
         'Content-Type':'application/json'
       })
     }
     const body = JSON.stringify(monthlyFee)
-    return this._http.post<MonthlyFeeRequest>(this.baseUrl+'/add', body, httpOptions);
+    return this._http.post(this.baseUrl+'/add', body, httpOptions);
   }
   deleteMonthlyFee(id: String): Observable<any> {
     return this._http.delete(this.baseUrl+'/'+id);
   }
-  updateMonthlyFee(monthlyFee: MonthlyFeeResponse): Observable<MonthlyFeeResponse> {
+  updateMonthlyFee(monthlyFee: MonthlyFeeResponse): Observable<any> {
     const httpOptions={
       headers:new HttpHeaders({
         'Content-Type':'application/json'
       })
     }
     const body = JSON.stringify(monthlyFee)
-    return this._http.post<MonthlyFeeResponse>(`${this.baseUrl}/edit/${monthlyFee._id}`, body, httpOptions)
+    return this._http.post(`${this.baseUrl}/edit/${monthlyFee._id}`, body, httpOptions)
   }
 
-  getByMemeberId(idMember: string):Observable<MonthlyFeeResponse[]>{
-    return this._http.get<MonthlyFeeResponse[]>(`${this.baseUrl}/getByMember/${idMember}`)
+  getByMemeberId(idMember: string):Observable<any>{
+    return this._http.get(`${this.baseUrl}/getByMember/${idMember}`)
   }
-  getDueByMemberId(idMember: string): Observable<MonthlyFeeResponse>{
-    return this._http.get<MonthlyFeeResponse>(`${this.baseUrl}/due/${idMember}`)
+  getDueByMemberId(idMember: string): Observable<any>{
+    return this._http.get(`${this.baseUrl}/due/${idMember}`)
   }
 
 }

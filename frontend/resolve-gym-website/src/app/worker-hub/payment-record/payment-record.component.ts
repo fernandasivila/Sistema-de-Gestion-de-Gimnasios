@@ -1,25 +1,24 @@
 import { Component, OnInit } from '@angular/core';
+import { DataTablesModule } from 'angular-datatables';
 import { ADTSettings } from 'angular-datatables/src/models/settings';
 import { Subject } from 'rxjs';
-import { MonthlyFeeService } from '../../services/monthly-fee.service';
-import { DataTablesModule } from 'angular-datatables';
-import { RouterLink } from '@angular/router';
+import { PaymentRecordService } from '../../services/payment-record.service';
 import { DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-fees-list',
+  selector: 'app-payment-record',
   standalone: true,
-  imports: [DataTablesModule, RouterLink],
+  imports: [DataTablesModule],
   providers: [DatePipe],
-  templateUrl: './fees-list.component.html',
-  styleUrl: './fees-list.component.css'
+  templateUrl: './payment-record.component.html',
+  styleUrl: './payment-record.component.css'
 })
-export class FeesListComponent implements OnInit {
+export class PaymentRecordComponent implements OnInit {
   dtOptions: ADTSettings = {};
   dtTrigger: Subject<ADTSettings> = new Subject<ADTSettings>()
 
   constructor(
-    private monthlyFeeService: MonthlyFeeService,
+    private paymentRecordService: PaymentRecordService,
     private datePipe: DatePipe
   ) { }
 
@@ -31,7 +30,7 @@ export class FeesListComponent implements OnInit {
           url: '/assets/datatable.spanish.json',
         },
         ajax: (dataTablesParameters: any, callback) => {
-          this.monthlyFeeService.getAllMonthlyFees().subscribe(resp => {
+          this.paymentRecordService.getAllPaymentRecord().subscribe(resp => {
             console.log(resp.data)
             callback({
               recordsTotal: resp.recordsTotal,
@@ -41,9 +40,10 @@ export class FeesListComponent implements OnInit {
           })
         },
         columns: [
-          { title: 'Fecha Vencimiento', data: 'dueDate', ngPipeInstance: this.datePipe, ngPipeArgs: ['shortTime', 'format']},
-          { title: 'Monto ($)', data: 'amount' },
-          { title: 'Usuario de Miembro', data: 'member' },
+          { title: 'Fecha Pago', data: 'releaseDate', ngPipeInstance: this.datePipe, ngPipeArgs: ['long', 'format']},
+          { title: 'Fecha Vencimiento', data: 'fee.dueDate', ngPipeInstance: this.datePipe, ngPipeArgs: ['long', 'format']},
+          { title: 'Monto ($)', data: 'fee.amount' },
+          { title: 'Usuario de Miembro', data: 'fee.member' },
         ]
       }
     })
@@ -51,7 +51,7 @@ export class FeesListComponent implements OnInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-     this.dtTrigger.next(this.dtOptions);
+      this.dtTrigger.next(this.dtOptions);
     }, 200);
   }
 

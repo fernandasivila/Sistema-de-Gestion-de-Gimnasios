@@ -103,7 +103,7 @@ export class EventListComponent implements OnInit, AfterViewInit {
   }
 
   deleteMember(){
-    //logica de borrado
+    console.log(this.idEventInstance)
   }
 
   private confirmateDeletion(){
