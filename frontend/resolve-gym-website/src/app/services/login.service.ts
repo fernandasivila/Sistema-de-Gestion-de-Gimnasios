@@ -40,7 +40,7 @@ export class LoginService {
 
   //obtener el usuario
   userLogged() {
-    var usuario = sessionStorage.getItem("user");
+    var usuario = sessionStorage.getItem("userId");
     return usuario;
   }
   

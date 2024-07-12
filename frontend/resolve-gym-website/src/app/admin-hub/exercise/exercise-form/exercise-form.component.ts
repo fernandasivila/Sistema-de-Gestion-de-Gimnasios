@@ -1,9 +1,12 @@
 import { JsonPipe, NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ExerciseService } from '../../../services/exercise.service';
-import { ExerciseRequest } from '../../../models/exercise';
+import { ExerciseRequest, ExerciseResponse } from '../../../models/exercise';
+import { MuscleGroupService } from '../../../services/muscle-group.service';
+import { MuscleGroup } from '../../../models/muscle-group';
+import { data } from 'jquery';
 
 
 @Component({
@@ -16,22 +19,21 @@ import { ExerciseRequest } from '../../../models/exercise';
 export class ExerciseFormComponent {
   action = 'Registrar';
   exerciseForm!: FormGroup;
-  muscleGroups = [
-    {
-      _id: 12334,
-      name: 'Musculo'
-    }
-  ]; 
+  muscleGroups: MuscleGroup[] = []
   imageBase64s: string[] = [];
+  ejercicioId = ''
 
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
-    private exerciseService: ExerciseService
-
+    private exerciseService: ExerciseService,
+    private musculosService: MuscleGroupService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
+
+    this.loadMusculos()
 
     this.exerciseForm = this.formBuilder.group({
       name: ['', [Validators.required]],
@@ -51,6 +53,10 @@ export class ExerciseFormComponent {
           break;
         case 'edit':
           this.action = 'Modificar';
+          this.ejercicioId = this.route.snapshot.paramMap.get('id')!
+          if (this.ejercicioId) {
+            
+          }
           // Lógica para cargar datos del ejercicio a editar
           break;
       }
@@ -147,6 +153,8 @@ export class ExerciseFormComponent {
 
   onSubmit() {
     if (this.exerciseForm.valid) {
+     
+
       if(this.action=="Registrar"){
         const formData: ExerciseRequest = this.exerciseForm.value;
       formData.images = this.imageBase64s;
@@ -154,7 +162,7 @@ export class ExerciseFormComponent {
       this.exerciseService.addExercise(formData).subscribe(
         (data: any) => {
           console.log('Ejercicio guardado correctamente', data);
-          // Redirigir o hacer alguna acción después de guardar
+          this.router.navigate(['/'])
         },
         (error: any) => {
           console.error('Error al guardar el ejercicio', error);
@@ -162,7 +170,15 @@ export class ExerciseFormComponent {
       );
       }else{
         if(this.action=="Modificar"){
-          
+          const formData: ExerciseResponse = this.exerciseForm.value;
+      formData.images = this.imageBase64s;
+      console.log(formData);
+          formData._id = this.ejercicioId
+
+          this.exerciseService.updateExercise(formData).subscribe(
+            data=>console.log("EXITO UPDATE EJERCICIO", data),
+            error=>console.log("ERROR UPDATE EJERCICIO", error)
+          )
         }
       }
       
@@ -170,5 +186,31 @@ export class ExerciseFormComponent {
       console.log('Formulario no válido');
     }
   }
+  loadMusculos(){
+    this.musculosService.getAllMuscleGroups().subscribe(
+      data=>{
+        
+        this.muscleGroups = data.data
+console.log("MUSCULOS",this.muscleGroups)
+      },error=>console.log("ERROR TRAYENDO LOS MUCULOS",error)
+    )
+  }
 
+  loadExerciseData(idEjercicio: string): void {
+    this.exerciseService.getExerciseById(idEjercicio).subscribe(
+      (result) => {
+        const ejercicio = result.data; // Suponiendo que 'result.data' contiene los datos del ejercicio
+
+        this.exerciseForm.patchValue({
+          name: ejercicio.name,
+          set: ejercicio.set,
+          rep: ejercicio.rep,
+          accessory: ejercicio.accessory,
+          instruction: ejercicio.instruction,
+          difficult: ejercicio.difficult,
+          type: ejercicio.type,
+          muscleGroup: ejercicio.muscleGroup 
+        });
+      })
+    }
 }
