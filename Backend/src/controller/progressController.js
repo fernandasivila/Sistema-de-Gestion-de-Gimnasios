@@ -67,10 +67,15 @@ const progressController = {
         data: errors.array(),
       });
     } else {
-      const images = req.files.map(file => ({
+      const images = [];
+
+      if(req.files)
+        {
+          images = req.files.map(file => ({
         data: file.buffer,
         contentType: file.mimetype,
       }));
+        } 
 
       let progress = new Progress({
         ...req.body,

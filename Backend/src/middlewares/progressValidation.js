@@ -3,7 +3,8 @@ const path = require ('path');
 
 const progressValidation = [
     body('name').trim().notEmpty().withMessage('Name is required.').isLength({min: 5}).withMessage('Must be at least 5 characters'),
-    body('images').isArray({min: 1,max: 4}).withMessage('Images must be an array with at least one exercise'),
+    
+    /*body('images').isArray({min: 1,max: 4}).withMessage('Images must be an array with at least one exercise'),
     body('images*').custom((value, { req }) => {
 
       if(!req.file){
@@ -22,6 +23,7 @@ const progressValidation = [
       }
         return true;
       }),
+      */
     body('date').isISO8601().withMessage('Date must be a valid date format (YYYY-MM-DD)'),
 ]
 
