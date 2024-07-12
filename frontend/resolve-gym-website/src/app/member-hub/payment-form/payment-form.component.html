@@ -1,34 +1,42 @@
 <div class="row justify-content-center">
     <div class="col-md-6">
-      <form [formGroup]="findMemberForm" (submit)="getMember()">
+      <h1>Cobro de Cuota</h1>
+      <form >
         <div class="mb-3">
           <label for="inputDni" class="form-label">Ingrese DNI del socio:</label>
-          <input type="text" class="form-control" id="inputDni" formControlName="dni" [(ngModel)]="dni" [ngModelOptions]="{standalone: true}">
+          <input type="text" class="form-control" id="inputDni" [(ngModel)]="dni" [ngModelOptions]="{standalone: true}">
         </div>
-        <button type="submit" class="btn btn-primary">Buscar Socio</button>
+        <button class="btn btn-primary" (click)="getMember()">Buscar Socio</button>
       </form>
     </div>
-  </div>
+</div>
   
-  <!-- Formulario para seleccionar plan mensual y generar QR -->
-  <div class="row" *ngIf="foundMember">
-    <div class="col-md-8">
-      <form [formGroup]="generatePaymentForm" (submit)="onGenerateQR()">
+  <!-- <div class="col-md-6" *ngIf="memberFound"> -->
+  <div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+      <form >
         <div class="mb-3">
           <label for="inputMonthlyPlan" class="form-label">Seleccione Plan Mensual:</label>
-          <select id="inputMonthlyPlan" class="form-select" formControlName="monthlyPlan">
-            <option *ngFor="let plan of monthlyPlans" [value]="plan._id">{{ plan.title }}</option>
+          <select id="inputMonthlyPlan" class="form-select" [(ngModel)]="monthlyPlanSelectedId" (change)="getMonthlyPlan(monthlyPlanSelectedId)" >
+            @for(plan of monthlyPlans; track plan._id){
+              @if(plan._id == monthlyPlanId){
+                <option value="plan._id" selected>{{ plan.name }}</option>
+              }
+              @else{
+                <option value="plan._id">{{ plan.name }}</option>
+              }
+            }
           </select>
         </div>
         <div class="mb-3">
           <label for="inputCost" class="form-label">Costo:</label>
-          <input type="number" class="form-control" id="inputCost" formControlName="amount">
+          <input type="number" class="form-control" id="inputCost" [(ngModel)]="monthlyPlanSelected.price">
         </div>
         <div class="mb-3">
           <label for="inputExpirationDate" class="form-label">Fecha de Vencimiento:</label>
-          <input type="date" class="form-control" id="inputExpirationDate" formControlName="dueDate">
+          <input type="date" class="form-control" id="inputExpirationDate" [(ngModel)]="dueDate">
         </div>
-        <button type="submit" class="btn btn-success">Generar QR de Pago</button>
+        <button class="btn btn-success" (click)="onGenerateQR()">Generar QR de Pago</button>
       </form>
     </div>
   </div>

@@ -178,7 +178,7 @@ export const routes: Routes = [
             },
             {
                 path: 'fee/payment',
-                component: FeePaymentComponent
+                component: PaymentFormComponent
             },
             {
                 path: 'fees/details',

@@ -3,6 +3,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MemberService } from '../../services/member.service';
+import { MonthlyPlanService } from '../../services/monthly-plan.service';
+import { MonthlyPlan } from '../../models/monthly-plan';
 
 @Component({
   selector: 'app-payment-form',
@@ -12,33 +14,22 @@ import { MemberService } from '../../services/member.service';
   styleUrl: './payment-form.component.css'
 })
 export class PaymentFormComponent {
-  findMemberForm!: FormGroup;
-  generatePaymentForm!: FormGroup;
-  monthlyPlans = [
-    { _id: '1', title: 'Premium' },
-    { _id: '2', title: 'Platinum' },
-    { _id: '3', title: 'Elite' }
-  ];
+  monthlyPlans: MonthlyPlan[] = [];
   memberFound = false;
   dni: string = "";
   member: any;
+  monthlyPlanId = "";
+  monthlyPlanSelected : any;
+  monthlyPlanSelectedId = "";
+  today = new Date();
+  dueDate = new Date().setDate(this.today.getMonth() + 1);
 
   constructor(
-    private formBuilder: FormBuilder,
     private memberService : MemberService,
-    private monthlyService : 
+    private monthlyService : MonthlyPlanService
   ) {}
 
   ngOnInit(): void {
-    this.findMemberForm = this.formBuilder.group({
-      dni: ['', [Validators.required, Validators.pattern('^[0-9]{7,8}$')]]
-    });
-
-    this.generatePaymentForm = this.formBuilder.group({
-      monthlyPlan: ['', Validators.required],
-      amount: ['', Validators.required],
-      dueDate: ['', Validators.required]
-    });
   }
 
   getMember() {
@@ -47,38 +38,44 @@ export class PaymentFormComponent {
       (data: any) => {
         console.log(data)
         this.member = data.data;
+        this.monthlyPlanId = this.member.monthlyPlan
+        this.getMonthlyPlan(this.monthlyPlanId);
+        this.getMonthlyPlans();
         this.memberFound = true;
       },
       (error: any) => {
         console.error("Error al traer el socio", error)
+        this.memberFound = false;
+      }
+    )
+  }
+
+  getMonthlyPlan(id : string){
+    this.monthlyService.getMonthlyPlanById(id).subscribe(
+      (data: any) => {
+        console.log(data)
+        this.monthlyPlanSelected = this.member.monthlyPlan
+      },
+      (error: any) => {
+        console.error("Error al traer el plan", error)
         this.memberFound = false;
       }
     )
   }
 
   getMonthlyPlans() {
-    this.memberService.getMemberByDNI(this.dni).subscribe(
+    this.monthlyService.getAllMonthlyPlans().subscribe(
       (data: any) => {
         console.log(data)
-        this.member = data.data;
-        this.memberFound = true;
+        this.monthlyPlans = data.data;
       },
       (error: any) => {
-        console.error("Error al traer el socio", error)
-        this.memberFound = false;
+        console.error("Error al traer planes", error)
       }
     )
   }
 
   // Método para generar QR de pago
   onGenerateQR(): void {
-    if (this.generatePaymentForm.valid) {
-      // Lógica para generar QR de pago
-      const paymentDetails = this.generatePaymentForm.value;
-      console.log('Detalles de pago:', paymentDetails);
-      // Aquí puedes llamar al servicio para generar el QR de pago
-    } else {
-      console.log('Formulario de generación de pago inválido');
-    }
   }
 }

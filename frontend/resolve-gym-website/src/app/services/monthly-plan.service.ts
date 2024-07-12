@@ -14,8 +14,8 @@ export class MonthlyPlanService {
     return this._http.get<MonthlyPlan[]>(this.baseUrl+'/');
   }
 
-  getMonthlyPlanById(id: number):Observable<MonthlyPlan>{
-    return this._http.get<MonthlyPlan>(this.baseUrl + '/' + id);
+  getMonthlyPlanById(id: string):Observable<any>{
+    return this._http.get(this.baseUrl + '/' + id);
   }
   addMonthlyPlan(monthlyPlan: MonthlyPlan): Observable<MonthlyPlan>{
     const httpOptions={
