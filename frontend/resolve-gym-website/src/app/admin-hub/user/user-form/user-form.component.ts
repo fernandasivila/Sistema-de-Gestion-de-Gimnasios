@@ -98,6 +98,11 @@ export class UserFormComponent implements OnInit {
     )
   }
 
+
+  getFormValuesWithoutImage() {
+    const formValues = { ...this.userForm.value };
+    return formValues;
+  }
   //getters para mejorar redibilidad
   get username() {
     return this.userForm.get('username')
