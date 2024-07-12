@@ -1,3 +1,5 @@
+const MonthlyPlan = require("../database/models/MonthlyPlan");
+
 class PaymentController {
     constructor(subscriptionService) {
       this.subscriptionService = subscriptionService;
@@ -5,11 +7,18 @@ class PaymentController {
   
     async getPaymentLink(req, res) {
       try {
-        const { monthlyPlan } = req.body;
+        const { monthlyPlanId } = req.body;
 
-        if (!monthlyPlan || monthlyPlan.length === 0) {
+        if (!monthlyPlanId) {
           return res.status(400).json({ error: true, msg: "No monthlyPlan provided" });
         }
+
+        const monthlyPlan = await MonthlyPlan.findById(monthlyPlanId);
+        if (!monthlyPlan) {
+          return res.status(404).json({ error: true, msg: "MonthlyPlan not found" });
+        }
+
+        console.log("PLAN BACK", monthlyPlan);
 
         const payment = await this.subscriptionService.createPayment(monthlyPlan);
   

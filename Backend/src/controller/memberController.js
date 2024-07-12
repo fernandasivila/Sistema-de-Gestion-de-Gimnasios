@@ -97,7 +97,7 @@ const memberController = {
     getByDni: async (req, res) => {
       const dni = req.params.dni;
       try {
-        const member = await Member.findOne({dni});
+        const member = await Member.findOne({'personalInformation.dni':dni});
         if (!member) {
           return res.status(404).json({
             meta: {
@@ -376,17 +376,30 @@ const memberController = {
         const id = req.params.id;
         const newMonthlyPlanId = req.body.monthlyPlan;
 
+        console.log(newMonthlyPlanId);
         try {
-          await Member.updateOne(
-            { _id: id },
-            { $set: { monthlyPlan: newMonthlyPlanId } }
-          );
-            res.json({
-              meta: {
-                status: 200,
-                message: "Member updated monthlyPlan successfully",
+              const updateResult = await Member.updateOne(
+                { _id: id },
+                { $set: { mounthlyPlan: newMonthlyPlanId } }
+              );
+              
+              console.log(updateResult);
+    
+              if (updateResult.acknowledged === false) {
+                return res.status(404).json({
+                  meta: {
+                    status: 404,
+                    message: "Member not found or monhtly already added"
+                  }
+                });
               }
-            });
+          
+              res.json({
+                meta: {
+                  status: 200,
+                  message: "Member updated progress successfully"
+                }
+              });
           } catch (error) {
             res.status(500).json({
               meta: {
