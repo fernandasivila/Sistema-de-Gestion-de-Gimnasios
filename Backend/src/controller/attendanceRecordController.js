@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const attendanceRecordController = {
     list: async (req, res) => {
         try {
-            const attendanceRecords = await AttendanceRecord.find();
+            const attendanceRecords = await AttendanceRecord.find().populate('member');
             res.status(200).json({
                 meta: {
                     status: 200,
