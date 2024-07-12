@@ -1,5 +1,5 @@
 import { DatePipe, TitleCasePipe } from '@angular/common';
-import { Component, OnInit, Injectable } from '@angular/core';
+import { Component, OnInit, Injectable, ChangeDetectorRef } from '@angular/core';
 import { AttendanceRecordService } from '../../services/attendance-record.service';
 import { MemberService } from '../../services/member.service';
 import { AttendanceRecordResponse } from '../../models/attendance-record';
@@ -27,6 +27,7 @@ type calendarWeek = {
 
 export class HabitTrackerComponent implements OnInit {
   constructor(
+    private cdr: ChangeDetectorRef,
     private attendanceRecordService: AttendanceRecordService,
     private memberService : MemberService
   ){
@@ -38,11 +39,20 @@ export class HabitTrackerComponent implements OnInit {
   workingDate = new Date();
   memberId = "6690162d02bf509b25364502"; //SOCIO
   daysGoals = 0;
+  isCurrentMonth = true;
+
+  get WorkingDate() : number {
+    return this.workingDate.getTime()
+  }
 
   calendar : calendarWeek[] = []
 
   ngOnInit(): void {
       this.loadCalendar();
+  }
+
+  checkCurrentMonth() : boolean {
+    return this.workingDate.getMonth() == (new Date()).getMonth()
   }
 
   loadCalendar(){
@@ -52,10 +62,7 @@ export class HabitTrackerComponent implements OnInit {
   getAttendanceRecordsByMemberAndDate() {
 
     this.attendanceRecordService.getAttendanceRecordByMemberAndMonth(this.memberId,this.workingDate.getMonth()+1, this.workingDate.getFullYear()).subscribe(
-      (result: any) => {
-        console.log(result)
-        console.log(this.workingDate);
-        
+      (result: any) => {     
         this.attendanceRecords = result.data
         this.getMember();
       },
@@ -68,10 +75,8 @@ export class HabitTrackerComponent implements OnInit {
   getMember() {
     this.memberService.getMemberById(this.memberId).subscribe(
       (result: any) => {
-        console.log(result)
         this.member = result.data
         this.attendedDays = this.extractDaysFromDateObjects(this.attendanceRecords)
-        console.log(this.attendedDays);
         this.daysGoals = this.member.weeklyGoal;
         this.calendar = this.buildCalendar(this.workingDate, this.attendedDays, this.daysGoals);
       },
@@ -133,8 +138,7 @@ export class HabitTrackerComponent implements OnInit {
         week.isCurrentWeek = false
       }
     }
-
-    console.log(calendar)
+    this.checkCurrentMonth()
     return calendar
   }
 
@@ -148,7 +152,9 @@ export class HabitTrackerComponent implements OnInit {
   }
 
   subtractMonths(){
+    console.log(this.workingDate)
     this.workingDate.setMonth(this.workingDate.getMonth() - 1);
     this.loadCalendar();
+    console.log(this.workingDate)
   }
 }

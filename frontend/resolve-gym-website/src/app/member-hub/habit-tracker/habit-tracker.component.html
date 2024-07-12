@@ -17,7 +17,7 @@
 <table class="table-calendar">
   <thead>
     <tr>
-      <th colspan="8" class="fs-4">{{workingDate | date:'MMMM yyyy':undefined:'es' | titlecase}}</th>
+      <th colspan="8" class="fs-4">{{ WorkingDate | date:'MMMM yyyy':undefined:'es' | titlecase }}</th>
     </tr>
     <tr class="fs-6">
       <th><span class="d-none d-sm-inline">Domingo</span><span class="d-sm-none d-inline">D</span></th>
@@ -36,7 +36,7 @@
       @for(day of week.days; track day){
       <td>
         @if(day){
-        <div class="calendar-number" [class.habit-success]="day?.wasPresent" [class.today]="day?.isToday">
+        <div class="calendar-number" [class.habit-success]="day?.wasPresent" [class.today]="isCurrentMonth && day?.isToday">
           {{day.date}}</div>
         }
       </td>

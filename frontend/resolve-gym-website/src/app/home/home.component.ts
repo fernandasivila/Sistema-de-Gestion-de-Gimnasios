@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Coach } from '../models/coach';
 import { CoachService } from '../services/coach.service';
 
 @Component({
@@ -8,13 +9,6 @@ import { CoachService } from '../services/coach.service';
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent {
+export class HomeComponent{
   
-
-  constructor(private coachService : CoachService){}
-
-  ngOnInit(){
-
-  }
-
 }
