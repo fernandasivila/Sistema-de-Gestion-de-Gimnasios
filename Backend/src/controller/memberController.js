@@ -254,6 +254,44 @@ const memberController = {
             });
         }
       },
+      getRoutinesByMember: async (req, res) => {
+        const id = req.params.id;
+        try {
+            const activeMembers = await Member.findById(id).select('routines')
+            .populate({
+              path: 'routines',
+              populate: {
+                path: 'exercises',
+                model: 'Exercise',
+                select: '-images' // Excluye el campo images de Exercise
+              }
+            })
+            .populate({
+              path: 'routines',
+              populate: {
+                path: 'muscleGroupsSelected',
+                model: 'MuscleGroup',
+                select: '-img'
+              }
+            }) // Población del campo muscleGroupsSelected
+            .exec();
+            res.status(200).json({
+                meta: {
+                    status: 200,
+                    message: "Routines retrieved successfully",
+                },
+                data: activeMembers
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({
+                meta: {
+                    status: 500,
+                    message: "Internal Server Error",
+                },
+            });
+        }
+      },
       addRoutine: async (req, res) => {
         const memberId = req.params.id;
         const newRoutineId = req.body.routine;
@@ -280,6 +318,46 @@ const memberController = {
             meta: {
               status: 200,
               message: "Member updated routines successfully"
+            }
+          });
+          } catch (error) {
+            res.status(500).json({
+              meta: {
+                status: 500,
+                message: "Error processing operation",
+              },
+              data: {
+                error: error.message,
+              },
+            });
+          }
+      },
+      addProgress: async (req, res) => {
+        const memberId = req.params.id;
+        const newProgressId = req.body.progress;
+
+        console.log(newProgressId);
+        try {
+          const updateResult = await Member.updateOne(
+            { _id: memberId },
+            { $push: { progress: newProgressId } }
+          );
+          
+          console.log(updateResult);
+
+          if (updateResult.modifiedCount === 0) {
+            return res.status(404).json({
+              meta: {
+                status: 404,
+                message: "Member not found or progress already added"
+              }
+            });
+          }
+      
+          res.json({
+            meta: {
+              status: 200,
+              message: "Member updated progress successfully"
             }
           });
           } catch (error) {
