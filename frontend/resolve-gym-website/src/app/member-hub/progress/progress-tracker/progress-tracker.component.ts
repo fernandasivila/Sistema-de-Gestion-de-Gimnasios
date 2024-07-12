@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Chart, ChartOptions, ChartType } from 'chart.js/auto';
 import { Progress } from '../../../models/progress';
 import { MemberService } from '../../../services/member.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-progress-tracker',
@@ -12,43 +13,55 @@ import { MemberService } from '../../../services/member.service';
 })
 export class ProgressTrackerComponent implements OnInit {
 
+  member:any;
+  /* let memberId = localStorage.getItem('userid') */
+  memberId = "6690162d02bf509b25364502";
   chart!: Chart;
   progress!: Progress[]
 
   constructor(
-    private memberService: MemberService
-  ) { }
+    private memberService: MemberService,
+    private router: Router) { }
 
   ngOnInit(): void {
-    this.loadChart()
-
+    this.loadProgress();
   }
 
   loadProgress() {
-    let userID = localStorage.getItem('userid')
-    if (userID) {
-      this.memberService.getMemberById(userID).subscribe(
-        (dataMember: any) => {
-          this.progress = dataMember.progress
+    this.memberService.getProgressByMember(this.memberId).subscribe(
+      (dataMember: any) => {
+        console.log(dataMember)
+        this.progress = dataMember.data.progress
+        this.loadChart()
+      },
+      (error: any) => {
+        console.error("Error al cargar el progreso", error)
+      }
+    )
+  }
 
-         },
-         (error:any)=>{
-          console.log(error)
-         }
-      )
-    }
+  getFormattedDates(): string[] {
+    const dates = this.progress.map(item => {
+      let date = new Date(item.date);
+      return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    });
+    console.log(dates);
+    return dates
+  }
 
+  getWeights(): number[] {
+    const weights = this.progress.map(progress => progress.weight.valueOf());
+    console.log(weights);
+    
+    return weights;
   }
 
   loadChart() {
     const data = {
-      //labels: this.progress.map(p=> new Date(p.date).toLocaleDateString),
-      labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-      
+      labels: this.getFormattedDates(),
       datasets: [{
         label: 'Peso',
-        //data: this.progress.map(p=>p.weight),
-        data: [80, 80, 65, 65, 60, 50, 56, 55],
+        data: this.getWeights(),
         fill: true,
         borderColor: '#ffffff',
         backgroundColor: '#5fc745',
@@ -88,7 +101,8 @@ export class ProgressTrackerComponent implements OnInit {
   }
 
   addProgress() {
-    //añadir un progreso
+    this.router.navigate(['progresses/record'])
+
   }
 
 }

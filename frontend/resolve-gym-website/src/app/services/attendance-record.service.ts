@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AttendanceRecordResponse } from '../models/attendance-record';
+import { AttendanceRecordRequest, AttendanceRecordResponse } from '../models/attendance-record';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +24,7 @@ export class AttendanceRecordService {
 getAttendanceRecordByMemberAndMonth(idMember:string,month:number,year:number):Observable<any>{
   return this._http.get(`${this.baseUrl}/attendance/${idMember}/${year}/${month}`);
 }
- addAttendanceRecord(attendanceRecord:AttendanceRecordResponse):Observable<any>{
+ addAttendanceRecord(attendanceRecord:AttendanceRecordRequest):Observable<any>{
   const httpOptions={
     headers:new HttpHeaders({
       'Content-Type':'application/json'

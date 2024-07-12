@@ -18,6 +18,9 @@ export class MemberService {
  getMemberById(id:string):Observable<MemberResponse>{
    return this._http.get<MemberResponse>(`${this.baseUrl}/${id}`);
  }
+ getMemberByDNI(dni:string):Observable<any>{
+  return this._http.get(`${this.baseUrl}/dni/${dni}`);
+}
  addMemeber(mem:MemberRequest):Observable<MemberRequest>{
   const httpOptions={
     headers:new HttpHeaders({
@@ -39,4 +42,40 @@ export class MemberService {
   deleteMember(id:string):Observable<any>{
       return this._http.delete(`${this.baseUrl}/${id}`);
     }
+  
+  getProgressByMember(id:string):Observable<any>{
+    return this._http.get(`${this.baseUrl}/progress/${id}`);
+  }
+
+  getRoutinesByMember(id:string):Observable<any>{
+    return this._http.get(`${this.baseUrl}/routines/${id}`);
+  }
+
+  addRoutine(idRoutine : string, idMember: string):Observable<any>{
+    const httpOptions={
+      headers:new HttpHeaders({
+        'Content-Type':'application/json'
+      })
+    }
+    console.log(idRoutine);
+    
+    const body = JSON.stringify({
+      "routine": idRoutine
+    })
+    return this._http.put(`${this.baseUrl}/edit/routine/${idMember}`,body,httpOptions);
+    }
+
+    addProgress(idProgress : string, idMember: string):Observable<any>{
+      const httpOptions={
+        headers:new HttpHeaders({
+          'Content-Type':'application/json'
+        })
+      }
+      console.log(idProgress);
+      
+      const body = JSON.stringify({
+        "progress": idProgress
+      })
+      return this._http.put(`${this.baseUrl}/edit/progress/${idMember}`,body,httpOptions);
+      }
 }
