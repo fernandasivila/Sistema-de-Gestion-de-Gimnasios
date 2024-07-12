@@ -12,32 +12,32 @@ export class ExerciseService {
 
   constructor(private _http:HttpClient) { }
 
-  getAllExercises():Observable<ExerciseResponse[]>{
-    return this._http.get<ExerciseResponse[]>(this.baseUrl+'/');
+  getAllExercises():Observable<any>{
+    return this._http.get(this.baseUrl+'/');
   }
-  getExerciseById(id:String):Observable<ExerciseResponse>{
-    return this._http.get<ExerciseResponse>(`${this.baseUrl}/${id}`);
+  getExerciseById(id:String):Observable<any>{
+    return this._http.get(`${this.baseUrl}/${id}`);
   }
-  addExercise(exercise:ExerciseRequest):Observable<ExerciseRequest>{
+  addExercise(exercise:ExerciseRequest):Observable<any>{
     const httpOptions={
       headers:new HttpHeaders({
         'Content-Type':'application/json'
       })
     }
     const body = JSON.stringify(exercise)
-    return this._http.post<ExerciseRequest>(this.baseUrl+'/add', body, httpOptions);
+    return this._http.post(this.baseUrl+'/add', body, httpOptions);
   }
   deleteExercise(id:String):Observable<any>{
-    return this._http.delete<any>(`${this.baseUrl}/${id}`);
+    return this._http.delete(`${this.baseUrl}/${id}`);
   }
-  updateExercise( exercise:ExerciseResponse):Observable<ExerciseResponse>{
+  updateExercise( exercise:ExerciseResponse):Observable<any>{
     const httpOptions={
       headers:new HttpHeaders({
         'Content-Type':'application/json'
       })
     }
     const body = JSON.stringify(exercise)
-    return this._http.post<ExerciseResponse>(`${this.baseUrl}/edit/${exercise._id}`,body,httpOptions)
+    return this._http.post(`${this.baseUrl}/edit/${exercise._id}`,body,httpOptions)
   }
 
 }

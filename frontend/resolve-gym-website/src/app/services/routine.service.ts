@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RoutineRequest, RoutineResponse } from '../models/routine';
+import { RoutineRequest, RoutineResponse,  } from '../models/routine';
 
 @Injectable({
   providedIn: 'root'
@@ -12,13 +12,13 @@ export class RoutineService {
 
   constructor(private _http: HttpClient) { }
 
-  getRoutines():Observable<RoutineResponse[]> {
-    return this._http.get<RoutineResponse[]>(this.baseUrl+'/');
+  getRoutines():Observable<any> {
+    return this._http.get(this.baseUrl+'/');
   }
-  getRoutine(id: String): Observable<RoutineResponse> {
-    return this._http.get<RoutineResponse>(this.baseUrl+'/'+id);
+  getRoutine(id: String): Observable<any> {
+    return this._http.get(this.baseUrl+'/'+id);
   }
-  addRoutine(routine: RoutineRequest): Observable<RoutineRequest> {
+  addRoutine(routine: RoutineRequest): Observable<any> {
     const httpOptions={
       headers:new HttpHeaders({
         'Content-Type':'application/json'
@@ -26,12 +26,12 @@ export class RoutineService {
     }
     const body = JSON.stringify(routine)
     
-    return this._http.post<RoutineRequest>(this.baseUrl+'/add', body,httpOptions);
+    return this._http.post(this.baseUrl+'/add', body,httpOptions);
   }
   deleteRoutine(id:string):Observable<any>{
     return this._http.delete<any>(this.baseUrl+'/'+id);
   }
-  updateRoutine(routine: RoutineResponse): Observable<RoutineResponse> {
+  updateRoutine(routine: RoutineResponse): Observable<any> {
     const httpOptions={
       headers:new HttpHeaders({
         'Content-Type':'application/json'
@@ -39,6 +39,6 @@ export class RoutineService {
     }
     const body = JSON.stringify(routine)
     
-    return this._http.put<RoutineResponse>(this.baseUrl+'/add', body,httpOptions);
+    return this._http.put(this.baseUrl+'/add', body,httpOptions);
   }
 }
