@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ExerciseService } from '../../../services/exercise.service';
+import { ExerciseRequest } from '../../../models/exercise';
 
 
 @Component({
@@ -26,18 +27,21 @@ export class ExerciseFormComponent {
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
-    private exerciseS: ExerciseService
+    private exerciseService: ExerciseService
 
   ) { }
 
   ngOnInit(): void {
+
     this.exerciseForm = this.formBuilder.group({
-      name: new FormControl("", [Validators.required]),
-      accessory: new FormControl(""),
-      instruction: new FormControl("", [Validators.required]),
-      difficult: new FormControl("", [Validators.required]),
-      type: new FormControl("", [Validators.required]),
-      muscleGroup: new FormControl("", [Validators.required])
+      name: ['', [Validators.required]],
+      set: [0, [Validators.required, Validators.min(1)]],
+      rep: [0, [Validators.required, Validators.min(1)]],
+      accessory: [''],
+      instruction: ['', [Validators.required]],
+      difficult: ['', [Validators.required]],
+      type: ['', [Validators.required]],
+      muscleGroup: ['', [Validators.required]]
     });
 
     this.route.url.subscribe((data: any) => {
@@ -53,35 +57,58 @@ export class ExerciseFormComponent {
     });
   }
 
-  // Getters para acceder a los controles del formulario
-  get name() {
-    return this.exerciseForm.get('name');
+   // Getters para acceder a los controles del formulario
+   get name() {
+    return this.exerciseForm.get('name') as FormControl;
+  }
+
+  get set() {
+    return this.exerciseForm.get('set') as FormControl;
+  }
+
+  get rep() {
+    return this.exerciseForm.get('rep') as FormControl;
   }
 
   get accessory() {
-    return this.exerciseForm.get('accessory');
+    return this.exerciseForm.get('accessory') as FormControl;
   }
 
   get instruction() {
-    return this.exerciseForm.get('instruction');
+    return this.exerciseForm.get('instruction') as FormControl;
   }
 
   get difficult() {
-    return this.exerciseForm.get('difficult');
+    return this.exerciseForm.get('difficult') as FormControl;
   }
 
   get type() {
-    return this.exerciseForm.get('type');
+    return this.exerciseForm.get('type') as FormControl;
   }
 
   get muscleGroup() {
-    return this.exerciseForm.get('muscleGroup');
+    return this.exerciseForm.get('muscleGroup') as FormControl;
   }
 
-  // Validaciones
-  validateNameRequired() {
-    const name = this.name;
-    return name?.errors?.['required'] && (name?.dirty || name?.touched);
+  // Validaciones específicas
+  validateSetRequired() {
+    const set = this.set;
+    return set?.errors?.['required'] && (set?.dirty || set?.touched);
+  }
+
+  validateSetMin() {
+    const set = this.set;
+    return set?.errors?.['min'] && (set?.dirty || set?.touched);
+  }
+
+  validateRepRequired() {
+    const rep = this.rep;
+    return rep?.errors?.['required'] && (rep?.dirty || rep?.touched);
+  }
+
+  validateRepMin() {
+    const rep = this.rep;
+    return rep?.errors?.['min'] && (rep?.dirty || rep?.touched);
   }
 
   validateInstructionRequired() {
@@ -105,7 +132,7 @@ export class ExerciseFormComponent {
   }
 
   onFileChange(event: any) {
-    this.imageBase64s = []
+    this.imageBase64s = [];
     const files = event.target.files;
     if (files) {
       for (let file of files) {
@@ -120,18 +147,25 @@ export class ExerciseFormComponent {
 
   onSubmit() {
     if (this.exerciseForm.valid) {
-      const formData = this.exerciseForm.value;
+      if(this.action=="Registrar"){
+        const formData: ExerciseRequest = this.exerciseForm.value;
       formData.images = this.imageBase64s;
       console.log(formData);
-      this.exerciseS.addExercise(formData).subscribe(
-        (data:any)=>{
+      this.exerciseService.addExercise(formData).subscribe(
+        (data: any) => {
           console.log('Ejercicio guardado correctamente', data);
+          // Redirigir o hacer alguna acción después de guardar
         },
-        (error:any)=>{
+        (error: any) => {
           console.error('Error al guardar el ejercicio', error);
         }
-      )
-
+      );
+      }else{
+        if(this.action=="Modificar"){
+          
+        }
+      }
+      
     } else {
       console.log('Formulario no válido');
     }

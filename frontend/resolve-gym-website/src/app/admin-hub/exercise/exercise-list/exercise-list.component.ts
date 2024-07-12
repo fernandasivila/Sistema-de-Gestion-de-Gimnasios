@@ -6,6 +6,7 @@ import { ActionButtonGroupComponent } from '../../action-button-group/action-but
 import { ADTSettings } from 'angular-datatables/src/models/settings';
 import { Subject } from 'rxjs';
 import { IDemoNgComponentEventType } from '../../../test/idemo-ng-component-event-type';
+import { ExerciseService } from '../../../services/exercise.service';
 
 @Component({
   selector: 'app-exercise-list',
@@ -20,35 +21,12 @@ export class ExerciseListComponent implements OnInit, AfterViewInit{
   dtOptions: ADTSettings = {};
   dtTrigger: Subject<ADTSettings> = new Subject<ADTSettings>()
 
-  constructor(private datePipe: DatePipe, private router: Router) {
+  constructor(private datePipe: DatePipe, 
+    private router: Router,
+    private ejercicioService: ExerciseService
+  ) {
     
   }
-
-  apiResponseExample = [
-    {
-
-//    images: ExerciseImage[] ;
-  //  muscleGroup: MuscleGroup;
-      
-      "img": [{
-        "data": {
-          "type": "Buffer",
-          "data": []
-        },
-        "contentType": "image/png"
-      }],
-      "_id": "6685a0e7d587e0ccac1a9623",
-      "name": "sentadillass",
-      "set": "2",
-      "rep":"4",
-      "accessory":"banda",
-      "instruction":"Mirada hacia el frente, rodillas levemente flexionadas",
-      "difficult":"Principiante",
-      "type":"Cardio",
-      "muscleGroup":"nombreDelMusculoCREO",
-      "__v": 0
-    }]
-
 
     @ViewChild('confirmationModal') confirmationModal! : ElementRef
     @ViewChild('actionButtons') actionButtons!: TemplateRef<ActionButtonGroupComponent>
@@ -62,7 +40,16 @@ export class ExerciseListComponent implements OnInit, AfterViewInit{
         language: {
           url: '/assets/datatable.spanish.json',
         },
-        data: this.apiResponseExample,
+        ajax: (dataTablesParameters: any, callback) => {
+          this.ejercicioService.getAllExercises().subscribe(resp => {
+            console.log(resp.data)
+            callback({
+              recordsTotal: resp.recordsTotal,
+              recordsFiltered: resp.recordsFiltered,
+              data: resp.data
+            });
+          })
+        },
         columns: [
           { title: 'Ejercicio', data: 'name'},
           { title: 'Set', data:'set'},
@@ -116,11 +103,23 @@ export class ExerciseListComponent implements OnInit, AfterViewInit{
   }
 
   deleteMember(){
-    //logica de borrado
+    console.log(this.idEventInstance)
+    if (this.idEventInstance) {
+      this.ejercicioService.deleteExercise(this.idEventInstance).subscribe(
+        (data: any) => {
+          console.log("EJERCICIO eliminado con exito", data)
+          window.location.reload();
+        },
+        (error: any) => {
+          console.log("ERROR eliminando EJERCICIO", error)
+        }
+      )
+    }
   }
 
   private confirmateDeletion(){
     this.confirmationModal.nativeElement.click()
   }
+
 
 }
