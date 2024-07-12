@@ -39,4 +39,8 @@ export class MemberService {
   deleteMember(id:string):Observable<any>{
       return this._http.delete(`${this.baseUrl}/${id}`);
     }
+  
+  getProgressByMember(id:string):Observable<any>{
+    return this._http.get(`${this.baseUrl}/progress/${id}`);
+  }
 }
