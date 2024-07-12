@@ -1,7 +1,7 @@
 import { JsonPipe, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ClassService } from '../../../services/class.service';
 import { Class } from '../../../models/class';
 
@@ -16,16 +16,18 @@ import { Class } from '../../../models/class';
 export class ClassFormComponent implements OnInit {
   action = 'Registrar'
   classForm!: FormGroup
+  classId=''
   
   constructor(
     private formBuilder : FormBuilder,
     private route: ActivatedRoute,
-    private classService: ClassService
+    private classService: ClassService,
+    private router: Router
   ){}
 
   ngOnInit(): void {
     this.classForm = this.formBuilder.group({
-      name: new FormControl("", [Validators.required, Validators.minLength(3), Validators.pattern('^[a-zA-Z\\s]+$')]),
+      name: new FormControl("", [Validators.required]),
       description: new FormControl("", [Validators.required]),
       schedule: new FormControl("", [Validators.required])
     });
@@ -37,9 +39,29 @@ export class ClassFormComponent implements OnInit {
             break
           case 'edit':
             this.action = 'Modificar'
-            //Logica Modificar
+            this.classId = this.route.snapshot.params['id'];
+           if(this.classId){
+             this.loadClassToUpdate(this.classId)
+           }else{
+            console.log("El id de la clase no se encontró")
+           }
             break
         }
+      }
+    )
+  }
+  loadClassToUpdate(id:string){
+    this.classService.getClassById(id).subscribe(
+      (classData:any) => {
+        console.log(classData.data)
+        this.classForm.patchValue({
+          name: classData.data.name,
+          description: classData.data.description,
+          schedule: classData.data.schedule
+        })
+      },
+      error=>{
+        console.log("Error cargando datos de la clase",error)
       }
     )
   }
@@ -97,14 +119,22 @@ export class ClassFormComponent implements OnInit {
         this.classService.addClass(formData).subscribe(
           res => {
             console.log("Se registro correctamente una clase",res);
+            this.router.navigate(['/admin-dashboard/classes'])
           },
           error => console.error(error)
         )
-      }
+      }else if (this.action == "Modificar") {
+        this.classService.updateClass(formData).subscribe(
+          res => {
+            console.log("Clase modificada con éxito", res);
+            this.router.navigate(['/admin-dashboard/classes']);
+          },
+          error => console.error("Error al modificar la clase", error)
+        );
 
     } else {
       console.log('Formulario no válido');
     }
   }
-
+}
 }

@@ -5,6 +5,8 @@ import { ActionButtonGroupComponent } from '../../action-button-group/action-but
 import { ADTSettings } from 'angular-datatables/src/models/settings';
 import { Subject } from 'rxjs';
 import { IDemoNgComponentEventType } from '../../../test/idemo-ng-component-event-type';
+import { ClassService } from '../../../services/class.service';
+import { Class } from '../../../models/class';
 
 @Component({
   selector: 'app-class-list',
@@ -18,24 +20,12 @@ export class ClassListComponent implements OnInit, AfterViewInit {
 
   dtOptions: ADTSettings = {};
   dtTrigger: Subject<ADTSettings> = new Subject<ADTSettings>()
+  classesTraidas : Class[] = []
   
-  constructor(private router: Router){}
-
-  apiResponseExample =[
-    {
-      "_id": "6685a0e7d587e0ccac1a9623",
-      "name":"Crossfit",
-      "description":"entrena tu cuerpo",
-      "schedule":"turno mañana, tarde, noche",
-
-    },
-    {
-      "_id": "6685a0e7d587e0ccac1a9625",
-      "name":"Funcional en trampolin",
-      "description":"qsy se feliz",
-      "schedule":"turno mañana"
-    }
-  ]
+  constructor(
+    private router: Router,
+    private classService: ClassService
+  ){}
 
   @ViewChild('confirmationModal') confirmationModal! : ElementRef
   @ViewChild('actionButtons') actionButtons!: TemplateRef<ActionButtonGroupComponent>
@@ -43,13 +33,22 @@ export class ClassListComponent implements OnInit, AfterViewInit {
   idEventInstance = ''
 
   ngOnInit(): void {
+
     setTimeout(()=>{
       const self = this;
       this.dtOptions = {
         language: {
           url: '/assets/datatable.spanish.json',
+        }, ajax: (dataTablesParameters: any, callback) => {
+          this.classService.getAllClasses().subscribe(resp => {
+            console.log(resp.data)
+            callback({
+              recordsTotal: resp.recordsTotal,
+              recordsFiltered: resp.recordsFiltered,
+              data: resp.data
+            });
+          })
         },
-        data: this.apiResponseExample,
         columns: [
           { title: 'Clase', data: 'name'},
           { title:'Descripcion', data:'description'},
@@ -99,12 +98,22 @@ export class ClassListComponent implements OnInit, AfterViewInit {
   }
 
   deleteMember(){
-    //logica de borrado
+    console.log(this.idEventInstance)
+    if (this.idEventInstance) {
+      this.classService.deleteClass(this.idEventInstance).subscribe(
+        (data: any) => {
+          console.log("Clase eliminada con exito", data)
+          this.router.navigate(['/admin-dashboard/classes'])
+        },
+        (error: any) => {
+          console.log("ERROR eliminando una clase", error)
+        }
+      )
+    }
   }
 
   private confirmateDeletion(){
     this.confirmationModal.nativeElement.click()
   }
-
 
 }

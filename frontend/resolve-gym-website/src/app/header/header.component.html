@@ -33,7 +33,7 @@
                     <!-- 
                     TODO: Mejorar navegabilidad de funciones de socios y empleados D:
                      -->
-                    <li class="nav-item dropdown">
+                    <li class="nav-item dropdown"  *ngIf="loginService.userLoggedIn() && loginService.getRoleUserLogged() =='Socio'">
                         <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-bs-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">Socios</a>
                         <div class="dropdown-menu" aria-labelledby="dropdownId">
@@ -45,7 +45,7 @@
                             <a class="dropdown-item" routerLink="/membershipPayments">Mi Membresía</a>
                         </div>
                     </li>
-                    <li class="nav-item dropdown">
+                    <li class="nav-item dropdown" *ngIf="loginService.userLoggedIn() && loginService.getRoleUserLogged() =='Empleado'">
                         <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-bs-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">Empleados</a>
                         <div class="dropdown-menu" aria-labelledby="dropdownId">
@@ -59,7 +59,7 @@
                     </li>
                 </ul>
                 <form class="d-flex my-2 my-lg-0">
-                    <button class="btn btn-success my-2 my-sm-0" type="button"routerLink="/login">
+                    <button class="btn btn-success my-2 my-sm-0" type="button"routerLink="/login" *ngIf="!loginService.userLoggedIn()" >
                         Iniciar Sesión
                     </button>
                     <button class="btn btn-success my-2 my-sm-0" type="button" *ngIf="loginService.userLoggedIn()" (click)="logout()">

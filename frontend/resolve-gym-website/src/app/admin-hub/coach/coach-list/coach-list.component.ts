@@ -5,6 +5,8 @@ import { ActionButtonGroupComponent } from '../../action-button-group/action-but
 import { ADTSettings } from 'angular-datatables/src/models/settings';
 import { Subject } from 'rxjs';
 import { IDemoNgComponentEventType } from '../../../test/idemo-ng-component-event-type';
+import { CoachService } from '../../../services/coach.service';
+import { Coach } from '../../../models/coach';
 
 @Component({
   selector: 'app-coach-list',
@@ -18,8 +20,12 @@ export class CoachListComponent implements OnInit, AfterViewInit{
 
   dtOptions: ADTSettings = {};
   dtTrigger: Subject<ADTSettings> = new Subject<ADTSettings>()
+  coachesTraidos!: Coach[]
 
-  constructor(private router : Router) { }
+  constructor(
+    private router: Router,
+    private coachService: CoachService
+  ) { }
 
   apiResponseExample = [
     {
@@ -51,8 +57,16 @@ export class CoachListComponent implements OnInit, AfterViewInit{
       this.dtOptions = {
         language: {
           url: '/assets/datatable.spanish.json',
+        }, ajax: (dataTablesParameters: any, callback) => {
+          this.coachService.getAllCoaches().subscribe(resp => {
+            console.log(resp.data)
+            callback({
+              recordsTotal: resp.recordsTotal,
+              recordsFiltered: resp.recordsFiltered,
+              data: resp.data
+            });
+          })
         },
-        data: this.apiResponseExample,
         columns: [
           { title: 'Coach', data: 'fullname' },
           { title:'email', data: 'email' },
@@ -105,7 +119,15 @@ export class CoachListComponent implements OnInit, AfterViewInit{
   }
 
   deleteMember(){
-    //logica de borrado
+    if(this.idEventInstance){
+      this.coachService.deleteCoach(this.idEventInstance).subscribe(
+        (data:any)=>{
+          console.log("Coach eliminado",data)
+          this.router.navigate(['/admin-dashboard/classes'])
+        },
+        error=> console.log("Error eliminando coach",error)
+      )
+    }
   }
 
   private confirmateDeletion(){
