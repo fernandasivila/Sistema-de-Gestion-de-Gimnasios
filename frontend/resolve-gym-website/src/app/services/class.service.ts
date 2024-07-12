@@ -36,6 +36,6 @@ export class ClassService {
       })
     }
     const body = JSON.stringify(classUpdate)
-    return this._http.post(`${this.baseUrl}/edit/${classUpdate._id}`,body,httpOptions)
+    return this._http.put(`${this.baseUrl}/edit/${classUpdate._id}`,body,httpOptions)
   }
 }

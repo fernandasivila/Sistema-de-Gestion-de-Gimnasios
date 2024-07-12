@@ -6,3 +6,12 @@ export interface EventI {
     startTime: Date;
     finishTime:Date;
 }
+
+export interface EventIResp {
+    _id?: String;
+    name: String;
+    description: String;
+    date: string;
+    startTime: string;
+    finishTime:string;
+}

@@ -45,6 +45,7 @@ export class EventFormComponent {
             if(params['id']){
               this.idModificar = params['id'];
               console.log(this.idModificar);
+              this.loadEventoToModify(this.idModificar)
             }
           })
           break;
@@ -99,6 +100,35 @@ export class EventFormComponent {
     return finishTime?.errors?.['required'] && (finishTime?.dirty || finishTime?.touched);
   }
 
+  loadEventoToModify(id:string){
+    this.eventService.getEventById(id).subscribe(
+      resp => {
+        console.log(resp.data)
+        let evento: EventI = {...resp.data}
+        this.eventForm.patchValue({
+          name: evento.name,
+          description: evento.description,
+          date: this.formatDate(new Date(evento.date)),
+          startTime: this.formatTime(new Date(evento.startTime)),
+          finishTime: this.formatTime(new Date(evento.finishTime)),
+        })
+      }
+    )
+  }
+
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
+  }
+
+  formatTime(date: Date): string {
+    const hours = ('0' + date.getUTCHours()).slice(-2);
+    const minutes = ('0' + date.getUTCMinutes()).slice(-2);
+    return `${hours}:${minutes}`;
+  }
+
   onSubmit() {
     if (this.eventForm.valid) {
       const eventData: EventI = {
@@ -117,6 +147,7 @@ export class EventFormComponent {
       }
       if (this.action == "Modificar") {
         eventData._id = this.idModificar;
+        console.log(eventData)
         this.eventService.updateEvent(eventData).subscribe(
           (response) => console.log(response),
           (error) => console.error(error)
