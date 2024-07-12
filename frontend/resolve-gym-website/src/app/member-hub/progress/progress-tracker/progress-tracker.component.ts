@@ -3,6 +3,7 @@ import { Chart, ChartOptions, ChartType } from 'chart.js/auto';
 import { Progress } from '../../../models/progress';
 import { MemberService } from '../../../services/member.service';
 import { Router } from '@angular/router';
+import { LoginService } from '../../../services/login.service';
 
 @Component({
   selector: 'app-progress-tracker',
@@ -15,12 +16,13 @@ export class ProgressTrackerComponent implements OnInit {
 
   member:any;
   /* let memberId = localStorage.getItem('userid') */
-  memberId = "6690162d02bf509b25364502";
+  memberId = this.loginService.userLoggedIn()? this.loginService.userLogged(): '';
   chart!: Chart;
   progress!: Progress[]
 
   constructor(
     private memberService: MemberService,
+    private loginService: LoginService,
     private router: Router) { }
 
   ngOnInit(): void {

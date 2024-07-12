@@ -4,6 +4,7 @@ import { FeedbackService } from '../../services/feedback.service';
 import { CommonModule } from '@angular/common';
 import { NgxStarRatingModule } from 'ngx-star-rating';
 import { FeedbackRequest, FeedbackResponse } from '../../models/feedback';
+import { LoginService } from '../../services/login.service';
 
 @Component({
   selector: 'app-feedback-form',
@@ -16,9 +17,12 @@ export class FeedbackFormComponent implements OnInit {
   feedbackForm!: FormGroup
   feedbacks: any
 
+  member: String = new String(this.loginService.userLogged());
+
   constructor(
     private formBuilder: FormBuilder,
-    private feedbackService: FeedbackService
+    private feedbackService: FeedbackService,
+    private loginService: LoginService
   ) {
 
   }
@@ -45,11 +49,13 @@ export class FeedbackFormComponent implements OnInit {
   onSubmit() {
     if (this.feedbackForm.valid) {
 
+      
+
       const feedback: FeedbackRequest = {
         body: this.description?.value,
         date: new Date(),
         score: this.score?.value,
-        member: '66901b759baea98ed03a1642' //Socio
+        member: this.member//Socio
       }
       this.feedbackService.addFeedback(feedback).subscribe(
         (result: any) => {
