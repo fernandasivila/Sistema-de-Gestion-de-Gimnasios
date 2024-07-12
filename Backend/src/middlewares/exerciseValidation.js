@@ -25,27 +25,7 @@ const exerciseValidation = [
             }
             return true;
         }
-    ),
-    body('images').custom((value, { req }) => {
-
-        if(!req.files || req.files.length === 0) {
-          throw new Error('At least one image is required');
-        }
-  
-        const allowedExtensions = ['.jpg', '.jpeg', '.png'];
-        req.files.forEach(file => {
-            const fileExtension = path.extname(file.originalname).toLowerCase();
-
-            if (!allowedExtensions.includes(fileExtension)) {
-                throw new Error('Extension is invalid. Available extensions: jpg, jpeg, png.');
-            }
-
-            if (file.size > 10 * 1024 * 1024) {
-                throw new Error('Image size exceeds limit of 10MB');
-            }
-        });
-        return true;
-    })
+    )
 ];
 
 module.exports = exerciseValidation;
