@@ -41,11 +41,7 @@ export class LoginService {
   //obtener el usuario
   userLogged() {
     var usuario = sessionStorage.getItem("userId");
-<<<<<<< HEAD
     return usuario? usuario:'';
-=======
-    return usuario;
->>>>>>> 6f3d0ce45a3aaa8f60b8b20381fe15c471bc7b4a
   }
   
   //obtener el rol de usuario
