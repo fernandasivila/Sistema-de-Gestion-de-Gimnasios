@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, NgModel } from '@angular/forms';
 import { RoutineService } from '../../services/routine.service';
 import { RoutineRequest } from '../../models/routine';
+import { MemberService } from '../../services/member.service';
 
 
 @Component({
@@ -18,42 +19,59 @@ export class RoutineCreatorComponent {
   routineCreate!: RoutineRequest
 //hacer binding con esto
   nameRoutine=''
-  muscleGroupName: String[] = []
+  muscleGroups: String[] = []
+  exercises: String[] = []
+  routineId = "";
+
+  userId = "6690195e9baea98ed03a162f"; //SOCIO
 
   constructor(
-    private routineService: RoutineService
-  ){
+    private routineService: RoutineService,
+    private memberService : MemberService
+  ){}
 
+  getMuscleGroupName() {
+    const muscleGroupSet = new Set<string>();
+
+    this.routine.forEach(ejercicio => {
+      muscleGroupSet.add(ejercicio.muscleGroup.valueOf());
+    });
+
+    this.muscleGroups = Array.from(muscleGroupSet);
   }
-
-  getMuscleGroupName(){
-   this.routine.forEach(
-      ejercicio=>{
-        this.muscleGroupName.push(ejercicio.muscleGroup)
-      }
-    )
+  
+  getExerciseIds() {
+    this.routine.forEach(ejercicio => {
+      this.exercises.push(ejercicio._id);
+    });
   }
-
   createRoutine(){
     this.getMuscleGroupName();
+    this.getExerciseIds();
     
     this.routineCreate = {
       name: this.nameRoutine,
-      exercises: this.routine,
+      exercises: this.exercises,
       releaseDate: new Date(),
-      muscleGroupsSelected: this.muscleGroupName
+      muscleGroupsSelected: this.muscleGroups
     }
-
-    console.log(this.routineCreate);
-
     this.routineService.addRoutine(this.routineCreate).subscribe(
-      result =>{
-        console.log('Rutina creada correctamente', result);
-      },error=>{
-        console.error('Error al crear la rutina', error);
+      (data : any) =>{
+        console.log('Rutina creada correctamente', data);
+        this.routineId = data.data._id;
+        this.addRoutineToMember();
       }
     )
   }
+
+  addRoutineToMember(){
+    this.memberService.addRoutine(this.routineId,this.userId).subscribe(
+      (data : any) =>{
+        console.log('Rutina agregada a miembro correctamente', data);
+      }
+    )
+  }
+
   borrarEjercicio(indice: number){
     this.routine.splice(indice, 1)
   }

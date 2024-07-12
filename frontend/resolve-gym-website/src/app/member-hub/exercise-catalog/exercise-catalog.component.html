@@ -9,7 +9,7 @@
             </button>
             <div class="col-6 col-md-auto">
                 <select class="form-select" name="" id="" [(ngModel)]="selectedType" (change)="filterExercises()">
-                    <option selected>Sin Filtro</option>
+                    <option value="" selected>Sin Filtro</option>
                     <option value="cardio">Cardio</option>
                     <option value="muscular">Musculación</option>
                 </select>
@@ -20,12 +20,12 @@
                 Grupo Musculatorio
             </button>
             <div class="col-6 col-md-auto">
-                <select class="form-select" [(ngModel)]="selectedDifficulty" (change)="filterExercises()">
+                <select class="form-select" [(ngModel)]="selectedMuscleGroup" (change)="filterExercises()">
                     <option value="" selected>Sin Filtro</option>
-                    <option value="Principiante">Principiante</option>
-                    <option value="Intermedio">Intermedio</option>
-                    <option value="Avanzado">Avanzado</option>
-                </select>
+                    <ng-container *ngFor="let muscle of muscleGroups">
+                      <option [value]="muscle._id">{{muscle.name}}</option>
+                    </ng-container>
+                  </select>
             </div>
         </div>
         <div class="d-flex gap-2">
@@ -33,8 +33,8 @@
                 Dificultad
             </button>
             <div class="col-6 col-md-auto">
-                <select class="form-select" name="" id="">
-                    <option selected>Sin Filtro</option>
+                <select class="form-select" name="" id="" [(ngModel)]="selectedDifficulty" (change)="filterExercises()">
+                    <option value="" selected>Sin Filtro</option>
                     <option value="">Principiante</option>
                     <option value="">Intermedio</option>
                     <option value="">Avanzado</option>

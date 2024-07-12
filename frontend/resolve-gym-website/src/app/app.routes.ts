@@ -28,6 +28,8 @@ import { MemberDetailsComponent } from './worker-hub/member-details/member-detai
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { EventsListComponent } from './events-list/events-list.component';
+import { FeePaymentComponent } from './worker-hub/fee-payment/fee-payment.component';
+import { FeesListComponent } from './worker-hub/fees-list/fees-list.component';
 
 export const routes: Routes = [
     {
@@ -168,7 +170,15 @@ export const routes: Routes = [
             },{
                 path: 'members/details',
                 component: MemberDetailsComponent
-            }
+            },
+            {
+                path: 'fee/payment',
+                component: FeePaymentComponent
+            },
+            {
+                path: 'fees/details',
+                component: FeesListComponent
+            },
         ]
     }
 ];

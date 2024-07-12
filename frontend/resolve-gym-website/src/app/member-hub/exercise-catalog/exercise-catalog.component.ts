@@ -22,8 +22,8 @@ import { FormsModule } from '@angular/forms';
 export class ExerciseCatalogComponent implements OnInit {
   faDumbbell = faDumbbell
  
-  musclesgroups: MuscleGroup[] = []
-  ejerciciosTraidos: ExerciseResponse[] = []
+  muscleGroups: MuscleGroup[] = []
+  ejercicios: ExerciseResponse[] = []
   ejerciciosFiltrados: ExerciseResponse[] = []
   routine: ExerciseResponse[] =[]
 
@@ -42,26 +42,32 @@ export class ExerciseCatalogComponent implements OnInit {
     private routineService: RoutineService,
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit(){
     this.loadMuscleGroup()
     this.loadExercises()
   }
 
-  loadMuscleGroup() {
+  loadMuscleGroup() {    
     this.muscleGroupService.getAllMuscleGroups().subscribe(
-      data => {
-        this.musclesgroups = data.data;
-      }, error => {
-        console.log(error);
+      (data:any) => {
+        this.muscleGroups = data.data;
+        console.log(this.muscleGroups);
       }
     )
   }
+
   loadExercises() {
     this.exerciseService.getAllExercises().subscribe(
       result => {
-        console.log("EJERCICIOS", result)
-        this.ejerciciosTraidos = result.data
-        this.ejerciciosTraidos.forEach(
+        this.ejerciciosFiltrados = result.data
+        this.ejerciciosFiltrados.forEach(
+          e => {
+            let imagen = this.convertToBase64(e.images[0].data.data, e.images[0].contentType)
+            //despues al enviar los ejercicios debo sacar este atributo
+            e.imgURL = imagen
+          })
+        this.ejercicios = result.data
+        this.ejercicios.forEach(
           e => {
             let imagen = this.convertToBase64(e.images[0].data.data, e.images[0].contentType)
             //despues al enviar los ejercicios debo sacar este atributo
@@ -83,8 +89,9 @@ export class ExerciseCatalogComponent implements OnInit {
     this.routine.push(ejercicio);
     console.log(this.routine)
   }
+
   filterExercises(){
-    this.ejerciciosFiltrados = this.ejerciciosTraidos.filter(
+    this.ejerciciosFiltrados = this.ejercicios.filter(
       ejercicio => {
         return (!this.selectedType || ejercicio.type === this.selectedType) &&
         (!this.selectedMuscleGroup || ejercicio.muscleGroup === this.selectedMuscleGroup) &&

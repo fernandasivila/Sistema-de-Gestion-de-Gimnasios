@@ -3,7 +3,7 @@ import { MuscleGroup } from "./muscle-group";
 
 export interface RoutineRequest {
     name: String;
-    exercises: ExerciseResponse[];
+    exercises: String[];
     releaseDate: Date;
     muscleGroupsSelected: String[];
 }

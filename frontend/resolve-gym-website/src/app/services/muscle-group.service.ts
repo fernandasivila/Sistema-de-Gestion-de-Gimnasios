@@ -17,5 +17,4 @@ export class MuscleGroupService {
   getMuscleGroupById(id: String): Observable<any> {
     return this._http.get(`${this.baseUrl}/${id}`);
   }
-
 }
