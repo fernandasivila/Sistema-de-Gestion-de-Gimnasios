@@ -16,6 +16,7 @@ import { EventService } from '../../../services/event.service';
 export class EventFormComponent {
   action = 'Registrar';
   eventForm!: FormGroup;
+  idModificar: string = "";
 
   constructor(
     private formBuilder: FormBuilder,
@@ -40,7 +41,12 @@ export class EventFormComponent {
           break;
         case 'edit':
           this.action = 'Modificar';
-          // Lógica para cargar datos del evento a editar
+          this.route.params.subscribe(params => {
+            if(params['id']){
+              this.idModificar = params['id'];
+              console.log(this.idModificar);
+            }
+          })
           break;
       }
     });
@@ -109,7 +115,13 @@ export class EventFormComponent {
           (error) => console.error(error)
         )
       }
-
+      if (this.action == "Modificar") {
+        eventData._id = this.idModificar;
+        this.eventService.updateEvent(eventData).subscribe(
+          (response) => console.log(response),
+          (error) => console.error(error)
+        )
+      }
     } else {
       console.log('Formulario no válido');
     }

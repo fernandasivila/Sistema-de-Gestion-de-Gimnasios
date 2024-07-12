@@ -6,6 +6,7 @@ import { ActionButtonGroupComponent } from '../../action-button-group/action-but
 import { ADTSettings } from 'angular-datatables/src/models/settings';
 import { Subject } from 'rxjs';
 import { IDemoNgComponentEventType } from '../../../test/idemo-ng-component-event-type';
+import { EventService } from '../../../services/event.service';
 
 @Component({
   selector: 'app-event-list',
@@ -20,18 +21,7 @@ export class EventListComponent implements OnInit, AfterViewInit {
   dtOptions: ADTSettings = {};
   dtTrigger: Subject<ADTSettings> = new Subject<ADTSettings>()
 
-  constructor(private router : Router, private datePipe: DatePipe){}
-
-  apiResponseExample = [
-    {
-      "_id": "sdf4",
-    "name": "Perroton",
-    "description": "Colabora con un kilo de alimento y gana meses gratis",
-    "date": "2024-01-01T00:00:00.000Z",
-    "startTime": "2024-01-01T00:00:00.000Z",
-    "finishTime":"2024-01-01T00:30:00.000Z"
-    }
-  ]
+  constructor(private eventService: EventService, private router : Router, private datePipe: DatePipe){}
 
   @ViewChild('confirmationModal') confirmationModal! : ElementRef
   @ViewChild('actionButtons') actionButtons!: TemplateRef<ActionButtonGroupComponent>
@@ -45,20 +35,21 @@ export class EventListComponent implements OnInit, AfterViewInit {
         language: {
           url: '/assets/datatable.spanish.json',
         },
-        data: this.apiResponseExample,
+        ajax: (dataTablesParameters: any, callback) => {
+          this.eventService.getAllEvents().subscribe(resp => {
+            console.log(resp.data)
+            callback({
+              data: resp.data
+            });
+          })
+        },
         columns: [
           { title: 'Evento', data: 'name' },
           { title:'Descripcion', data:'description'},
-          { title:'Fecha', data:'date', ngPipeInstance: this.datePipe, ngPipeArgs: ['mediumDate', 'format']},
-          { title: 'Inicia', data:'startTime', ngPipeInstance: this.datePipe, ngPipeArgs: ['shortTime', 'format']},
-          { title: 'Termina', 
-            data: 'finishTime', 
-            render: (data, type, row) => {
-             return this.datePipe.transform(data, 'shortTime');
-            }
-          },
-         
-          
+          { title:'Fecha', data:'date', render: (data: any) => this.datePipe.transform(data, 'shortDate')},
+          { title: 'Inicia', data:'startTime', render: (data: any) => this.datePipe.transform(data, 'shortTime')},
+          { title: 'Termina', data: 'finishTime', render: (data: any) => this.datePipe.transform(data, 'shortTime')},
+  
           {
             title: 'Acciones',
             data: null,
@@ -102,8 +93,14 @@ export class EventListComponent implements OnInit, AfterViewInit {
     this.router.navigate([`/admin-dashboard/events/edit/${this.idEventInstance}`])
   }
 
-  deleteMember(){
-    //logica de borrado
+  deleteMember() {
+    this.eventService.deleteEvent(this.idEventInstance).subscribe(
+      (response) => {
+        console.log(response);
+        window.location.reload();
+      },
+      (error) => console.error(error)
+    );
   }
 
   private confirmateDeletion(){
