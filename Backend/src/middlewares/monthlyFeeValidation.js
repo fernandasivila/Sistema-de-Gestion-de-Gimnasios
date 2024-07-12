@@ -1,5 +1,6 @@
 const {body} = require('express-validator');
 const Member = require('../database/models/Member');
+const mongoose = require('mongoose');
 
 const isValidObjectId = (value) => {
     if (!mongoose.Types.ObjectId.isValid(value)) {

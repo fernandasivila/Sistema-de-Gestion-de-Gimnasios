@@ -29,7 +29,7 @@ const monthlyFeeController = {
   getById: async (req, res) => {
     const id = req.params.id;
     try {
-      const monthlyFee = await MonthlyFee.findById(id).populate('member');;
+      const monthlyFee = await MonthlyFee.findById(id).populate('member');
       if (!monthlyFee) {
         return res.status(404).json({
           meta: {

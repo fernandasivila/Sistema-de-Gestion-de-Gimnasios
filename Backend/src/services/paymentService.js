@@ -7,10 +7,10 @@ class PaymentService {
     const items = [
       {
       title: "Gym Resolve",
-      description: "Hola",
+      description: "Gym Resolve:" + monthlyPlan.name,
       category_id: "gym_resolve",
       quantity: 1,
-      unit_price: 1
+      unit_price: monthlyPlan.price
       }
     ]
 

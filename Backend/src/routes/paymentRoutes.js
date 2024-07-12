@@ -12,7 +12,7 @@ router.get("/", function (req, res, next) {
   });
 });
 
-router.get("/payment", function (req, res, next) {
+router.post("/payment", function (req, res, next) {
   PaymentInstance.getPaymentLink(req, res);
 });
 
