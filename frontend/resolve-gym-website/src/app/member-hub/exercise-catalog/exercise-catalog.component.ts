@@ -8,7 +8,7 @@ import { ExcerciseDetailsComponent } from '../excercise-details/excercise-detail
 import { MuscleGroupService } from '../../services/muscle-group.service';
 import { CommonModule } from '@angular/common';
 import { ExerciseService } from '../../services/exercise.service';
-import {Buffer} from "buffer" ;
+//import {Buffer} from "buffer" ;
 import { RoutineService } from '../../services/routine.service';
 import { FormsModule } from '@angular/forms';
 
@@ -60,7 +60,7 @@ export class ExerciseCatalogComponent implements OnInit {
     this.exerciseService.getAllExercises().subscribe(
       result => {
         this.ejerciciosFiltrados = result.data
-        this.ejerciciosFiltrados.forEach(
+        /* this.ejerciciosFiltrados.forEach(
           e => {
             let imagen = this.convertToBase64(e.images[0].data.data, e.images[0].contentType)
             //despues al enviar los ejercicios debo sacar este atributo
@@ -72,7 +72,7 @@ export class ExerciseCatalogComponent implements OnInit {
             let imagen = this.convertToBase64(e.images[0].data.data, e.images[0].contentType)
             //despues al enviar los ejercicios debo sacar este atributo
             e.imgURL = imagen
-          })
+          }) */
           this.cargado=false
       },
       error => {
@@ -80,11 +80,11 @@ export class ExerciseCatalogComponent implements OnInit {
       }
     )
   }
-   convertToBase64(data: number[], contentType: string): string {
+/*    convertToBase64(data: number[], contentType: string): string {
     const buffer = Buffer.from(data);
     const base64String = buffer.toString('base64');
     return `data:${contentType};base64,${base64String}`;
-  }
+  } */
   addRutina(ejercicio: ExerciseResponse){
     this.routine.push(ejercicio);
     console.log(this.routine)

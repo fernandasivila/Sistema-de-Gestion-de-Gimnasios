@@ -7,7 +7,6 @@ import { UserService } from '../../../services/user.service';
 import { Role } from '../../../models/role';
 import { HttpClientModule } from '@angular/common/http';
 import { UserRequest, UserResponse } from '../../../models/user';
-import {Buffer} from "buffer" ;
 import { error } from 'jquery';
 
 
@@ -256,7 +255,7 @@ export class UserFormComponent implements OnInit {
         let imgUser = dataUser.img
         console.log("USUARIO A MODIFICAR:", imgUser)
        // this.imageBase64post = dataUser.img;
-       this.imageData = this.convertToBase64(imgUser.data.data,imgUser.contentType)
+       //this.imageData = this.convertToBase64(imgUser.data.data,imgUser.contentType)
 
         this.userForm.patchValue(
           {
@@ -280,11 +279,11 @@ export class UserFormComponent implements OnInit {
     )
   }
 
-  private convertToBase64(data: number[], contentType: string): string {
+/*   private convertToBase64(data: number[], contentType: string): string {
     const buffer = Buffer.from(data);
     const base64String = buffer.toString('base64');
     return `data:${contentType};base64,${base64String}`;
-  }
+  } */
 
   //verificar si funciona
   getRoles() {

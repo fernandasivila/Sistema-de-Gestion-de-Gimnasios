@@ -21,7 +21,7 @@
                 <div id="carouselExample" class="carousel slide">
                     <div class="carousel-inner">
                         <div *ngFor="let img of exercise.images; let i = index" class="carousel-item" [ngClass]="{'active': i === 0}">
-                            <img [src]="convertToBase64(img.data.data, img.contentType)" class="d-block w-100" alt="...">
+                            <img class="d-block w-100" alt="...">
                         </div>
                         
                     </div>
