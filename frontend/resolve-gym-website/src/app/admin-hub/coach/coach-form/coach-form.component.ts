@@ -74,11 +74,11 @@ export class CoachFormComponent implements OnInit {
     )
   }
 
-  private convertToBase64(data: number[], contentType: string): string {
+/*   private convertToBase64(data: number[], contentType: string): string {
     const buffer = Buffer.from(data);
     const base64String = buffer.toString('base64');
     return `data:${contentType};base64,${base64String}`;
-  }
+  } */
 
   //ELIMINAR
   getFormValuesWithoutImage() {

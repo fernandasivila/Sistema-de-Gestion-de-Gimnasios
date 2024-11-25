@@ -29,7 +29,6 @@
     "datatables.net": "^2.0.3",
     "datatables.net-bs5": "^2.0.3",
     "jquery": "^3.6.0",
-    "ngx-star-rating": "^2.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"

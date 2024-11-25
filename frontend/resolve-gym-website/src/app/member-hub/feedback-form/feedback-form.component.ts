@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FeedbackService } from '../../services/feedback.service';
 import { CommonModule } from '@angular/common';
-import { NgxStarRatingModule } from 'ngx-star-rating';
+
 import { FeedbackRequest, FeedbackResponse } from '../../models/feedback';
 import { LoginService } from '../../services/login.service';
 
 @Component({
   selector: 'app-feedback-form',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, NgxStarRatingModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './feedback-form.component.html',
   styleUrl: './feedback-form.component.css'
 })
